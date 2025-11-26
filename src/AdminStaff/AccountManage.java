@@ -25,7 +25,7 @@ public class AccountManage extends javax.swing.JPanel {
     String filePath = "Account.txt";
     
     public void createAccount(){
-        try (BufferReader br = new BufferReader(filePath)){
+        try (BufferedReader br = new BufferedReader(filePath)){
             String line;
             while (tfaccountID.text)
     }
