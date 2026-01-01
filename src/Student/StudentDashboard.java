@@ -4,11 +4,53 @@
  */
 package Student;
 
+import Main.LogIn2;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.*;
+import java.io.*;
+import java.nio.file.*;
+
+
+
+import Student.AssessmentMark;
+import Student.EditProfile;
+import Student.RegisterClass;
+import Main.LogIn2;
 /**
  *
  * @author Xinn
  */
 public class StudentDashboard extends javax.swing.JFrame {
+    public StudentDashboard (String studentName){
+        setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        JLabel welcomeLabel = new JLabel ("Welcome!" +studentName);
+        add(welcomeLabel);
+        setVisible(true);
+    }
+    
+//    public String studentName;
+//    public StudentDashboard (String studentName){
+//        this.studentName = studentName;
+//        initComponents();
+//        displayWelcomeMessage();
+//    }
+//    
+//    public void displayWelcomeMessage(){
+//        String welcomeMessage = "Welcome! " + studentName;
+//        jLabelWelcome.setText(welcomeMessage);
+//    }
+//    
+    
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(StudentDashboard.class.getName());
 
@@ -28,77 +70,203 @@ public class StudentDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        btnCheckIndividualResult = new javax.swing.JButton();
+        btnComment = new javax.swing.JButton();
+        btnRegisterClass = new javax.swing.JButton();
+        btnLogOut = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        btnEditProfile = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jLabelWelcome = new javax.swing.JLabel();
+        btnNotification = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(181, 172, 252));
+
+        btnCheckIndividualResult.setBackground(new java.awt.Color(181, 172, 252));
+        btnCheckIndividualResult.setText("Check Individual Result");
+        btnCheckIndividualResult.setBorder(null);
+        btnCheckIndividualResult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckIndividualResultActionPerformed(evt);
+            }
+        });
+
+        btnComment.setBackground(new java.awt.Color(181, 172, 252));
+        btnComment.setText("Comment");
+        btnComment.setBorder(null);
+        btnComment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCommentActionPerformed(evt);
+            }
+        });
+
+        btnRegisterClass.setBackground(new java.awt.Color(181, 172, 252));
+        btnRegisterClass.setText("Register Class");
+        btnRegisterClass.setBorder(null);
+        btnRegisterClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterClassActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnRegisterClass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnCheckIndividualResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+            .addComponent(btnComment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(btnRegisterClass, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnCheckIndividualResult, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnComment, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(192, Short.MAX_VALUE))
+        );
+
+        btnLogOut.setText("LogOut");
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogOutActionPerformed(evt);
+            }
+        });
+
+        jPanel2.setBackground(new java.awt.Color(240, 240, 240));
+
+        btnEditProfile.setText("Edit Profile");
+        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditProfileActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("STUDENT DASHBOARD");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jButton1.setText("Register Class");
+        jLabelWelcome.setBackground(new java.awt.Color(240, 240, 240));
+        jLabelWelcome.setFont(new java.awt.Font("Yu Gothic UI", 1, 18)); // NOI18N
+        jLabelWelcome.setText("PrintName");
 
-        jButton2.setText("Check Individual Result");
-
-        jButton3.setText("Comment");
-
-        jButton4.setText("Edit Profile");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnNotification.setText("Notification");
+        btnNotification.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnNotificationActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btnNotification)
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(22, 22, 22))
+                    .addComponent(jLabelWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabelWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 8, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnNotification))
+                .addGap(65, 65, 65))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(54, 54, 54)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(194, 194, 194)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(87, 87, 87))
+                        .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(57, 57, 57))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
+        EditProfile editProfile = new EditProfile();
+        editProfile. setVisible(true);
+        dispose();
+       
+    }//GEN-LAST:event_btnEditProfileActionPerformed
+
+    private void btnCheckIndividualResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckIndividualResultActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+        AssessmentMark checkMark = new AssessmentMark();
+        checkMark. setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnCheckIndividualResultActionPerformed
+
+    private void btnRegisterClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterClassActionPerformed
+        // TODO add your handling code here:
+        RegisterClass registerClass = new RegisterClass();
+        registerClass. setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnRegisterClassActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        // TODO add your handling code here:
+        LogIn2 logout = new LogIn2();
+        logout.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnLogOutActionPerformed
+
+    private void btnCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentActionPerformed
+        // TODO add your handling code here:
+        feedbackForm comment = new feedbackForm();
+        comment.setVisible (true);
+        dispose();
+    }//GEN-LAST:event_btnCommentActionPerformed
+
+    private void btnNotificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificationActionPerformed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_btnNotificationActionPerformed
 
     /**
      * @param args the command line arguments
@@ -123,13 +291,26 @@ public class StudentDashboard extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new StudentDashboard().setVisible(true));
+        String studentName = "";
+        try{
+            Path path = Paths.get("Account.txt");
+            studentName = Files.readString(path).trim();
+        } catch (IOException e){
+            studentName = "Unknown";
+            System.out.println("Error Message" + e.getMessage());            
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnCheckIndividualResult;
+    private javax.swing.JButton btnComment;
+    private javax.swing.JButton btnEditProfile;
+    private javax.swing.JButton btnLogOut;
+    private javax.swing.JButton btnNotification;
+    private javax.swing.JButton btnRegisterClass;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelWelcome;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

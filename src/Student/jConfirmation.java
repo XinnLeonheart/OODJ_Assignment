@@ -6,14 +6,8 @@ package Student;
 
 /**
  *
- * @author Xinn
+ * @author Xenia Thor
  */
-public class Student {
-
-    static class setROwCount {
-
-        public setROwCount() {
-        }
-    }
+class jConfirmation {
     
 }

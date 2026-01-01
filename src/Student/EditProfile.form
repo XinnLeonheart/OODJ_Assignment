@@ -27,103 +27,225 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace pref="196" max="32767" attributes="0"/>
+          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="label1" min="-2" pref="135" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="button1" min="-2" max="-2" attributes="0"/>
-                          <Component id="textField4" min="-2" pref="175" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="textField2" min="-2" pref="175" max="-2" attributes="0"/>
-                          <Component id="textField1" min="-2" pref="175" max="-2" attributes="0"/>
-                          <Component id="button2" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel6" min="-2" pref="104" max="-2" attributes="0"/>
+                          <Component id="txtStudentID" min="-2" pref="175" max="-2" attributes="0"/>
+                          <Component id="jLabel3" min="-2" pref="104" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txtPassword" min="-2" pref="175" max="-2" attributes="0"/>
+                          <Component id="jLabel2" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="jLabel5" alignment="0" min="-2" pref="104" max="-2" attributes="0"/>
+                          <Component id="txtGender" alignment="0" min="-2" pref="175" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel1" alignment="0" min="-2" pref="84" max="-2" attributes="0"/>
+                          <Component id="txtPhoneNum" alignment="0" min="-2" pref="175" max="-2" attributes="0"/>
+                          <Component id="txtName" alignment="0" min="-2" pref="175" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txtEmail" min="-2" pref="175" max="-2" attributes="0"/>
+                          <Component id="jLabel4" min="-2" pref="84" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="btnSave" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="btnCANCEL" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
-          </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="197" max="-2" attributes="0"/>
-                  <Component id="textField3" min="-2" pref="175" max="-2" attributes="0"/>
-                  <EmptySpace pref="323" max="32767" attributes="0"/>
-              </Group>
+              <EmptySpace min="0" pref="33" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="button2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="label1" min="-2" pref="35" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-                      <Component id="textField1" min="-2" pref="34" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="textField2" min="-2" pref="34" max="-2" attributes="0"/>
-                          <Component id="textField4" min="-2" pref="34" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="81" max="32767" attributes="0"/>
-                      <Component id="button1" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="txtName" min="-2" pref="34" max="-2" attributes="0"/>
+                  <Component id="txtEmail" min="-2" pref="34" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-          </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
-                  <Component id="textField3" min="-2" pref="34" max="-2" attributes="0"/>
-                  <EmptySpace pref="230" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="txtPhoneNum" min="-2" pref="34" max="-2" attributes="0"/>
+                  <Component id="txtPassword" min="-2" pref="34" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel5" alignment="3" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="txtStudentID" min="-2" pref="34" max="-2" attributes="0"/>
+                  <Component id="txtGender" min="-2" pref="34" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="btnCANCEL" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnSave" alignment="1" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="java.awt.Label" name="label1">
+    <Component class="java.awt.TextField" name="txtPassword">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Personal Information"/>
+        <Property name="text" type="java.lang.String" value="password"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="passwordMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPasswordActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="java.awt.TextField" name="textField1">
+    <Component class="java.awt.TextField" name="txtName">
       <Properties>
-        <Property name="text" type="java.lang.String" value="textField2"/>
+        <Property name="text" type="java.lang.String" value="student name"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNameActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="java.awt.TextField" name="textField2">
+    <Component class="java.awt.TextField" name="txtPhoneNum">
       <Properties>
-        <Property name="text" type="java.lang.String" value="textField4"/>
+        <Property name="text" type="java.lang.String" value="phone number"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPhoneNumActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="java.awt.TextField" name="textField3">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="textField1"/>
-      </Properties>
-    </Component>
-    <Component class="java.awt.TextField" name="textField4">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="textField3"/>
-      </Properties>
-    </Component>
-    <Component class="java.awt.Button" name="button1">
+    <Component class="java.awt.Button" name="btnSave">
       <Properties>
         <Property name="label" type="java.lang.String" value="Save"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="java.awt.Button" name="button2">
+    <Component class="java.awt.Button" name="btnCANCEL">
       <Properties>
         <Property name="label" type="java.lang.String" value="Cancel"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCANCELActionPerformed"/>
+      </Events>
+    </Component>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="fc" green="ac" red="b5" type="rgb"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
+                  <Component id="label2" min="-2" pref="212" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="label2" min="-2" pref="66" max="-2" attributes="0"/>
+                  <EmptySpace pref="19" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="java.awt.Label" name="label2">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Imprint MT Shadow" size="18" style="3"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Personal Information"/>
+          </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Name"/>
+          </AccessibilityProperties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JLabel" name="jLabel2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Password: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Phone Number: "/>
+      </Properties>
+    </Component>
+    <Component class="java.awt.TextField" name="txtGender">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="gender"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtGenderActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="java.awt.TextField" name="txtStudentID">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="student ID"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtStudentIDActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Gender: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel6">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Student ID: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Email"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Name: "/>
+      </Properties>
+    </Component>
+    <Component class="java.awt.TextField" name="txtEmail">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="email"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtEmailActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

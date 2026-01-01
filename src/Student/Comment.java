@@ -8,14 +8,14 @@ package Student;
  *
  * @author Xenia Thor
  */
-public class Login extends javax.swing.JFrame {
+public class Comment extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Login.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Comment.class.getName());
 
     /**
-     * Creates new form Logiin
+     * Creates new form Comment
      */
-    public Login() {
+    public Comment() {
         initComponents();
     }
 
@@ -34,11 +34,11 @@ public class Login extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 645, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 445, Short.MAX_VALUE)
         );
 
         pack();
@@ -66,7 +66,7 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Comment().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
