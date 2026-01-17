@@ -8,6 +8,12 @@ package AdminStaff;
  *
  * @author lolipop
  */
+
+import java.util.LinkedHashMap;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+
 public class CreateClass extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CreateClass.class.getName());
@@ -17,18 +23,71 @@ public class CreateClass extends javax.swing.JFrame {
      */
     public CreateClass() {
         initComponents();
+        
+        private ArrayList<ClassInfo> classList = new ArrayList<>();
+        private JTable tableClass; // your JTable
+        private JComboBox<String> moduleComboBox; // your module dropdown
+
+        public ClassManager(JTable table, JComboBox<String> moduleComboBox) {
+            this.tableClass = table;
+            this.moduleComboBox = moduleComboBox;
+        }
     }
     
-    public void createClass(){
-        
+    static class ClassInfo {
+        String classID;
+        String className;
+        String module;
+
+        ClassInfo(String classID, String className, String module) {
+            this.classID = classID;
+            this.className = className;
+            this.module = module;
+        }
     }
     
-    public void displayModule(){
-        
+    public void createClass(String classID, String className) {
+        String module = cbModule.getSelectedItem().toString();
+
+        if(classID.isEmpty() || className.isEmpty() || module.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill all fields");
+            return;
+        }
+
+        ClassInfo newClass = new ClassInfo(classID, className, module);
+        classList.add(newClass);
+        refreshTable();
+        JOptionPane.showMessageDialog(null, "Class created successfully!");
     }
     
-    public void searchClass(){
-        
+    public void displayModule() {
+        // Example modules
+        String[] modules = {"Math", "Science", "History", "English"};
+
+        cbModule.removeAllItems();
+        for(String m : modules) {
+            cbModule.addItem(m);
+        }
+    }
+    
+    public void searchClass(String query) {
+        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
+        model.setRowCount(0); // clear table
+
+        for(ClassInfo c : classList) {
+            if(c.classID.contains(query) || c.className.toLowerCase().contains(query.toLowerCase())) {
+                model.addRow(new Object[]{c.classID, c.className, c.module});
+            }
+        }
+    }
+    
+    private void refreshTable() {
+        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
+        model.setRowCount(0); // clear table
+
+        for(ClassInfo c : classList) {
+            model.addRow(new Object[]{c.classID, c.className, c.module});
+        }
     }
     
     /**
@@ -43,7 +102,7 @@ public class CreateClass extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableClass = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -54,13 +113,13 @@ public class CreateClass extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jTextField3 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbModule = new javax.swing.JComboBox<>();
 
         jScrollPane2.setViewportView(jEditorPane1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableClass.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -71,7 +130,7 @@ public class CreateClass extends javax.swing.JFrame {
                 "Class ID", "Class Name", "Module"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableClass);
 
         jLabel1.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
         jLabel1.setText("Create Classes");
@@ -116,7 +175,7 @@ public class CreateClass extends javax.swing.JFrame {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jTextField1)
                                         .addComponent(jTextField2)
-                                        .addComponent(jComboBox1, 0, 200, Short.MAX_VALUE))))))
+                                        .addComponent(cbModule, 0, 200, Short.MAX_VALUE))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(318, 318, 318)
                         .addComponent(jLabel1)))
@@ -138,7 +197,7 @@ public class CreateClass extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbModule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
@@ -181,8 +240,8 @@ public class CreateClass extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSearchClass;
+    private javax.swing.JComboBox<String> cbModule;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -191,9 +250,9 @@ public class CreateClass extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTable tableClass;
     // End of variables declaration//GEN-END:variables
 }
