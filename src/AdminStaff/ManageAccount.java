@@ -25,7 +25,7 @@ public class ManageAccount extends javax.swing.JFrame {
     /**
      * Creates new form ManageAccount
      */
-    private static final String filePath = "src/TextFiles/Account.txt";
+    private static final String ACCOUNT_FILE = "src/TextFiles/Account.txt";
     
     public ManageAccount() {
         initComponents();
@@ -56,7 +56,7 @@ public class ManageAccount extends javax.swing.JFrame {
                 return;
         }    
 
-        try (BufferedReader br = new BufferedReader (new FileReader(filePath))){
+        try (BufferedReader br = new BufferedReader (new FileReader(ACCOUNT_FILE))){
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -112,7 +112,7 @@ public class ManageAccount extends javax.swing.JFrame {
     }  
     
     public void writeAccInfoIntoDatabase() throws IOException{
-        try (FileWriter fw = new FileWriter(filePath, true)){
+        try (FileWriter fw = new FileWriter(ACCOUNT_FILE, true)){
              fw.write(
                     tfAccountID.getText().trim() + ";" +
                     tfUserName.getText().trim() + ";" +
@@ -136,7 +136,7 @@ public class ManageAccount extends javax.swing.JFrame {
 
         try {
             // 1. Read all lines
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE));
             java.util.ArrayList<String> lines = new java.util.ArrayList<>();
             String line;
 
@@ -148,7 +148,7 @@ public class ManageAccount extends javax.swing.JFrame {
             br.close();
 
             // 2. Rewrite file with updated data
-            try (FileWriter fw = new FileWriter(filePath)) {
+            try (FileWriter fw = new FileWriter(ACCOUNT_FILE)) {
                 for (String existingLine : lines) {
                     String[] data = existingLine.split(";");
 
@@ -246,7 +246,7 @@ public class ManageAccount extends javax.swing.JFrame {
     public void makeSureAccIDNotSame() {
         String newAccID = tfAccountID.getText().trim();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -274,7 +274,7 @@ public class ManageAccount extends javax.swing.JFrame {
     public void makeSureUsernameNotSame() {
         String newUsername = tfUserName.getText().trim();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -303,7 +303,7 @@ public class ManageAccount extends javax.swing.JFrame {
     public void makeSureEmailNotSame() {
         String newEmail = tfEmail.getText().trim() + tfEmailDomain.getText().trim();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -334,7 +334,7 @@ public class ManageAccount extends javax.swing.JFrame {
         String prefix = "ACC";
         int nextID = 1;
 
-        File file = new File(filePath);
+        File file = new File(ACCOUNT_FILE);
 
         // If file does not exist or empty → start from ACC001
         if (!file.exists() || file.length() == 0) {
@@ -411,7 +411,7 @@ public class ManageAccount extends javax.swing.JFrame {
         }
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE));
             java.util.ArrayList<String> lines = new java.util.ArrayList<>();
             String line;
 
@@ -422,7 +422,7 @@ public class ManageAccount extends javax.swing.JFrame {
             }
             br.close();
 
-            try (FileWriter fw = new FileWriter(filePath)) {
+            try (FileWriter fw = new FileWriter(ACCOUNT_FILE)) {
                 for (String l : lines) {
                     fw.write(l + "\n");
                 }
@@ -536,7 +536,7 @@ public class ManageAccount extends javax.swing.JFrame {
             (DefaultTableModel) tableAccountDetail.getModel();
         model.setRowCount(0);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;

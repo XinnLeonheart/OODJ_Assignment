@@ -8,6 +8,21 @@ package AdminStaff;
  *
  * @author lolipop
  */
+
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultCellEditor;
+import java.util.Map;
+import java.util.LinkedHashMap;
+
+
 public class AssignLecturer extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AssignLecturer.class.getName());
@@ -15,10 +30,161 @@ public class AssignLecturer extends javax.swing.JFrame {
     /**
      * Creates new form AssignLecturer
      */
+    
+    private static final String ACCOUNT_FILE = "src/TextFiles/Account.txt";
+    private static final String LECTURER_FILE = "src/TextFiles/Lecturer.txt";
+
     public AssignLecturer() {
         initComponents();
+        displayAcademicLeaderListOnTable();
+    }
+    
+    public void displayAcademicLeaderListOnTable() {
+        JComboBox<String> academicLeaderCombo = new JComboBox<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split(";");
+
+                String name = data[2].trim();
+                String role = data[8].trim();
+
+                if (role.equalsIgnoreCase("Academic Leader")) {
+                    academicLeaderCombo.addItem(name);
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                "Error loading academic leaders");
+        }
+
+        // Column 3 = Academic Leader dropdown-list
+        tableAssignLecturer
+            .getColumnModel()
+            .getColumn(3)
+            .setCellEditor(new DefaultCellEditor(academicLeaderCombo));
+    }
+    
+    public void searchLecturer() {
+        String searchText = tfSearchLecturer.getText().trim().toLowerCase();
+        DefaultTableModel model =
+            (DefaultTableModel) tableAssignLecturer.getModel();
+        model.setRowCount(0);
+
+        if (searchText.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Please enter Lecturer ID or Name");
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split(";");
+
+                String accID = data[0].trim();
+                String name = data[2].trim();
+                String email = data[3].trim();
+                String role = data[8].trim();
+
+                // Only show LECTURERS
+                if (role.equalsIgnoreCase("Lecturer") &&
+                    (accID.toLowerCase().contains(searchText)
+                    || name.toLowerCase().contains(searchText))) {
+
+                    model.addRow(new Object[]{
+                        accID,
+                        name,
+                        email,
+                        ""   // Academic Leader ComboBox column
+                    });
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                "Error searching lecturer");
+        }
+        
+        displayAcademicLeaderListOnTable();
+
     }
 
+    
+    public void saveAssignInfoIntoDatabase(){
+        DefaultTableModel model =
+            (DefaultTableModel) tableAssignLecturer.getModel();
+
+        Map<String, String> lecturerMap = new LinkedHashMap<>();
+
+        // Load existing record
+        File file = new File(LECTURER_FILE);
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+
+                    String[] data = line.split(";");
+                    lecturerMap.put(data[0], line);
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                    "Error reading lecturer file");
+                return;
+            }
+        }
+
+        // Update/ Add from table
+        for (int i = 0; i < model.getRowCount(); i++) {
+
+            String lecturerID = model.getValueAt(i, 0).toString();
+            String lecturerName = model.getValueAt(i, 1).toString();
+            String lecturerEmail = model.getValueAt(i, 2).toString();
+            Object leaderObj = model.getValueAt(i, 3);
+
+            if (leaderObj == null || leaderObj.toString().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Please assign Academic Leader for all lecturers");
+                return;
+            }
+
+            String academicLeader = leaderObj.toString();
+
+            String newLine =
+                lecturerID + ";" +
+                lecturerName + ";" +
+                lecturerEmail + ";" +
+                academicLeader;
+
+            lecturerMap.put(lecturerID, newLine); // overwrite if exists
+        }
+
+        // Rewrite file
+        try (BufferedWriter bw = new BufferedWriter(
+                new FileWriter(LECTURER_FILE))) {
+
+            for (String record : lecturerMap.values()) {
+                bw.write(record);
+                bw.newLine();
+            }
+
+            JOptionPane.showMessageDialog(this,
+                "Lecturer assignment updated successfully");
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                "Error saving lecturer assignment");
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,46 +196,68 @@ public class AssignLecturer extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableAccountDetail = new javax.swing.JTable();
+        tableAssignLecturer = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         btnSearchCourse = new javax.swing.JButton();
-        tfSearchCourse = new javax.swing.JTextField();
+        tfSearchLecturer = new javax.swing.JTextField();
+        btnSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
         jLabel1.setText("Assign Lecturer ");
 
-        tableAccountDetail.setModel(new javax.swing.table.DefaultTableModel(
+        tableAssignLecturer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Course ID", "Course Name", "Lecturer Name"
+                "Lecturer ID", "Lecturer Name", "Lecturer Email", "Academic Leader"
             }
-        ));
-        jScrollPane1.setViewportView(tableAccountDetail);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
 
-        jLabel2.setText("Search Course (Course ID/ Name):");
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tableAssignLecturer);
+        if (tableAssignLecturer.getColumnModel().getColumnCount() > 0) {
+            tableAssignLecturer.getColumnModel().getColumn(0).setResizable(false);
+            tableAssignLecturer.getColumnModel().getColumn(1).setResizable(false);
+            tableAssignLecturer.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        jLabel2.setText("Search Lecturer (ID/ Name):");
 
         btnSearchCourse.setText("Search");
+        btnSearchCourse.addActionListener(this::btnSearchCourseActionPerformed);
+
+        btnSave.setText("Save");
+        btnSave.addActionListener(this::btnSaveActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(403, 403, 403))
             .addGroup(layout.createSequentialGroup()
                 .addGap(51, 51, 51)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSave)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel2)
                             .addGap(27, 27, 27)
-                            .addComponent(tfSearchCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfSearchLecturer, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnSearchCourse))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -78,21 +266,31 @@ public class AssignLecturer extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addGap(21, 21, 21)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel2)
-                        .addComponent(tfSearchCourse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tfSearchLecturer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnSearchCourse))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnSave)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        saveAssignInfoIntoDatabase();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnSearchCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchCourseActionPerformed
+        searchLecturer();
+    }//GEN-LAST:event_btnSearchCourseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -120,11 +318,12 @@ public class AssignLecturer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSearchCourse;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableAccountDetail;
-    private javax.swing.JTextField tfSearchCourse;
+    private javax.swing.JTable tableAssignLecturer;
+    private javax.swing.JTextField tfSearchLecturer;
     // End of variables declaration//GEN-END:variables
 }
