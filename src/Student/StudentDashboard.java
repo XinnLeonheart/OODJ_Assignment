@@ -23,7 +23,7 @@ import java.nio.file.*;
 
 import Student.Assessment;
 import Student.EditProfile;
-import Student.RegisterClass;
+import Student.Class;
 import Main.LogIn2;
 /**
  *
@@ -264,7 +264,9 @@ public class StudentDashboard extends javax.swing.JFrame {
 
     private void btnNotificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificationActionPerformed
         // TODO add your handling code here:
-        
+        Notification notification = new Notification();
+        notification.setVisible(true);
+        dispose();
         
     }//GEN-LAST:event_btnNotificationActionPerformed
 
