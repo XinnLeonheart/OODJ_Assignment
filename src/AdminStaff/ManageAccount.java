@@ -529,6 +529,8 @@ public class ManageAccount extends javax.swing.JFrame {
         cbGender.setSelectedItem(0);
         tfAge.setText("");
         cbRole.setSelectedIndex(0);
+        DefaultTableModel model = (DefaultTableModel) tableAccountDetail.getModel();
+        model.setRowCount(0);
     }
 
     public void loadAccountTable() {

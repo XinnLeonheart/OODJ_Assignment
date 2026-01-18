@@ -17,8 +17,82 @@ public class DefineGradingSystem extends javax.swing.JFrame {
      */
     public DefineGradingSystem() {
         initComponents();
+        displayGradeSelectionOnTable();
     }
+    
+    public void searchStudent(){
+        String keyword = tfSearchStudent.getText().trim();
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
+        model.setRowCount(0); // Clear previous rows
 
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("Assessment.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Format: ID,Name,AssessmentMark
+                String[] parts = line.split(",");
+                if (parts.length >= 3) {
+                    String id = parts[0].trim();
+                    String name = parts[1].trim();
+                    String assessmentStr = parts[2].trim();
+
+                    if (id.equalsIgnoreCase(keyword) || name.equalsIgnoreCase(keyword)) {
+                        String grade = convertMarkToGrade(assessmentStr); // auto-select grade
+                        model.addRow(new Object[]{id, name, assessmentStr, grade});
+                    }
+                }
+            }
+        } catch (java.io.IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error reading Assessment.txt: " + ex.getMessage());
+        }
+    }
+    
+    private String convertMarkToGrade(String markStr) {
+        try {
+            double mark = Double.parseDouble(markStr);
+            if (mark >= 90) return "A+";
+            if (mark >= 85) return "A";
+            if (mark >= 80) return "B+";
+            if (mark >= 75) return "B";
+            if (mark >= 70) return "C+";
+            if (mark >= 65) return "C";
+            if (mark >= 60) return "C-";
+            if (mark >= 55) return "D";
+            if (mark >= 50) return "F+";
+            if (mark >= 45) return "F";
+            return "F-";
+        } catch (NumberFormatException e) {
+            return ""; // empty if invalid number
+        }
+    }
+    
+    public void saveGradingInformation() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
+        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter("AssessmentWithGrades.txt", true))) {
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String id = model.getValueAt(i, 0).toString();
+                String name = model.getValueAt(i, 1).toString();
+                String assessment = model.getValueAt(i, 2).toString();
+                String grade = model.getValueAt(i, 3).toString();
+
+                bw.write(id + "," + name + "," + assessment + "," + grade);
+                bw.newLine();
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, "Grades saved successfully!");
+        } catch (java.io.IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error saving grades: " + ex.getMessage());
+        }
+    }
+    
+    public void displayGradeSelectionOnTable(){
+        // Grades array
+        String[] grade = {"A+", "A", "B+", "B", "C+", "C", "C-", "D", "F+", "F", "F-", ""};
+
+        // Set the 4th column to use JComboBox
+        javax.swing.table.TableColumn gradeColumn = tableGrading.getColumnModel().getColumn(3);
+        javax.swing.JComboBox<String> comboBox = new javax.swing.JComboBox<>(grade);
+        gradeColumn.setCellEditor(new javax.swing.DefaultCellEditor(comboBox));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,31 +103,96 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     private void initComponents() {
 
         lblGradingSystem = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableGrading = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        tfSearchStudent = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblGradingSystem.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
         lblGradingSystem.setText("Define Grading System");
 
+        tableGrading.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Student ID", "Student Name", "Overall Assessment Mark", "Grade"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tableGrading);
+
+        jLabel1.setText("Search Student (ID/ Name): ");
+
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(this::btnSearchActionPerformed);
+
+        btnSave.setText("Save");
+        btnSave.addActionListener(this::btnSaveActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(74, 74, 74)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblGradingSystem)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addGap(345, 345, 345))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSave)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addGap(18, 18, 18)
+                            .addComponent(tfSearchStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSearch))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(25, 25, 25)
                 .addComponent(lblGradingSystem)
-                .addContainerGap(244, Short.MAX_VALUE))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(tfSearchStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSave)
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        searchStudent();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        saveGradingInformation();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -81,6 +220,12 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblGradingSystem;
+    private javax.swing.JTable tableGrading;
+    private javax.swing.JTextField tfSearchStudent;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,6 +9,12 @@ package AdminStaff;
  * @author lolipop
  */
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,21 +23,18 @@ import java.util.ArrayList;
 public class CreateClass extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CreateClass.class.getName());
+    private ArrayList<ClassInfo> classList = new ArrayList<>();
 
     /**
      * Creates new form CreateClass
      */
+    
+    private static final String CLASS_FILE = "src/TextFiles/Class.txt";
+    
     public CreateClass() {
         initComponents();
-        
-        private ArrayList<ClassInfo> classList = new ArrayList<>();
-        private JTable tableClass; // your JTable
-        private JComboBox<String> moduleComboBox; // your module dropdown
-
-        public ClassManager(JTable table, JComboBox<String> moduleComboBox) {
-            this.tableClass = table;
-            this.moduleComboBox = moduleComboBox;
-        }
+        displayModuleOnTable();
+        generateClassID();
     }
     
     static class ClassInfo {
@@ -46,36 +49,114 @@ public class CreateClass extends javax.swing.JFrame {
         }
     }
     
-    public void createClass(String classID, String className) {
-        String module = cbModule.getSelectedItem().toString();
+    public void generateClassID(){
+        
+        String prefix = "C";
+        int nextID = 1;
 
-        if(classID.isEmpty() || className.isEmpty() || module.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill all fields");
+        File file = new File(CLASS_FILE);
+
+        // If file does not exist / empty -> start from C001
+        if (!file.exists() || file.length() == 0) {
+            tfClassID.setText(prefix + "001");
             return;
         }
 
-        ClassInfo newClass = new ClassInfo(classID, className, module);
-        classList.add(newClass);
-        refreshTable();
-        JOptionPane.showMessageDialog(null, "Class created successfully!");
-    }
-    
-    public void displayModule() {
-        // Example modules
-        String[] modules = {"Math", "Science", "History", "English"};
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            String lastID = null;
 
-        cbModule.removeAllItems();
-        for(String m : modules) {
-            cbModule.addItem(m);
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] data = line.split(";");
+                    lastID = data[0].trim(); 
+                }
+            }
+
+            if (lastID != null && lastID.startsWith(prefix)) {
+                int number = Integer.parseInt(lastID.substring(3));
+                nextID = number + 1;
+            }
+
+            tfClassID.setText(prefix + String.format("%03d", nextID));
+
+        } catch (IOException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                "Error generating Class ID!");
         }
     }
     
-    public void searchClass(String query) {
-        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
-        model.setRowCount(0); // clear table
+    public void createClass() {
+        String classID = tfClassID.getText().trim();
+        String className = tfClassName.getText().trim();
+        String module = cbModule.getSelectedItem().toString();
 
-        for(ClassInfo c : classList) {
-            if(c.classID.contains(query) || c.className.toLowerCase().contains(query.toLowerCase())) {
+        if (classID.isEmpty() || className.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields");
+            return;
+        }
+
+        classList.add(new ClassInfo(classID, className, module));
+        refreshTable();
+
+        JOptionPane.showMessageDialog(this, "Class created successfully!");
+    }
+    
+    public void saveResult(){
+       DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
+
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "No data to save.");
+            return;
+        }
+
+        classList.clear(); // reset memory list
+
+        // Read updated data from JTable
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String classID = model.getValueAt(i, 0).toString();
+            String className = model.getValueAt(i, 1).toString();
+            String module = model.getValueAt(i, 2).toString();
+
+            classList.add(new ClassInfo(classID, className, module));
+        }
+
+        // Overwrite file with updated data
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CLASS_FILE))) {
+
+            for (ClassInfo c : classList) {
+                bw.write(c.classID + ";" + c.className + ";" + c.module);
+                bw.newLine();
+            }
+
+            JOptionPane.showMessageDialog(this, "Class information updated successfully!");
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving class data!");
+        }
+    }
+    
+    public void displayModuleOnTable() {
+        String[] modules = {
+            "English", "Mathematics", "Science", "Statistics",
+            "Physics", "Biology", "Chemistry", "Accounting"
+        };
+
+        JComboBox<String> moduleComboBox = new JComboBox<>(modules);
+
+        tableClass.getColumnModel()
+                  .getColumn(2)   // Module column index
+                  .setCellEditor(new DefaultCellEditor(moduleComboBox));
+    }
+    
+    public void searchClass() {
+        String query = jTextField3.getText().trim().toLowerCase();
+        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
+        model.setRowCount(0);
+
+        for (ClassInfo c : classList) {
+            if (c.classID.toLowerCase().contains(query) ||
+                c.className.toLowerCase().contains(query)) {
                 model.addRow(new Object[]{c.classID, c.className, c.module});
             }
         }
@@ -83,11 +164,18 @@ public class CreateClass extends javax.swing.JFrame {
     
     private void refreshTable() {
         DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
-        model.setRowCount(0); // clear table
+        model.setRowCount(0);
 
-        for(ClassInfo c : classList) {
+        for (ClassInfo c : classList) {
             model.addRow(new Object[]{c.classID, c.className, c.module});
         }
+    }
+    
+    public void clearTextFieldAndResult(){
+        generateClassID();
+        tfClassName.setText("");
+        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
+            model.setRowCount(0);
     }
     
     /**
@@ -107,13 +195,15 @@ public class CreateClass extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        tfClassID = new javax.swing.JTextField();
+        tfClassName = new javax.swing.JTextField();
         btnSearchClass = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnCreateClass = new javax.swing.JButton();
         jTextField3 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         cbModule = new javax.swing.JComboBox<>();
+        btnSaveClass = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
 
         jScrollPane2.setViewportView(jEditorPane1);
 
@@ -142,10 +232,20 @@ public class CreateClass extends javax.swing.JFrame {
         jLabel4.setText("Class Name:");
 
         btnSearchClass.setText("Search");
+        btnSearchClass.addActionListener(this::btnSearchClassActionPerformed);
 
-        jButton1.setText("Create");
+        btnCreateClass.setText("Create");
+        btnCreateClass.addActionListener(this::btnCreateClassActionPerformed);
 
         jLabel5.setText("Module:");
+
+        cbModule.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "English", "Mathematics", "Science", "Statistics", "Physics", "Biology", "Chemistry", "Accounting" }));
+
+        btnSaveClass.setText("Save");
+        btnSaveClass.addActionListener(this::btnSaveClassActionPerformed);
+
+        btnClear.setText("Clear");
+        btnClear.addActionListener(this::btnClearActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -156,26 +256,31 @@ public class CreateClass extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addGap(29, 29, 29)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnSearchClass))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jButton1)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel5))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jTextField1)
-                                        .addComponent(jTextField2)
-                                        .addComponent(cbModule, 0, 200, Short.MAX_VALUE))))))
+                                .addComponent(btnSaveClass)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnSearchClass))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnCreateClass)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(tfClassID)
+                                            .addComponent(tfClassName)
+                                            .addComponent(cbModule, 0, 200, Short.MAX_VALUE))))
+                                .addGap(18, 18, 18)
+                                .addComponent(btnClear))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(318, 318, 318)
                         .addComponent(jLabel1)))
@@ -189,29 +294,49 @@ public class CreateClass extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfClassID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfClassName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(cbModule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCreateClass)
+                    .addComponent(btnClear))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(btnSearchClass)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSaveClass)
+                .addGap(13, 13, 13))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCreateClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateClassActionPerformed
+        createClass();
+    }//GEN-LAST:event_btnCreateClassActionPerformed
+
+    private void btnSaveClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveClassActionPerformed
+        saveResult();
+    }//GEN-LAST:event_btnSaveClassActionPerformed
+
+    private void btnSearchClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchClassActionPerformed
+        searchClass();
+    }//GEN-LAST:event_btnSearchClassActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clearTextFieldAndResult();
+    }//GEN-LAST:event_btnClearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -239,9 +364,11 @@ public class CreateClass extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnCreateClass;
+    private javax.swing.JButton btnSaveClass;
     private javax.swing.JButton btnSearchClass;
     private javax.swing.JComboBox<String> cbModule;
-    private javax.swing.JButton jButton1;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -250,9 +377,9 @@ public class CreateClass extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTable tableClass;
+    private javax.swing.JTextField tfClassID;
+    private javax.swing.JTextField tfClassName;
     // End of variables declaration//GEN-END:variables
 }
