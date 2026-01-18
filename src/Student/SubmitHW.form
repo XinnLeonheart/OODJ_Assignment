@@ -139,11 +139,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="CANCEL"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancel2ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="java.awt.Checkbox" name="btnConfirmation">
       <Properties>
         <Property name="label" type="java.lang.String" value="I agree"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnConfirmationMouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

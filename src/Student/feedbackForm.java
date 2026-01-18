@@ -220,7 +220,7 @@ private void loadTxtFileIntoComboBox(){
 
     private void btnCheckIndividualResult1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckIndividualResult1ActionPerformed
         // TODO add your handling code here:
-        AssessmentMark checkMark = new AssessmentMark();
+        Assessment checkMark = new Assessment();
         checkMark. setVisible(true);
         dispose();
     }//GEN-LAST:event_btnCheckIndividualResult1ActionPerformed

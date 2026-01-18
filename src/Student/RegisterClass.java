@@ -4,6 +4,7 @@
  */
 package Student;
 
+import Student.Registration;
 /**
  *
  * @author Xenia Thor
@@ -37,9 +38,7 @@ public class RegisterClass extends javax.swing.JFrame {
         btnNext1 = new javax.swing.JButton();
         btnNext = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        btnCheckIndividualResult = new javax.swing.JButton();
-        btnComment = new javax.swing.JButton();
-        btnRegisterClass = new javax.swing.JButton();
+        btnBack = new java.awt.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(20, 10, 69));
@@ -49,13 +48,18 @@ public class RegisterClass extends javax.swing.JFrame {
         label1.setFont(new java.awt.Font("Gabriola", 1, 24)); // NOI18N
         label1.setText("My Course");
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setText("Module");
 
-        jLabel2.setText("jLabel1");
+        jLabel2.setText("Submit Assignment");
 
         jLabel3.setText("jLabel1");
 
         btnNext2.setText("NEXT");
+        btnNext2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNext2ActionPerformed(evt);
+            }
+        });
 
         btnNext1.setText("NEXT");
         btnNext1.addActionListener(new java.awt.event.ActionListener() {
@@ -73,30 +77,11 @@ public class RegisterClass extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(181, 172, 252));
 
-        btnCheckIndividualResult.setBackground(new java.awt.Color(181, 172, 252));
-        btnCheckIndividualResult.setText("Check Individual Result");
-        btnCheckIndividualResult.setBorder(null);
-        btnCheckIndividualResult.addActionListener(new java.awt.event.ActionListener() {
+        btnBack.setActionCommand("BACK");
+        btnBack.setLabel("BACK");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCheckIndividualResultActionPerformed(evt);
-            }
-        });
-
-        btnComment.setBackground(new java.awt.Color(181, 172, 252));
-        btnComment.setText("Comment");
-        btnComment.setBorder(null);
-        btnComment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCommentActionPerformed(evt);
-            }
-        });
-
-        btnRegisterClass.setBackground(new java.awt.Color(219, 218, 224));
-        btnRegisterClass.setText("Register Class");
-        btnRegisterClass.setBorder(null);
-        btnRegisterClass.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegisterClassActionPerformed(evt);
+                btnBackActionPerformed(evt);
             }
         });
 
@@ -104,21 +89,20 @@ public class RegisterClass extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnRegisterClass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnCheckIndividualResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-            .addComponent(btnComment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(btnRegisterClass, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnCheckIndividualResult, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnComment, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(349, Short.MAX_VALUE))
         );
+
+        btnBack.getAccessibleContext().setAccessibleName("BACK");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +110,7 @@ public class RegisterClass extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -141,17 +125,17 @@ public class RegisterClass extends javax.swing.JFrame {
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnNext2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(16, 16, 16)
                 .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,7 +151,6 @@ public class RegisterClass extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnNext2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -181,26 +164,19 @@ public class RegisterClass extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnNext1ActionPerformed
 
-    private void btnCheckIndividualResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckIndividualResultActionPerformed
+    private void btnNext2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNext2ActionPerformed
         // TODO add your handling code here:
-        AssessmentMark checkMark = new AssessmentMark();
-        checkMark. setVisible(true);
+        SubmitHW submit = new SubmitHW();
+        submit. setVisible(true);
         dispose();
-    }//GEN-LAST:event_btnCheckIndividualResultActionPerformed
+    }//GEN-LAST:event_btnNext2ActionPerformed
 
-    private void btnCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentActionPerformed
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        feedbackForm comment = new feedbackForm();
-        comment.setVisible (true);
+        Registration registration = new Registration();
+        registration. setVisible(true);
         dispose();
-    }//GEN-LAST:event_btnCommentActionPerformed
-
-    private void btnRegisterClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterClassActionPerformed
-        // TODO add your handling code here:
-        RegisterClass registerClass = new RegisterClass();
-        registerClass. setVisible(true);
-        dispose();
-    }//GEN-LAST:event_btnRegisterClassActionPerformed
+    }//GEN-LAST:event_btnBackActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,12 +204,10 @@ public class RegisterClass extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCheckIndividualResult;
-    private javax.swing.JButton btnComment;
+    private java.awt.Button btnBack;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnNext1;
     private javax.swing.JButton btnNext2;
-    private javax.swing.JButton btnRegisterClass;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

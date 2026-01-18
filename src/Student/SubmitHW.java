@@ -4,11 +4,23 @@
  */
 package Student;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.io.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  *
  * @author Xenia Thor
  */
 public class SubmitHW extends javax.swing.JFrame {
+    
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SubmitHW.class.getName());
 
@@ -17,6 +29,16 @@ public class SubmitHW extends javax.swing.JFrame {
      */
     public SubmitHW() {
         initComponents();
+        
+        btnOk2.setEnabled(false);
+        
+        //add itemListener to the checkbox
+        btnConfirmation.addItemListener (new ItemListener() {
+            @Override
+            public void itemStateChanged (ItemEvent e) {
+                btnOk2.setEnabled (btnConfirmation.getState());
+            }
+        });
     }
 
     /**
@@ -84,8 +106,18 @@ public class SubmitHW extends javax.swing.JFrame {
         });
 
         btnCancel2.setText("CANCEL");
+        btnCancel2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancel2ActionPerformed(evt);
+            }
+        });
 
         btnConfirmation.setLabel("I agree");
+        btnConfirmation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnConfirmationMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,11 +157,21 @@ public class SubmitHW extends javax.swing.JFrame {
 
     private void btnOk2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOk2ActionPerformed
         // TODO add your handling code here:
-        JDialogSubmitHW submit = new JDialogSubmitHW (this,true);
+        JconfirmationSubmitHW SubmitHW = new JconfirmationSubmitHW (this,true);
         
         //show the dialog
-        submit.setVisible (true);
+        SubmitHW.setVisible (true);
+        
     }//GEN-LAST:event_btnOk2ActionPerformed
+
+    private void btnConfirmationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmationMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnConfirmationMouseClicked
+
+    private void btnCancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancel2ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnCancel2ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -191,7 +191,7 @@ public class Assessment extends javax.swing.JFrame {
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         // TODO add your handling code here:
-        AssessmentMark mark = new AssessmentMark();
+        Assessment mark = new Assessment();
 
     }//GEN-LAST:event_btnPrintActionPerformed
 
