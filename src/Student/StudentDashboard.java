@@ -21,7 +21,7 @@ import java.nio.file.*;
 
 
 
-import Student.AssessmentMark;
+import Student.Assessment;
 import Student.EditProfile;
 import Student.RegisterClass;
 import Main.LogIn2;
@@ -236,15 +236,15 @@ public class StudentDashboard extends javax.swing.JFrame {
 
     private void btnCheckIndividualResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckIndividualResultActionPerformed
         // TODO add your handling code here:
-        AssessmentMark checkMark = new AssessmentMark();
+        Assessment checkMark = new Assessment();
         checkMark. setVisible(true);
         dispose();
     }//GEN-LAST:event_btnCheckIndividualResultActionPerformed
 
     private void btnRegisterClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterClassActionPerformed
         // TODO add your handling code here:
-        RegisterClass registerClass = new RegisterClass();
-        registerClass. setVisible(true);
+        Registration registration = new Registration();
+        registration. setVisible(true);
         dispose();
     }//GEN-LAST:event_btnRegisterClassActionPerformed
 
