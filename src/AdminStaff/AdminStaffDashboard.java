@@ -4,6 +4,8 @@
  */
 package AdminStaff;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author Xinn
@@ -18,7 +20,51 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     public AdminStaffDashboard() {
         initComponents();
     }
+    
+    public void goToManageAccountDashboard(JFrame currentFrame) {
+        ManageAccount manageAccountDashboard = new ManageAccount();
+        manageAccountDashboard.setVisible(true);
+        manageAccountDashboard.setLocationRelativeTo(null); // center on screen
 
+        // Close the current frame
+        if (currentFrame != null) {
+            currentFrame.dispose();
+        }
+    }
+
+    public void goToAssignLecturerDashboard(JFrame currentFrame) {
+        AssignLecturer assignLecturerDashboard = new AssignLecturer();
+        assignLecturerDashboard.setVisible(true);
+        assignLecturerDashboard.setLocationRelativeTo(null); // center on screen
+
+        // Close the current frame
+        if (currentFrame != null) {
+            currentFrame.dispose();
+        }
+    }
+    
+    public void goToCreateClassDashboard(JFrame currentFrame) {
+        CreateClass createClassDashboard = new CreateClass();
+        createClassDashboard.setVisible(true);
+        createClassDashboard.setLocationRelativeTo(null); // center on screen
+
+        // Close the current frame
+        if (currentFrame != null) {
+            currentFrame.dispose();
+        }
+    }
+    
+    public void goToAPUGradingSystem(JFrame currentFrame) {
+        DefineGradingSystem defineGradingSystemDashboard = new DefineGradingSystem();
+        defineGradingSystemDashboard.setVisible(true);
+        defineGradingSystemDashboard.setLocationRelativeTo(null); // center on screen
+
+        // Close the current frame
+        if (currentFrame != null) {
+            currentFrame.dispose();
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,30 +74,45 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAccountManage = new javax.swing.JButton();
+        btnAssignLecturer = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btnGradingSystem = new javax.swing.JButton();
+        btnCreateClass = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Account Manage");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAccountManage.setText("Account Manage");
+        btnAccountManage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAccountManageActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Assign Lecturers");
+        btnAssignLecturer.setText("Assign Lecturers");
+        btnAssignLecturer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAssignLecturerActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
         jLabel1.setText("Administrator Dashboard");
 
-        jButton5.setText("Grading System");
+        btnGradingSystem.setText("Grading System");
+        btnGradingSystem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGradingSystemActionPerformed(evt);
+            }
+        });
 
-        jButton6.setText("Create Classes");
+        btnCreateClass.setText("Create Classes");
+        btnCreateClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateClassActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Log Out");
 
@@ -67,13 +128,13 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(btnAccountManage)
                                 .addGap(40, 40, 40)
-                                .addComponent(jButton2)
+                                .addComponent(btnAssignLecturer)
                                 .addGap(38, 38, 38)
-                                .addComponent(jButton5)))
+                                .addComponent(btnGradingSystem)))
                         .addGap(45, 45, 45)
-                        .addComponent(jButton6)))
+                        .addComponent(btnCreateClass)))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -83,10 +144,10 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(74, 74, 74)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAssignLecturer, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGradingSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCreateClass, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAccountManage, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addGap(26, 26, 26))
@@ -95,9 +156,21 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnAccountManageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountManageActionPerformed
+        goToManageAccountDashboard(this);
+    }//GEN-LAST:event_btnAccountManageActionPerformed
+
+    private void btnAssignLecturerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignLecturerActionPerformed
+        goToAssignLecturerDashboard(this);
+    }//GEN-LAST:event_btnAssignLecturerActionPerformed
+
+    private void btnGradingSystemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGradingSystemActionPerformed
+        goToAPUGradingSystem(this);
+    }//GEN-LAST:event_btnGradingSystemActionPerformed
+
+    private void btnCreateClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateClassActionPerformed
+        goToCreateClassDashboard(this);
+    }//GEN-LAST:event_btnCreateClassActionPerformed
 
     /**
      * @param args the command line arguments
@@ -125,11 +198,11 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnAccountManage;
+    private javax.swing.JButton btnAssignLecturer;
+    private javax.swing.JButton btnCreateClass;
+    private javax.swing.JButton btnGradingSystem;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
