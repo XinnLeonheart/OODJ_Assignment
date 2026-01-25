@@ -180,7 +180,7 @@ public class ManageAccount extends javax.swing.JFrame {
         }
     }
 
-    public void makeSureTfAreFilled(){
+    public boolean makeSureTfAreFilled(){
        if (
                 (tfAccountID == null || tfAccountID.getText().trim().isEmpty()) ||
                 (tfUserName == null || tfUserName.getText().trim().isEmpty()) ||
@@ -192,14 +192,21 @@ public class ManageAccount extends javax.swing.JFrame {
                 (tfAge == null || tfAge.getText().trim().isEmpty()) ||
                 (cbRole == null || cbRole.getSelectedItem() == null || cbRole.getSelectedItem().toString().trim().isEmpty())) {
 
-                JOptionPane.showMessageDialog(null, "You must fill in all the fields to register an account!");
-                return;
-            }        
-    }
+                JOptionPane.showMessageDialog(
+                this,
+                "You must fill in all the fields!",
+                "Missing Information",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+        return true;
+    }     
+        
     
-    public void makeSureNameNotContainNumber(){
+    public boolean makeSureNameNotContainNumber() {
         String name = tfName.getText().trim();
-            
+
         if (!name.matches("[a-zA-Z ]+")) {
             JOptionPane.showMessageDialog(
                 this,
@@ -207,43 +214,55 @@ public class ManageAccount extends javax.swing.JFrame {
                 "Invalid Name",
                 JOptionPane.ERROR_MESSAGE
             );
-            tfName.setText("");
             tfName.requestFocus();
+            return false;
         }
+        return true;
     }
+
     
-    public void makeSurePhoneNoIsNumeric(){
+    public boolean makeSurePhoneNoIsNumeric(){
         String phoneNum = tfPhoneNum.getText().trim();
         try {
             Integer.parseInt(phoneNum);
+            return true;
         }
         catch (NumberFormatException error){
             JOptionPane.showMessageDialog(null, "Please enter a valid phone number!");
-            return;
+            tfPhoneNum.requestFocus();
+            return false;
         }        
     }
     
-    public void makeSureAgeIsNumeric(){
+    public boolean makeSureAgeIsNumeric(){
         String age = tfAge.getText().trim();
         try {
             Integer.parseInt(age);
+            return true;
         }
         catch (NumberFormatException error){
             JOptionPane.showMessageDialog(null, "Please enter a valid number!");
-            return;
+            tfAge.requestFocus();
+            return false;
         }        
     }
     
-    public void makeSuretfEmailNotContainDomain(){
+    public boolean makeSuretfEmailNotContainDomain(){
         String registerEmail = tfEmail.getText().trim();
+        
         if (registerEmail.contains("@")){
-            JOptionPane.showMessageDialog(null, "Please DO NOT include an email domain!\n"
-                    + "Example: 'tp123456' instead of 'tp123456@mail.uni.edu.my'");
-            return;
+            JOptionPane.showMessageDialog(null,
+                    "Please DO NOT include an email domain!\n"
+                    + "Example: 'tp123456' instead of 'tp123456@mail.uni.edu.my'",
+                    "Invalid Email Format",
+                    JOptionPane.ERROR_MESSAGE);
+            tfEmail.requestFocus();  
+            return false;
         }        
+        return true;
     }
     
-    public void makeSureAccIDNotSame() {
+    public boolean makeSureAccIDNotSame() {
         String newAccID = tfAccountID.getText().trim();
 
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
@@ -263,15 +282,17 @@ public class ManageAccount extends javax.swing.JFrame {
                         JOptionPane.ERROR_MESSAGE
                     );
                     autoGenerateAccID();
-                    return;
+                    return false;
                 }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error checking Account ID");
+            return false;
         }
+        return true;
     }
     
-    public void makeSureUsernameNotSame() {
+    public boolean makeSureUsernameNotSame() {
         String newUsername = tfUserName.getText().trim();
 
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
@@ -292,15 +313,17 @@ public class ManageAccount extends javax.swing.JFrame {
                     );
                     tfUserName.setText("");
                     tfUserName.requestFocus();
-                    return;
+                    return false;
                 }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error checking username");
+            return false;
         }
+        return true;
     }
         
-    public void makeSureEmailNotSame() {
+    public boolean makeSureEmailNotSame() {
         String newEmail = tfEmail.getText().trim() + tfEmailDomain.getText().trim();
 
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
@@ -321,12 +344,14 @@ public class ManageAccount extends javax.swing.JFrame {
                     );
                     tfEmail.setText("");
                     tfEmail.requestFocus();
-                    return;
+                    return false;
                 }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error checking email");
+            return false;
         }
+        return true;
     }
     
     public void autoGenerateAccID() {
@@ -367,24 +392,36 @@ public class ManageAccount extends javax.swing.JFrame {
     }
     
     public void createAccount() throws IOException{       
-        makeSureTfAreFilled();
-        makeSureNameNotContainNumber();
-        makeSurePhoneNoIsNumeric();
-        makeSureAgeIsNumeric();
-        makeSuretfEmailNotContainDomain();   
-        makeSureAccIDNotSame();
-        makeSureUsernameNotSame();
-        makeSureEmailNotSame();
+        if (!makeSureTfAreFilled()) return;
+        if (!makeSureNameNotContainNumber()) return;
+        if (!makeSurePhoneNoIsNumeric()) return;
+        if (!makeSureAgeIsNumeric()) return;
+        if (!makeSuretfEmailNotContainDomain()) return;
+        if (!makeSureAccIDNotSame()) return;
+        if (!makeSureUsernameNotSame()) return;
+        if (!makeSureEmailNotSame()) return;
+        
+        String confirmAccountInformation =
+            "Please confirm the following account details:\n\n"
+          + "Account ID   : "       + tfAccountID.getText() + "\n"
+          + "Username   : "         + tfUserName.getText() + "\n"
+          + "Name           : "     + tfName.getText() + "\n"
+          + "Email            : "   + tfEmail.getText() + "\n"
+          + "Password    : "        + tfPassword.getText() + "\n"
+          + "Phone No.   : "        + tfPhoneNum.getText() + "\n"
+          + "Gender        : "      + cbGender.getSelectedItem() + "\n"
+          + "Age               : "  + tfAge.getText() + "\n"
+          + "Role             : "   + cbRole.getSelectedItem() + "\n";
         
         // Double confirmation to create the account
-        int result = JOptionPane.showConfirmDialog(null,
-                "Are you sure to create this account?",
-                "Confirm Create",
+        int result = JOptionPane.showConfirmDialog(this,
+                confirmAccountInformation,
+                "Confirm Create Account",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         
+        // Once user choose "YES", the account will be created
         if (result == JOptionPane.YES_OPTION){
-            // Write information into text file
             writeAccInfoIntoDatabase();
             JOptionPane.showMessageDialog(null, "Account has been created successfully!");
             clearAllTextFields();
@@ -591,6 +628,7 @@ public class ManageAccount extends javax.swing.JFrame {
         tfAccountID = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         cbRole = new javax.swing.JComboBox<>();
+        btnBack = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -697,12 +735,17 @@ public class ManageAccount extends javax.swing.JFrame {
 
         cbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin Staff", "Academic Leader", "Lecturer", "Student" }));
 
+        btnBack.setText("Back");
+        btnBack.addActionListener(this::btnBackActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(btnBack)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(451, 451, 451))
             .addGroup(layout.createSequentialGroup()
@@ -769,14 +812,19 @@ public class ManageAccount extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnBack)))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfAccountID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -886,6 +934,10 @@ public class ManageAccount extends javax.swing.JFrame {
         displayInformation();
     }//GEN-LAST:event_tableAccountDetailMouseClicked
 
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        NavigateToAdminDashboard.goToAdminStaffDashboard(this);
+    }//GEN-LAST:event_btnBackActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -912,6 +964,7 @@ public class ManageAccount extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnEdit;
