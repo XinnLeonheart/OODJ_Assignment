@@ -34,7 +34,8 @@ public class CreateClass extends javax.swing.JFrame {
     public CreateClass() {
         initComponents();
         displayModuleOnTable();
-        generateClassID();
+        autoGenerateClassID();
+        loadTableClass();
     }
     
     static class ClassInfo {
@@ -49,7 +50,7 @@ public class CreateClass extends javax.swing.JFrame {
         }
     }
     
-    public void generateClassID(){
+    public void autoGenerateClassID(){
         
         String prefix = "C";
         int nextID = 1;
@@ -81,7 +82,7 @@ public class CreateClass extends javax.swing.JFrame {
             tfClassID.setText(prefix + String.format("%03d", nextID));
 
         } catch (IOException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this,
                 "Error generating Class ID!");
         }
     }
@@ -100,6 +101,7 @@ public class CreateClass extends javax.swing.JFrame {
         refreshTable();
 
         JOptionPane.showMessageDialog(this, "Class created successfully!");
+        autoGenerateClassID();
     }
     
     public void saveResult(){
@@ -130,6 +132,7 @@ public class CreateClass extends javax.swing.JFrame {
             }
 
             JOptionPane.showMessageDialog(this, "Class information updated successfully!");
+            autoGenerateClassID();
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving class data!");
@@ -150,18 +153,106 @@ public class CreateClass extends javax.swing.JFrame {
     }
     
     public void searchClass() {
-        String query = jTextField3.getText().trim().toLowerCase();
+        String searchText = tfSearchClass.getText().trim().toLowerCase();
         DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
         model.setRowCount(0);
+        
+        if (searchText.isEmpty()) {
+            tfSearchClass.setText("");
+            JOptionPane.showMessageDialog(this, "Please enter Account ID or Name to search.");
+            loadTableClass();
+            return;
+        }
+                
+        try (BufferedReader br = new BufferedReader (new FileReader(CLASS_FILE))){
+            String line;
 
-        for (ClassInfo c : classList) {
-            if (c.classID.toLowerCase().contains(query) ||
-                c.className.toLowerCase().contains(query)) {
-                model.addRow(new Object[]{c.classID, c.className, c.module});
+            while ((line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) continue;
+
+            String[] data = line.split(";");
+
+            String classID = data[0].toLowerCase();
+            String className = data[1].toLowerCase();
+
+            if (classID.contains(searchText) || className.contains(searchText)) {
+                model.addRow(new Object[]{
+                        data[0], data[1], data[2], "Delete"
+                });
             }
+        }
+
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "No matching account found.");
+        }                       
+        } catch (IOException e){
+            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());           
         }
     }
     
+    public void getClassInformation(){
+        int selectedRow = tableClass.getSelectedRow();
+        
+        if (selectedRow != -1){
+            btnCreateClass.setEnabled(false);
+            tfClassID.setText((String) tableClass.getValueAt(selectedRow, 0));
+            
+            String accID = (String) tableClass.getValueAt(selectedRow, 0);
+            String userName = (String) tableClass.getValueAt(selectedRow, 1);
+            String module = (String) tableClass.getValueAt(selectedRow, 1);
+            
+            tfClassID.setText(accID);
+            tfClassName.setText(userName);
+            cbModule.setSelectedItem(module);
+  
+        }
+        else {
+            btnCreateClass.setEnabled(true);
+        }
+    }
+    
+    public void loadTableClass(){
+        
+        DefaultTableModel model =
+            (DefaultTableModel) tableClass.getModel();
+        model.setRowCount(0);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(CLASS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] data = line.split(";");
+
+                model.addRow(new Object[]{
+                    data[0], data[1], data[2], "Delete"
+                });
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading accounts");
+        }
+    }
+    
+    public void displaySelectedRowFromTable() {
+        tableClass.getSelectionModel().addListSelectionListener(e -> {
+            // Ignore adjusting events
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = tableClass.getSelectedRow();
+                if (selectedRow >= 0) {
+                    String classID = tableClass.getValueAt(selectedRow, 0).toString();
+                    String className = tableClass.getValueAt(selectedRow, 1).toString();
+                    String module = tableClass.getValueAt(selectedRow, 2).toString();
+
+                    tfClassID.setText(classID);
+                    tfClassName.setText(className);
+                    cbModule.setSelectedItem(module);
+
+                    btnCreateClass.setEnabled(false);
+                }
+            }
+        });
+    }
+        
     private void refreshTable() {
         DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
         model.setRowCount(0);
@@ -172,10 +263,8 @@ public class CreateClass extends javax.swing.JFrame {
     }
     
     public void clearTextFieldAndResult(){
-        generateClassID();
+        autoGenerateClassID();
         tfClassName.setText("");
-        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
-            model.setRowCount(0);
     }
     
     /**
@@ -189,6 +278,7 @@ public class CreateClass extends javax.swing.JFrame {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
+        jSpinner1 = new javax.swing.JSpinner();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableClass = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -199,11 +289,12 @@ public class CreateClass extends javax.swing.JFrame {
         tfClassName = new javax.swing.JTextField();
         btnSearchClass = new javax.swing.JButton();
         btnCreateClass = new javax.swing.JButton();
-        jTextField3 = new javax.swing.JTextField();
+        tfSearchClass = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         cbModule = new javax.swing.JComboBox<>();
         btnSaveClass = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
 
         jScrollPane2.setViewportView(jEditorPane1);
 
@@ -231,6 +322,10 @@ public class CreateClass extends javax.swing.JFrame {
 
         jLabel4.setText("Class Name:");
 
+        tfClassID.setEditable(false);
+        tfClassID.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        tfClassID.setEnabled(false);
+
         btnSearchClass.setText("Search");
         btnSearchClass.addActionListener(this::btnSearchClassActionPerformed);
 
@@ -247,6 +342,9 @@ public class CreateClass extends javax.swing.JFrame {
         btnClear.setText("Clear");
         btnClear.addActionListener(this::btnClearActionPerformed);
 
+        btnBack.setText("Back");
+        btnBack.addActionListener(this::btnBackActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -262,11 +360,12 @@ public class CreateClass extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel2)
                                         .addGap(29, 29, 29)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tfSearchClass, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnSearchClass))
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(btnCreateClass)
                                     .addGroup(layout.createSequentialGroup()
@@ -282,15 +381,22 @@ public class CreateClass extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(btnClear))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(318, 318, 318)
+                        .addContainerGap()
+                        .addComponent(btnBack)
+                        .addGap(237, 237, 237)
                         .addComponent(jLabel1)))
                 .addGap(0, 50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnBack)))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -311,7 +417,7 @@ public class CreateClass extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(btnSearchClass)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfSearchClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -337,6 +443,10 @@ public class CreateClass extends javax.swing.JFrame {
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         clearTextFieldAndResult();
     }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        NavigateToAdminDashboard.goToAdminStaffDashboard(this);
+    }//GEN-LAST:event_btnBackActionPerformed
 
     /**
      * @param args the command line arguments
@@ -364,6 +474,7 @@ public class CreateClass extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnCreateClass;
     private javax.swing.JButton btnSaveClass;
@@ -377,9 +488,10 @@ public class CreateClass extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable tableClass;
     private javax.swing.JTextField tfClassID;
     private javax.swing.JTextField tfClassName;
+    private javax.swing.JTextField tfSearchClass;
     // End of variables declaration//GEN-END:variables
 }
