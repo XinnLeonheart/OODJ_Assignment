@@ -33,6 +33,11 @@ public class ManageAccount extends javax.swing.JFrame {
         tfEmailDomain.setEditable(false);
         autoGenerateAccID();
         loadAccountTable();
+        tableAccountDetail.getSelectionModel().addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) {
+            displayInformation();
+        }
+    });
         tableAccountDetail.getColumnModel()
         .getColumn(9)
         .setCellRenderer(new ButtonRenderer());
@@ -45,14 +50,15 @@ public class ManageAccount extends javax.swing.JFrame {
     }
     
     public void searchAccount(){
-        String searchText = tfSearch.getText().trim();
+        String searchText = tfSearch.getText().trim().toLowerCase();
         DefaultTableModel model = (DefaultTableModel) tableAccountDetail.getModel();
         model.setRowCount(0);
         String searchAcc = tfSearch.getText().trim();
             
         if (searchAcc.isEmpty()) {
                 tfSearch.setText("");
-                JOptionPane.showMessageDialog(null, "Please enter Account ID or Name to search.");
+                JOptionPane.showMessageDialog(this, "Please enter Account ID or Name to search.");
+                loadAccountTable();
                 return;
         }    
 
@@ -60,35 +66,25 @@ public class ManageAccount extends javax.swing.JFrame {
             String line;
 
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(";");
-                String accID = data[0].trim();
-                String userName = data[1].trim();
-                String name = data[2].trim();
-                String email = data[3].trim();
-                String password = data[4].trim();
-                String phoneNum = data[5].trim();
-                String gender = data[6].trim();
-                String age = data[7].trim();
-                String accRole = data[8].trim();
+            if (line.trim().isEmpty()) continue;
 
-                String searchableText = accID + " " + userName;
+            String[] data = line.split(";");
 
-                // Check if the search text matches the order in the searchable text
-                if (isOrderedMatch(searchText.toLowerCase(), searchableText.toLowerCase())) {
-                    // Add the matching record to the table
-                    model.addRow(new Object[]{
-                        accID,
-                        userName,
-                        name,
-                        email,
-                        password,
-                        phoneNum,
-                        gender,
-                        age,
-                        accRole,
-                        "Delete"});
-                }          
-            }                       
+            String accID = data[0].toLowerCase();
+            String username = data[1].toLowerCase();
+
+            if (accID.contains(searchText) || username.contains(searchText)) {
+                model.addRow(new Object[]{
+                        data[0], data[1], data[2], data[3], data[4],
+                        data[5], data[6], data[7], data[8], "Delete"
+                });
+            }
+        }
+
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "No matching account found.");
+        }                       
         } catch (IOException e){
             JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());           
         }
@@ -421,19 +417,9 @@ public class ManageAccount extends javax.swing.JFrame {
         if (!makeSureUsernameNotSame()) return;
         if (!makeSureEmailNotSame()) return;
         
-        String confirmAccountInformation =
-            "Please confirm the following account details:\n\n"
-          + "Account ID   : "       + tfAccountID.getText() + "\n"
-          + "Username   : "         + tfUserName.getText() + "\n"
-          + "Name           : "     + tfName.getText() + "\n"
-          + "Email            : "   + tfEmail.getText() + "\n"
-          + "Password    : "        + tfPassword.getText() + "\n"
-          + "Phone No.   : "        + tfPhoneNum.getText() + "\n"
-          + "Gender        : "      + cbGender.getSelectedItem() + "\n"
-          + "Age               : "  + cbAge.getSelectedItem() + "\n"
-          + "Role             : "   + cbRole.getSelectedItem() + "\n";
-        
         // Double confirmation to create the account
+        String confirmAccountInformation = buildConfirmAccountInformation();
+        
         int result = JOptionPane.showConfirmDialog(this,
                 confirmAccountInformation,
                 "Confirm Create Account",
@@ -443,6 +429,7 @@ public class ManageAccount extends javax.swing.JFrame {
         // Once user choose "YES", the account will be created
         if (result == JOptionPane.YES_OPTION){
             writeAccInfoIntoDatabase();
+            loadAccountTable();
             JOptionPane.showMessageDialog(null, "Account has been created successfully!");
             clearAllTextFields();
             autoGenerateAccID();
@@ -454,6 +441,20 @@ public class ManageAccount extends javax.swing.JFrame {
         }
     }
         
+    private String buildConfirmAccountInformation() {
+        return
+            "Please confirm the following account details:\n\n"
+          + "Account ID   : " + tfAccountID.getText() + "\n"
+          + "Username     : " + tfUserName.getText() + "\n"
+          + "Name         : " + tfName.getText() + "\n"
+          + "Email        : " + tfEmail.getText() + tfEmailDomain.getText() + "\n"
+          + "Password     : " + tfPassword.getText() + "\n"
+          + "Phone No.    : " + tfPhoneNum.getText() + "\n"
+          + "Gender       : " + cbGender.getSelectedItem() + "\n"
+          + "Age          : " + cbAge.getSelectedItem() + "\n"
+          + "Role         : " + cbRole.getSelectedItem() + "\n";
+    }
+
     public void deleteAccount(String accID) throws IOException{
         // Double confirmation to delete the account
         int result = JOptionPane.showConfirmDialog(null,
@@ -496,44 +497,129 @@ public class ManageAccount extends javax.swing.JFrame {
     }
     
     public void editAccount()throws IOException {
-        String newID = tfAccountID.getText().trim();
-        String newUserName = tfUserName.getText().trim();
-        String newEmail = tfEmail.getText().trim();
-        String newPassword = tfPassword.getText().trim()+ tfEmailDomain.getText().trim();
-        String newPhoneNo = tfPhoneNum.getText().trim();
-        String newGender = cbGender.getSelectedItem().toString().trim();
-        String newAge = cbAge.getSelectedItem().toString().trim();
-        String newRole = cbRole.getSelectedItem().toString().trim();
-        
         int selectedRow = tableAccountDetail.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(null, "No record selected for editing!");
                 return;
             }        
         
-        makeSureTfAreFilled();
-        makeSurePhoneNoIsValid();
-        makeSuretfEmailNotContainDomain();
-        makeSureAccIDNotSame();
-        makeSureUsernameNotSame();
-        makeSureEmailNotSame();
+            if (!isDataChanged(selectedRow)) {
+            JOptionPane.showMessageDialog(this,
+                    "No changes detected.\nPlease modify at least one field before editing.",
+                    "No Changes",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+            
+        if (!makeSureTfAreFilled()) return;
+        if (!makeSurePhoneNoIsValid()) return;
+        if (!makeSuretfEmailNotContainDomain()) return;
+        if (!makeSureUsernameNotSameOnEdit()) return;
+        if (!makeSureEmailNotSameOnEdit()) return;
+
         
         // Double confirmation to edit the account information
+        String confirmAccountInformation = buildConfirmAccountInformation();
+        
         int result = JOptionPane.showConfirmDialog(null,
-                "Are you sure to edit the information of this account?",
-                "Confirm Delete",
+                confirmAccountInformation,
+                "Confirm Edit Account",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         
         if (result == JOptionPane.YES_OPTION){
             editAccInfoInDatabase();
-            JOptionPane.showMessageDialog(null, "Account information has been edited successfully!");
+            JOptionPane.showMessageDialog(this, "Account information has been edited successfully!");
         }
         else{
-                JOptionPane.showMessageDialog(null, "Account information edit action has been cancelled");
-                return;  
+                JOptionPane.showMessageDialog(this, "Account information edit action has been cancelled");  
         }
                     
+    }
+    
+    public boolean isDataChanged(int selectedRow) {
+
+        String originalAccID   = tableAccountDetail.getValueAt(selectedRow, 0).toString();
+        String originalUsername= tableAccountDetail.getValueAt(selectedRow, 1).toString();
+        String originalName    = tableAccountDetail.getValueAt(selectedRow, 2).toString();
+        String originalEmail   = tableAccountDetail.getValueAt(selectedRow, 3).toString();
+        String originalPassword= tableAccountDetail.getValueAt(selectedRow, 4).toString();
+        String originalPhone   = tableAccountDetail.getValueAt(selectedRow, 5).toString();
+        String originalGender  = tableAccountDetail.getValueAt(selectedRow, 6).toString();
+        String originalAge     = tableAccountDetail.getValueAt(selectedRow, 7).toString();
+        String originalRole    = tableAccountDetail.getValueAt(selectedRow, 8).toString();
+
+        String newEmail = tfEmail.getText().trim() + tfEmailDomain.getText().trim();
+
+        return !(
+            originalAccID.equals(tfAccountID.getText().trim()) &&
+            originalUsername.equals(tfUserName.getText().trim()) &&
+            originalName.equals(tfName.getText().trim()) &&
+            originalEmail.equals(newEmail) &&
+            originalPassword.equals(tfPassword.getText().trim()) &&
+            originalPhone.equals(tfPhoneNum.getText().trim()) &&
+            originalGender.equals(cbGender.getSelectedItem().toString()) &&
+            originalAge.equals(cbAge.getSelectedItem().toString()) &&
+            originalRole.equals(cbRole.getSelectedItem().toString())
+        );
+    }
+    
+    public boolean makeSureUsernameNotSameOnEdit() {
+        String newUsername = tfUserName.getText().trim();
+        String currentAccID = tfAccountID.getText().trim();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split(";");
+                String accID = data[0].trim();
+                String existingUsername = data[1].trim();
+
+                if (!accID.equals(currentAccID) &&
+                    existingUsername.equalsIgnoreCase(newUsername)) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Username already exists!",
+                            "Duplicate Username",
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean makeSureEmailNotSameOnEdit() {
+        String newEmail = tfEmail.getText().trim() + tfEmailDomain.getText().trim();
+        String currentAccID = tfAccountID.getText().trim();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split(";");
+                String accID = data[0].trim();
+                String existingEmail = data[3].trim();
+
+                if (!accID.equals(currentAccID) &&
+                    existingEmail.equalsIgnoreCase(newEmail)) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Email already exists!",
+                            "Duplicate Email",
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
     
     public void displayInformation(){
@@ -586,11 +672,10 @@ public class ManageAccount extends javax.swing.JFrame {
         cbGender.setSelectedItem(0);
         cbAge.setSelectedItem(0);
         cbRole.setSelectedIndex(0);
-        DefaultTableModel model = (DefaultTableModel) tableAccountDetail.getModel();
-        model.setRowCount(0);
     }
 
     public void loadAccountTable() {
+        displayInformation();
         DefaultTableModel model =
             (DefaultTableModel) tableAccountDetail.getModel();
         model.setRowCount(0);
@@ -807,11 +892,14 @@ public class ManageAccount extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jLabel11)
                                     .addGap(36, 36, 36)
-                                    .addComponent(tfPhoneNum, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(cbAge, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tfPhoneNum, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(18, 18, 18)
                         .addComponent(tfEmailDomain, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnClear)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel10)
@@ -825,13 +913,9 @@ public class ManageAccount extends javax.swing.JFrame {
                                 .addComponent(jLabel9)
                                 .addComponent(jLabel6))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(cbAge, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
-                                    .addComponent(btnEdit)))
+                            .addComponent(btnClear)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnEdit)
                             .addGap(18, 18, 18)
                             .addComponent(btnCreate)
                             .addGap(434, 434, 434))))
@@ -874,30 +958,32 @@ public class ManageAccount extends javax.swing.JFrame {
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(cbAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEdit)
-                    .addComponent(btnCreate))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(btnEdit)
+                            .addComponent(btnCreate)
+                            .addComponent(btnClear)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearchAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSearchAcc))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnClear)
-                .addGap(18, 18, 18))
+                .addGap(47, 47, 47))
         );
 
         pack();
@@ -930,7 +1016,6 @@ public class ManageAccount extends javax.swing.JFrame {
 
     private void btnSearchAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchAccActionPerformed
         searchAccount();
-        displayInformation();
     }//GEN-LAST:event_btnSearchAccActionPerformed
 
     private void tfEmailDomainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfEmailDomainActionPerformed
@@ -955,7 +1040,7 @@ public class ManageAccount extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void tableAccountDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAccountDetailMouseClicked
-        displayInformation();
+
     }//GEN-LAST:event_tableAccountDetailMouseClicked
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -1040,19 +1125,36 @@ class ButtonRenderer extends javax.swing.JButton
 }
 
 class ButtonEditor extends javax.swing.DefaultCellEditor {
-    private javax.swing.JButton button;
-    private int row;
-    private javax.swing.JTable table;
+
+    private final javax.swing.JButton button;
+    private String accID;
+    private final javax.swing.JTable table;
 
     public ButtonEditor(javax.swing.JCheckBox checkBox, javax.swing.JTable table) {
-    super(checkBox);
-    this.table = table;
+        super(checkBox);
+        this.table = table;
 
-    button = new javax.swing.JButton("Delete");
-    button.setBackground(java.awt.Color.RED);
-    button.setForeground(java.awt.Color.WHITE);
+        button = new javax.swing.JButton("Delete");
+        button.setBackground(java.awt.Color.RED);
+        button.setForeground(java.awt.Color.WHITE);
 
-    button.addActionListener(e -> fireEditingStopped());
+        button.addActionListener(e -> {
+            fireEditingStopped(); // stop cell editing first
+
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                try {
+                    ManageAccount parent =
+                        (ManageAccount) javax.swing.SwingUtilities
+                            .getWindowAncestor(table);
+                    parent.deleteAccount(accID);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(
+                        table,
+                        "Error deleting account:\n" + ex.getMessage()
+                    );
+                }
+            });
+        });
     }
 
     @Override
@@ -1060,25 +1162,12 @@ class ButtonEditor extends javax.swing.DefaultCellEditor {
             javax.swing.JTable table, Object value,
             boolean isSelected, int row, int column) {
 
-        this.row = row;
+        accID = table.getValueAt(row, 0).toString();
         return button;
     }
 
     @Override
     public Object getCellEditorValue() {
-        String accID = table.getValueAt(row, 0).toString();
-
-        try {
-            ManageAccount parent =
-                (ManageAccount) javax.swing.SwingUtilities.getWindowAncestor(button);
-            parent.deleteAccount(accID);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(button,
-                    "Error deleting account:\n" + e.getMessage());
-        }
-
-        return "Delete";
+        return "Delete"; // NEVER do logic here
     }
-}    
-
-
+}

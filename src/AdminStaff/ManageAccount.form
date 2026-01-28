@@ -65,7 +65,12 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                                  <Component id="tfPhoneNum" min="-2" pref="318" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbAge" min="-2" pref="150" max="-2" attributes="0"/>
+                                      <Component id="cbGender" min="-2" pref="150" max="-2" attributes="0"/>
+                                      <Component id="cbRole" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
+                                      <Component id="tfPhoneNum" min="-2" pref="318" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -73,7 +78,6 @@
                       <Component id="tfEmailDomain" min="-2" pref="118" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                      <Component id="btnClear" min="-2" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" alignment="0" pref="1020" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
@@ -89,15 +93,9 @@
                               <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="cbAge" min="-2" pref="150" max="-2" attributes="0"/>
-                              <Component id="cbGender" min="-2" pref="150" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cbRole" min="-2" pref="150" max="-2" attributes="0"/>
-                                  <EmptySpace pref="167" max="32767" attributes="0"/>
-                                  <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="btnClear" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="btnCreate" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="434" max="-2" attributes="0"/>
@@ -154,34 +152,37 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cbGender" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnCreate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnClear" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="cbGender" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="cbAge" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="cbRole" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cbAge" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cbRole" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnEdit" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnCreate" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="46" max="32767" attributes="0"/>
+              <EmptySpace pref="53" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="tfSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnSearchAcc" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                  <Component id="btnSearchAcc" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="200" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="btnClear" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
