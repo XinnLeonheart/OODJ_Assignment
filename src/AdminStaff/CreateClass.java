@@ -15,39 +15,26 @@ import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class CreateClass extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CreateClass.class.getName());
-    private ArrayList<ClassInfo> classList = new ArrayList<>();
 
     /**
      * Creates new form CreateClass
      */
     
     private static final String CLASS_FILE = "src/TextFiles/Class.txt";
-    
+    private String originalTableData = "";
+
     public CreateClass() {
         initComponents();
-        displayModuleOnTable();
+        displayModuleSelectionOnTable();
         autoGenerateClassID();
-        loadTableClass();
-    }
-    
-    static class ClassInfo {
-        String classID;
-        String className;
-        String module;
-
-        ClassInfo(String classID, String className, String module) {
-            this.classID = classID;
-            this.className = className;
-            this.module = module;
-        }
+        loadTableClass();        
     }
     
     public void autoGenerateClassID(){
@@ -75,7 +62,7 @@ public class CreateClass extends javax.swing.JFrame {
             }
 
             if (lastID != null && lastID.startsWith(prefix)) {
-                int number = Integer.parseInt(lastID.substring(3));
+                int number = Integer.parseInt(lastID.substring(1));
                 nextID = number + 1;
             }
 
@@ -95,16 +82,28 @@ public class CreateClass extends javax.swing.JFrame {
         if (classID.isEmpty() || className.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all fields");
             return;
+        }      
+        
+         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CLASS_FILE, true))) {
+            bw.write(classID + ";" + className + ";" + module);
+            bw.newLine();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving class data");
+            return;
         }
 
-        classList.add(new ClassInfo(classID, className, module));
-        refreshTable();
-
         JOptionPane.showMessageDialog(this, "Class created successfully!");
+        
+        loadTableClass();
+        tfClassName.setText("");
         autoGenerateClassID();
     }
     
     public void saveResult(){
+        if (tableClass.isEditing()) {
+            tableClass.getCellEditor().stopCellEditing();
+        }
+            
        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
 
         if (model.getRowCount() == 0) {
@@ -112,34 +111,35 @@ public class CreateClass extends javax.swing.JFrame {
             return;
         }
 
-        classList.clear(); // reset memory list
+        StringBuilder currentData = new StringBuilder();
 
-        // Read updated data from JTable
         for (int i = 0; i < model.getRowCount(); i++) {
-            String classID = model.getValueAt(i, 0).toString();
-            String className = model.getValueAt(i, 1).toString();
-            String module = model.getValueAt(i, 2).toString();
-
-            classList.add(new ClassInfo(classID, className, module));
+            currentData.append(
+                model.getValueAt(i, 0) + ";" +
+                model.getValueAt(i, 1) + ";" +
+                model.getValueAt(i, 2)
+            ).append("\n");
         }
 
-        // Overwrite file with updated data
+        // Compare with original data
+        if (currentData.toString().equals(originalTableData)) {
+            JOptionPane.showMessageDialog(this, "No changes detected.");
+            return;
+        }
+
+        // Save changes
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CLASS_FILE))) {
-
-            for (ClassInfo c : classList) {
-                bw.write(c.classID + ";" + c.className + ";" + c.module);
-                bw.newLine();
-            }
-
-            JOptionPane.showMessageDialog(this, "Class information updated successfully!");
-            autoGenerateClassID();
-
+            bw.write(currentData.toString());
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving class data!");
+            JOptionPane.showMessageDialog(this, "Error saving changes.");
+            return;
         }
+
+        JOptionPane.showMessageDialog(this, "Changes saved successfully!");
+        loadTableClass();
     }
     
-    public void displayModuleOnTable() {
+    public void displayModuleSelectionOnTable() {
         String[] modules = {
             "English", "Mathematics", "Science", "Statistics",
             "Physics", "Biology", "Chemistry", "Accounting"
@@ -150,6 +150,20 @@ public class CreateClass extends javax.swing.JFrame {
         tableClass.getColumnModel()
                   .getColumn(2)   // Module column index
                   .setCellEditor(new DefaultCellEditor(moduleComboBox));
+        
+        tableClass.getColumnModel()
+          .getColumn(2)
+          .setCellRenderer(new DefaultTableCellRenderer() {
+              @Override
+              public java.awt.Component getTableCellRendererComponent(
+                      JTable table, Object value, boolean isSelected,
+                      boolean hasFocus, int row, int column) {
+
+                  JComboBox<String> rendererCombo = new JComboBox<>(modules);
+                  rendererCombo.setSelectedItem(value);
+                  return rendererCombo;
+              }
+          });
     }
     
     public void searchClass() {
@@ -189,35 +203,15 @@ public class CreateClass extends javax.swing.JFrame {
         } catch (IOException e){
             JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());           
         }
-    }
+    }    
     
-    public void getClassInformation(){
-        int selectedRow = tableClass.getSelectedRow();
-        
-        if (selectedRow != -1){
-            btnCreateClass.setEnabled(false);
-            tfClassID.setText((String) tableClass.getValueAt(selectedRow, 0));
-            
-            String accID = (String) tableClass.getValueAt(selectedRow, 0);
-            String userName = (String) tableClass.getValueAt(selectedRow, 1);
-            String module = (String) tableClass.getValueAt(selectedRow, 1);
-            
-            tfClassID.setText(accID);
-            tfClassName.setText(userName);
-            cbModule.setSelectedItem(module);
-  
-        }
-        else {
-            btnCreateClass.setEnabled(true);
-        }
-    }
-    
-    public void loadTableClass(){
-        
+    public void loadTableClass(){    
         DefaultTableModel model =
             (DefaultTableModel) tableClass.getModel();
         model.setRowCount(0);
 
+        StringBuilder snapshot = new StringBuilder();
+        
         try (BufferedReader br = new BufferedReader(new FileReader(CLASS_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -225,43 +219,19 @@ public class CreateClass extends javax.swing.JFrame {
                 String[] data = line.split(";");
 
                 model.addRow(new Object[]{
-                    data[0], data[1], data[2], "Delete"
+                    data[0], data[1], data[2]
                 });
+                
+                snapshot.append(line).append("\n");
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error loading accounts");
         }
-    }
-    
-    public void displaySelectedRowFromTable() {
-        tableClass.getSelectionModel().addListSelectionListener(e -> {
-            // Ignore adjusting events
-            if (!e.getValueIsAdjusting()) {
-                int selectedRow = tableClass.getSelectedRow();
-                if (selectedRow >= 0) {
-                    String classID = tableClass.getValueAt(selectedRow, 0).toString();
-                    String className = tableClass.getValueAt(selectedRow, 1).toString();
-                    String module = tableClass.getValueAt(selectedRow, 2).toString();
-
-                    tfClassID.setText(classID);
-                    tfClassName.setText(className);
-                    cbModule.setSelectedItem(module);
-
-                    btnCreateClass.setEnabled(false);
-                }
-            }
-        });
-    }
         
-    private void refreshTable() {
-        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
-        model.setRowCount(0);
-
-        for (ClassInfo c : classList) {
-            model.addRow(new Object[]{c.classID, c.className, c.module});
-        }
-    }
+        originalTableData = snapshot.toString();
+    }           
     
+    // Refresh classID and clear text in the tfClassName
     public void clearTextFieldAndResult(){
         autoGenerateClassID();
         tfClassName.setText("");
@@ -310,8 +280,19 @@ public class CreateClass extends javax.swing.JFrame {
             new String [] {
                 "Class ID", "Class Name", "Module"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tableClass);
+        if (tableClass.getColumnModel().getColumnCount() > 0) {
+            tableClass.getColumnModel().getColumn(0).setResizable(false);
+        }
 
         jLabel1.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
         jLabel1.setText("Create Classes");
