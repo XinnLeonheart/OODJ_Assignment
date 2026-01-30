@@ -33,11 +33,13 @@ public class ManageAccount extends javax.swing.JFrame {
         tfEmailDomain.setEditable(false);
         autoGenerateAccID();
         loadAccountTable();
+        
         tableAccountDetail.getSelectionModel().addListSelectionListener(e -> {
         if (!e.getValueIsAdjusting()) {
-            displayInformation();
-        }
-    });
+                getAccountInformation();
+            }
+        });
+        
         tableAccountDetail.getColumnModel()
         .getColumn(9)
         .setCellRenderer(new ButtonRenderer());
@@ -45,7 +47,13 @@ public class ManageAccount extends javax.swing.JFrame {
         tableAccountDetail.getColumnModel()
                 .getColumn(9)
                 .setCellEditor(new ButtonEditor(new javax.swing.JCheckBox(), tableAccountDetail));
-
+        
+        cbRole.addItemListener(e -> {
+            if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+                updateAgeBasedOnRole();
+            }
+        });
+        updateAgeBasedOnRole();
 
     }
     
@@ -55,11 +63,11 @@ public class ManageAccount extends javax.swing.JFrame {
         model.setRowCount(0);
         String searchAcc = tfSearch.getText().trim();
             
-        if (searchAcc.isEmpty()) {
-                tfSearch.setText("");
-                JOptionPane.showMessageDialog(this, "Please enter Account ID or Name to search.");
-                loadAccountTable();
-                return;
+        if (searchText.isEmpty()) {
+            tfSearch.setText("");
+            JOptionPane.showMessageDialog(this, "Please enter Account ID or Name to search.");
+            loadAccountTable();
+            return;
         }    
 
         try (BufferedReader br = new BufferedReader (new FileReader(ACCOUNT_FILE))){
@@ -260,9 +268,6 @@ public class ManageAccount extends javax.swing.JFrame {
         // Valid international phone number
         return true;
     }
-
-
-    
     
     public boolean makeSuretfEmailNotContainDomain(){
         String registerEmail = tfEmail.getText().trim();
@@ -512,12 +517,12 @@ public class ManageAccount extends javax.swing.JFrame {
         }
             
         if (!makeSureTfAreFilled()) return;
+        if (!makeSureNameNotContainNumber()) return;
         if (!makeSurePhoneNoIsValid()) return;
         if (!makeSuretfEmailNotContainDomain()) return;
         if (!makeSureUsernameNotSameOnEdit()) return;
-        if (!makeSureEmailNotSameOnEdit()) return;
+        if (!makeSureEmailNotSameOnEdit()) return;       
 
-        
         // Double confirmation to edit the account information
         String confirmAccountInformation = buildConfirmAccountInformation();
         
@@ -622,7 +627,7 @@ public class ManageAccount extends javax.swing.JFrame {
         return true;
     }
     
-    public void displayInformation(){
+    public void getAccountInformation(){
         int selectedRow = tableAccountDetail.getSelectedRow();
         
         if (selectedRow != -1){
@@ -662,20 +667,33 @@ public class ManageAccount extends javax.swing.JFrame {
         }
     }
     
-    public void clearAllTextFields(){
+    public void clearAllTextFields() {
         tableAccountDetail.clearSelection();
+
         tfUserName.setText("");
         tfName.setText("");
         tfEmail.setText("");
         tfPassword.setText("");
         tfPhoneNum.setText("");
-        cbGender.setSelectedItem(0);
-        cbAge.setSelectedItem(0);
-        cbRole.setSelectedIndex(0);
+        
+        if (cbGender.getItemCount() > 0) {
+            cbGender.setSelectedIndex(0);
+        }
+
+        if (cbRole.getItemCount() > 0) {
+            cbRole.setSelectedIndex(0);
+        }
+
+        if (cbAge.getItemCount() > 0) {
+            cbAge.setSelectedIndex(0);
+        }
+        
+        tfSearch.setText("");        
     }
 
+
     public void loadAccountTable() {
-        displayInformation();
+        getAccountInformation();
         DefaultTableModel model =
             (DefaultTableModel) tableAccountDetail.getModel();
         model.setRowCount(0);
@@ -695,7 +713,29 @@ public class ManageAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error loading accounts");
         }
     }
+    
+    private void updateAgeBasedOnRole() {
+        String selectedRole = cbRole.getSelectedItem().toString();
 
+        cbAge.removeAllItems(); // clear old ages
+
+        int startAge;
+        int endAge;
+
+        if (selectedRole.equals("Student")) {
+            startAge = 13;
+            endAge = 40;
+        } else {
+            // Academic Leader, Lecturer, Admin Staff
+            startAge = 18;
+            endAge = 75;
+        }
+
+        for (int age = startAge; age <= endAge; age++) {
+            cbAge.addItem(String.valueOf(age));
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -756,7 +796,7 @@ public class ManageAccount extends javax.swing.JFrame {
         jLabel11.setText("Phone Number");
 
         jLabel1.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
-        jLabel1.setText("Account Manage ");
+        jLabel1.setText("Manage Account ");
 
         tfUserName.addActionListener(this::tfUserNameActionPerformed);
 
@@ -850,8 +890,6 @@ public class ManageAccount extends javax.swing.JFrame {
         jLabel12.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
         jLabel12.setText("Please enter 00 instead of (+)");
 
-        cbAge.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50" }));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -890,36 +928,45 @@ public class ManageAccount extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jLabel11)
-                                    .addGap(36, 36, 36)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel11)
+                                            .addGap(36, 36, 36))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel8)
+                                            .addGap(107, 107, 107))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel9)
+                                            .addGap(85, 85, 85))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(jLabel6)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(cbAge, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(tfPhoneNum, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(18, 18, 18)
-                        .addComponent(tfEmailDomain, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel10)
-                            .addGap(17, 17, 17)
-                            .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSearchAcc))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel8)
-                                .addComponent(jLabel9)
-                                .addComponent(jLabel6))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnClear)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnEdit)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnCreate)
-                            .addGap(434, 434, 434))))
-                .addGap(40, 40, 40))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfEmailDomain, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCreate)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEdit)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(17, 17, 17)
+                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnSearchAcc)
+                                    .addComponent(btnClear))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(40, 40, 40))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -959,24 +1006,21 @@ public class ManageAccount extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(btnEdit)
-                            .addComponent(btnCreate)
-                            .addComponent(btnClear)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCreate)
+                    .addComponent(btnClear)
+                    .addComponent(jLabel6)
+                    .addComponent(btnEdit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1037,6 +1081,7 @@ public class ManageAccount extends javax.swing.JFrame {
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         clearAllTextFields();
+        loadAccountTable();
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void tableAccountDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAccountDetailMouseClicked
@@ -1168,6 +1213,6 @@ class ButtonEditor extends javax.swing.DefaultCellEditor {
 
     @Override
     public Object getCellEditorValue() {
-        return "Delete"; // NEVER do logic here
+        return "Delete"; 
     }
 }
