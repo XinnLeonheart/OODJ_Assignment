@@ -9,6 +9,7 @@ package AdminStaff;
  * @author lolipop
  */
 
+import Navigation.NavigateToDashboard;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -426,7 +427,7 @@ public class CreateClass extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        NavigateToAdminDashboard.goToAdminStaffDashboard(this);
+        NavigateToDashboard.goToAdminStaffDashboard(this);
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**

@@ -4,6 +4,8 @@
  */
 package AdminStaff;
 
+import Navigation.NavigateToDashboard;
+
 /**
  *
  * @author User
@@ -206,7 +208,7 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        NavigateToAdminDashboard.goToAdminStaffDashboard(this);
+        NavigateToDashboard.goToAdminStaffDashboard(this);
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**

@@ -4,6 +4,7 @@
  */
 package AdminStaff;
 
+import Navigation.NavigateToLogInPage;
 import javax.swing.JFrame;
 
 /**
@@ -79,11 +80,11 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnGradingSystem = new javax.swing.JButton();
         btnCreateClass = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnLogOut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnAccountManage.setText("Account Manage");
+        btnAccountManage.setText("Manage Account");
         btnAccountManage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAccountManageActionPerformed(evt);
@@ -114,16 +115,21 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Log Out");
+        btnLogOut.setText("Log Out");
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogOutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(68, 68, 68)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3)
+                    .addComponent(btnLogOut)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
@@ -135,7 +141,7 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
                                 .addComponent(btnGradingSystem)))
                         .addGap(45, 45, 45)
                         .addComponent(btnCreateClass)))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +155,7 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
                     .addComponent(btnCreateClass, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAccountManage, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(btnLogOut)
                 .addGap(26, 26, 26))
         );
 
@@ -171,6 +177,10 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     private void btnCreateClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateClassActionPerformed
         goToCreateClassDashboard(this);
     }//GEN-LAST:event_btnCreateClassActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        NavigateToLogInPage.goToLogInPage(this);
+    }//GEN-LAST:event_btnLogOutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,7 +212,7 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     private javax.swing.JButton btnAssignLecturer;
     private javax.swing.JButton btnCreateClass;
     private javax.swing.JButton btnGradingSystem;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnLogOut;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
