@@ -20,8 +20,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultCellEditor;
 import java.util.Map;
+import javax.swing.JTable;
 import java.util.LinkedHashMap;
-
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class AssignLecturer extends javax.swing.JFrame {
     
@@ -36,11 +37,17 @@ public class AssignLecturer extends javax.swing.JFrame {
 
     public AssignLecturer() {
         initComponents();
+        tableAssignLecturer.setSelectionMode(
+            javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+        );
         displayAcademicLeaderListOnTable();
+        loadLecturerInformationOnTable();
     }
     
     public void displayAcademicLeaderListOnTable() {
         JComboBox<String> academicLeaderCombo = new JComboBox<>();
+        academicLeaderCombo.addItem("-- Select Academic Leader --");
+
 
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
             String line;
@@ -49,7 +56,6 @@ public class AssignLecturer extends javax.swing.JFrame {
                 if (line.trim().isEmpty()) continue;
 
                 String[] data = line.split(";");
-
                 String name = data[2].trim();
                 String role = data[8].trim();
 
@@ -60,16 +66,133 @@ public class AssignLecturer extends javax.swing.JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this,
                 "Error loading academic leaders");
+            return;
         }
 
         // Column 3 = Academic Leader dropdown-list
-        tableAssignLecturer
-            .getColumnModel()
-            .getColumn(3)
-            .setCellEditor(new DefaultCellEditor(academicLeaderCombo));
+        tableAssignLecturer.getColumnModel()
+                .getColumn(3) // Academic Leader column (index 3)
+                .setCellEditor(new DefaultCellEditor(academicLeaderCombo));
+
+        // Set JComboBox as renderer for column 3
+        tableAssignLecturer.getColumnModel()
+                .getColumn(3)
+                .setCellRenderer(new DefaultTableCellRenderer() {
+                    @Override
+                    public java.awt.Component getTableCellRendererComponent(
+                            JTable table, Object value, boolean isSelected,
+                            boolean hasFocus, int row, int column) {
+
+                        JComboBox<String> rendererCombo = new JComboBox<>();
+                        rendererCombo.addItem("-- Select Academic Leader --");
+
+                        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+                            String line;
+                            while ((line = br.readLine()) != null) {
+                                if (line.trim().isEmpty()) continue;
+
+                                String[] data = line.split(";");
+                                String name = data[2].trim();
+                                String role = data[8].trim();
+
+                                if (role.equalsIgnoreCase("Academic Leader")) {
+                                    rendererCombo.addItem(name);
+                                }
+                            }
+                        } catch (IOException e) {
+                            // ignore for rendering
+                        }
+
+                        rendererCombo.setSelectedItem(value);
+
+                        if (isSelected) {
+                            rendererCombo.setBackground(table.getSelectionBackground());
+                        }
+
+                        return rendererCombo;
+                    }
+                });
+
+    }
+
+    public void loadLecturerInformationOnTable(){
+        DefaultTableModel model = (DefaultTableModel) tableAssignLecturer.getModel();
+        model.setRowCount(0); // Clear table first
+        
+        Map<String, String> assignedLeaders = new LinkedHashMap<>();
+
+        File lecturerFile = new File(LECTURER_FILE);
+        if (lecturerFile.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(lecturerFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+
+                    String[] data = line.split(";");
+                    // data[0] = Lecturer ID
+                    // data[3] = Academic Leader
+                    assignedLeaders.put(data[0].trim(), data[3].trim());
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                    "Error loading lecturer assignments");
+            }
+        }
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split(";");
+
+                String accID = data[0].trim();
+                String name = data[2].trim();
+                String email = data[3].trim();
+                String role = data[8].trim();
+
+                // Only show lecturers
+                if (role.equalsIgnoreCase("Lecturer")) {
+                    String academicLeader = assignedLeaders.getOrDefault(accID,
+                        "-- Select Academic Leader --"
+                );
+                                    
+                    model.addRow(new Object[] {
+                        accID,
+                        name,
+                        email,
+                        academicLeader    // Academic Leader ComboBox column
+                    });
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading lecturers");
+        }
+
+        displayAcademicLeaderListOnTable(); // Set up the combo box in the column
     }
     
     public void searchLecturer() {
+        java.util.List<Integer> matchedRows = new java.util.ArrayList<>();
+        
+        Map<String, String> assignedLeaders = new LinkedHashMap<>();
+
+        File file = new File(LECTURER_FILE);
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+
+                    String[] data = line.split(";");
+                    assignedLeaders.put(data[0].trim(), data[3].trim());
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                    "Error loading lecturer assignments");
+            }
+        }
+
         String searchText = tfSearchLecturer.getText().trim().toLowerCase();
         DefaultTableModel model =
             (DefaultTableModel) tableAssignLecturer.getModel();
@@ -77,13 +200,14 @@ public class AssignLecturer extends javax.swing.JFrame {
 
         if (searchText.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "Please enter Lecturer ID or Name");
+                "Please enter Lecturer ID or Name to search.");
             return;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
             String line;
 
+            // Match Lecturers
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
@@ -103,17 +227,68 @@ public class AssignLecturer extends javax.swing.JFrame {
                         accID,
                         name,
                         email,
-                        ""   // Academic Leader ComboBox column
+                        assignedLeaders.getOrDefault(accID,
+                            "-- Select Academic Leader --")    // Academic Leader ComboBox column
                     });
+                    
+                    matchedRows.add(model.getRowCount() - 1);
+                    
                 }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this,
                 "Error searching lecturer");
+            return;
         }
         
+        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+
+            String line;
+
+            // Second pass: remaining lecturers
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split(";");
+
+                String accID = data[0].trim();
+                String name = data[2].trim();
+                String email = data[3].trim();
+                String role = data[8].trim();
+
+                if (role.equalsIgnoreCase("Lecturer") &&
+                    !(accID.toLowerCase().contains(searchText)
+                    || name.toLowerCase().contains(searchText))) {
+
+                    model.addRow(new Object[]{
+                        accID,
+                        name,
+                        email,
+                        assignedLeaders.getOrDefault(accID,
+                            "-- Select Academic Leader --")    // Academic Leader ComboBox column
+                    });
+                }
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading lecturers");
+        }
+
         displayAcademicLeaderListOnTable();
 
+            if (!matchedRows.isEmpty()) {
+                tableAssignLecturer.clearSelection();
+
+                for (int row : matchedRows) {
+                    tableAssignLecturer.addRowSelectionInterval(row, row);
+                }
+
+                // Scroll to first matched row
+                int firstRow = matchedRows.get(0);
+                tableAssignLecturer.scrollRectToVisible(
+                    tableAssignLecturer.getCellRect(firstRow, 0, true)
+                );
+            }
     }
 
     
@@ -149,7 +324,10 @@ public class AssignLecturer extends javax.swing.JFrame {
             String lecturerEmail = model.getValueAt(i, 2).toString();
             Object leaderObj = model.getValueAt(i, 3);
 
-            if (leaderObj == null || leaderObj.toString().isEmpty()) {
+            if (leaderObj == null ||
+                leaderObj.toString().isEmpty() ||
+                leaderObj.toString().equals("-- Select Academic Leader --")) {
+
                 JOptionPane.showMessageDialog(this,
                     "Please assign Academic Leader for all lecturers");
                 return;
@@ -184,10 +362,8 @@ public class AssignLecturer extends javax.swing.JFrame {
         }
     }
     
-    public void clearTextFieldAndTable(){
+    public void clearTextField(){
         tfSearchLecturer.setText("");
-        DefaultTableModel model = (DefaultTableModel) tableAssignLecturer.getModel();
-            model.setRowCount(0);
     }
     
     /**
@@ -315,7 +491,7 @@ public class AssignLecturer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSearchCourseActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        clearTextFieldAndTable();
+        clearTextField();
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
