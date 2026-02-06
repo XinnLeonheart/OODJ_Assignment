@@ -6,6 +6,9 @@ import AdminStaff.AdminStaffDashboard;
 import Lecturer.LecturerDashboard;
 import Student.StudentDashboard;
 import javax.swing.JOptionPane;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -18,8 +21,10 @@ import javax.swing.JOptionPane;
  */
 
 public class LogIn2 extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LogIn2.class.getName());
+    public static String loggedInID;
+    public static String loggedInName;
 
     /**
      * Creates new form LogIn2
@@ -120,35 +125,59 @@ public class LogIn2 extends javax.swing.JFrame {
         // TODO add your handling code here:
         String EmailOrUsername = tfEmailOrUsername.getText();
         String Password = tfPassword.getText();
+        String filePath = "src/TextFiles/Account";
+        boolean found = false;
 
-        if (EmailOrUsername.equals("admin@apu.mail.edu.my") || EmailOrUsername.equals("admin")){
-            AdminStaffDashboard adminStaff = new AdminStaffDashboard();
-            adminStaff.setVisible(true);
-            dispose();
-        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
 
-        else if (EmailOrUsername.equals("academicleader@apu.mail.edu.my") || EmailOrUsername.equals("academicleader")){
-            AcademicLeaderDashboard academicLeader = new AcademicLeaderDashboard();
-            academicLeader.setVisible(true);
-            dispose();
-        }
-
-        else if (EmailOrUsername.equals("lecturer@apu.mail.edu.my") || EmailOrUsername.equals("lecturer")){
-            LecturerDashboard lecturer = new LecturerDashboard();
-            lecturer.setVisible(true);
-            dispose();
-        }
-
-        else if (EmailOrUsername.equals("student@apu.mail.edu.my") || EmailOrUsername.equals("student")){
-            StudentDashboard student = new StudentDashboard();
-            student.setVisible(true);
-            dispose();
-        }
-
-        else
-        {
-            JOptionPane.showMessageDialog(null, "Wrong Email or Password, Try Again");
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length >= 9) {
+                    String username = data[1].trim();
+                    String email = data[3].trim();
+                    String password = data[4].trim();
+                    String role = data[8].trim().toLowerCase();
+                    if (EmailOrUsername.equals(email) || EmailOrUsername.equals(username)) {
+                        found = true;
+                        if (Password.equals(password)) {
+                            loggedInID = data[0].trim();
+                            loggedInName = data[2].trim();
+                            if (role.equals("admin")) {
+                                AdminStaffDashboard adminStaff = new AdminStaffDashboard();
+                                adminStaff.setVisible(true);
+                                dispose();
+                                break;
+                            } else if (role.equals("academicleader")) {
+                                AcademicLeaderDashboard academicLeader = new AcademicLeaderDashboard();
+                                academicLeader.setVisible(true);
+                                dispose();
+                                break;
+                            } else if (role.equals("lecturer")) {
+                                LecturerDashboard lecturer = new LecturerDashboard();
+                                lecturer.setVisible(true);
+                                dispose();
+                                break;
+                            } else if (role.equals("student")) {
+                                StudentDashboard student = new StudentDashboard();
+                                student.setVisible(true);
+                                dispose();
+                                break;
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Invalid password.");
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());
             return;
+        }
+
+        if (!found) {
+            JOptionPane.showMessageDialog(null, "Invalid username or password.");
         }
 
     }//GEN-LAST:event_btnLogInActionPerformed

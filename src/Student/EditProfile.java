@@ -6,6 +6,15 @@ package Student;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.util.ArrayList;
+
+import Main.LogIn2;
 
 
 /**
@@ -21,7 +30,39 @@ public class EditProfile extends javax.swing.JFrame {
      */
     public EditProfile() {
         initComponents();
+        loadStudentData();
+        txtName.setEditable(false);
+        txtStudentID.setEditable(false);
+        txtGender.setEditable(false);
+        txtAge.setEditable(false);
     }
+    
+    private void loadStudentData(){
+        // Load student data from file
+        String filePath = "src/TextFiles/Account";
+        String targetID = LogIn2.loggedInID;
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length >= 9 && data[0].trim().equals(targetID)) {
+                    txtStudentID.setText(data[0]);
+                    txtName.setText(data[2]);
+                    txtEmail.setText(data[3]);
+                    txtPassword.setText(data[4]);
+                    txtPhoneNum.setText(data[5]);
+                    txtGender.setText(data[6]);
+                    txtAge.setText(data[7]);
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading file: " + e);
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -50,30 +91,32 @@ public class EditProfile extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtEmail = new java.awt.TextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtAge = new java.awt.TextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        txtPassword.setText("password");
         txtPassword.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 passwordMouseClicked(evt);
             }
         });
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPasswordActionPerformed(evt);
             }
         });
 
-        txtName.setText("student name");
         txtName.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNameActionPerformed(evt);
             }
         });
 
-        txtPhoneNum.setText("phone number");
         txtPhoneNum.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPhoneNumActionPerformed(evt);
             }
@@ -81,6 +124,7 @@ public class EditProfile extends javax.swing.JFrame {
 
         btnSave.setLabel("Save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -88,6 +132,7 @@ public class EditProfile extends javax.swing.JFrame {
 
         btnCANCEL.setLabel("Cancel");
         btnCANCEL.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCANCELActionPerformed(evt);
             }
@@ -122,6 +167,7 @@ public class EditProfile extends javax.swing.JFrame {
 
         txtGender.setText("gender");
         txtGender.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtGenderActionPerformed(evt);
             }
@@ -129,6 +175,7 @@ public class EditProfile extends javax.swing.JFrame {
 
         txtStudentID.setText("student ID");
         txtStudentID.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtStudentIDActionPerformed(evt);
             }
@@ -142,8 +189,19 @@ public class EditProfile extends javax.swing.JFrame {
 
         jLabel1.setText("Name: ");
 
+        jLabel7.setText("Age: ");
+
+        txtAge.setText("age");
+        txtAge.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAgeActionPerformed(evt);
+            }
+        });
+
         txtEmail.setText("email");
         txtEmail.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtEmailActionPerformed(evt);
             }
@@ -177,9 +235,13 @@ public class EditProfile extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCANCEL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 33, Short.MAX_VALUE))
         );
@@ -211,10 +273,14 @@ public class EditProfile extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtStudentID, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtGender, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCANCEL, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSave, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCANCEL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18))
         );
 
@@ -225,14 +291,13 @@ public class EditProfile extends javax.swing.JFrame {
         // TODO add your handling code here:
         StudentDashboard main = new StudentDashboard();
         main.setVisible(true);
-        this.dispose();       
-
-    // Open the student dashboard
-    new StudentDashboard().setVisible(true);
+        this.dispose(); 
+        
     }//GEN-LAST:event_btnCANCELActionPerformed
 
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
         // TODO add your handling code here:
+        
         
     }//GEN-LAST:event_txtNameActionPerformed
 
@@ -250,8 +315,53 @@ public class EditProfile extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
-        
+        String filePath = "src/TextFiles/Account";
+        String studentID = txtStudentID.getText().trim();
+        boolean found = false;
+
+        ArrayList<String> lines = new ArrayList<>();
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage());
+            return;
+        }
+
+        for (int i = 0; i < lines.size(); i++) {
+            String[] data = lines.get(i).split(";");
+            if (data.length >= 9 && data[0].trim().equals(studentID)) {
+                String updatedLine = data[0] + ";" + data[1] + ";" + txtName.getText() + ";"
+                        + txtEmail.getText() + ";" + txtPassword.getText() + ";"
+                        + txtPhoneNum.getText() + ";" + txtGender.getText() + ";"
+                        + data[7] + ";" + data[8];
+                lines.set(i, updatedLine);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            JOptionPane.showMessageDialog(this, "Student ID not found.");
+            return;
+        }
+
+        try (FileWriter fw = new FileWriter(filePath)) {
+            for (String l : lines) {
+                fw.write(l + System.lineSeparator());
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage());
+        }
+
+        JOptionPane.showMessageDialog(this, "Profile updated successfully!");
+        StudentDashboard main = new StudentDashboard();
+        main.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void txtGenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGenderActionPerformed
@@ -261,6 +371,10 @@ public class EditProfile extends javax.swing.JFrame {
     private void txtStudentIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStudentIDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtStudentIDActionPerformed
+
+    private void txtAgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAgeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAgeActionPerformed
 
     private void passwordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passwordMouseClicked
         // TODO add your handling code here:
@@ -302,8 +416,10 @@ public class EditProfile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private java.awt.Label label2;
+    private java.awt.TextField txtAge;
     private java.awt.TextField txtEmail;
     private java.awt.TextField txtGender;
     private java.awt.TextField txtName;

@@ -5,52 +5,81 @@
 package Student;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
-
+import Main.LogIn2;
 
 /**
  *
  * @author Xenia Thor
  */
 public class feedbackForm extends javax.swing.JFrame {
-    
-    //variables
-    private JComboBox<String> JComboBox1;
-    
-    //constructor
-    public feedbackForm(){
-        initComponents();
-        loadTxtFileIntoComboBox();
-    }
-    
-private void loadTxtFileIntoComboBox(){
-    String filePath ="Class.txt";
-    jComboBox1.removeAllItems();
-    
-    try (BufferedReader br = new BufferedReader (new FileReader (filePath))){
-        String line;
-        while ((line = br.readLine()) != null) {
-            if (!line.trim().isEmpty()){
-                String[] part= line.split ("|");
-                jComboBox1.addItem(part[0].trim());
-            }
-        }
-    } catch (IOException e){
-        JOptionPane.showMessageDialog (this, e.getMessage());
-    }
-//    jComboBox1.setModel (model);
-}
-    
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(feedbackForm.class.getName());
 
-    /**
-     * Creates new form feedbackForm
-     */
+    private java.util.Map<String, String> classNameToIdMap = new java.util.HashMap<>();
+
+    public feedbackForm(){
+        initComponents();
+        btnTitle.setText("Choose which class to comment on");
+        loadClassesIntoComboBox();
+        setLocationRelativeTo(null);
+    }
+
+    private void loadClassesIntoComboBox(){
+        jComboBox1.removeAllItems();
+        classNameToIdMap.clear();
+
+        String studentID = LogIn2.loggedInID;
+        if (studentID == null || studentID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please log in first!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        java.util.ArrayList<String> registeredClassIDs = new java.util.ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Registration"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.trim().split(";");
+                if (parts.length >= 2 && parts[0].trim().equals(studentID)) {
+                    for (int i = 1; i < parts.length; i++) {
+                        registeredClassIDs.add(parts[i].trim());
+                    }
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            // Registration file doesn't exist
+        }
+
+        if (registeredClassIDs.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You have not registered for any classes yet.\nPlease register for classes first.", "No Classes", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] part = line.split(";");
+                    String classId = part[0].trim();
+                    String className = part[1].trim();
+
+                    if (registeredClassIDs.contains(classId)) {
+                        jComboBox1.addItem(className);
+                        classNameToIdMap.put(className, classId);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
+        if (jComboBox1.getItemCount() > 0) {
+            // No module loading needed
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -61,33 +90,19 @@ private void loadTxtFileIntoComboBox(){
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jColorChooser1 = new javax.swing.JColorChooser();
-        jOptionPane1 = new javax.swing.JOptionPane();
-        jDialog1 = new javax.swing.JDialog();
         jComboBox1 = new javax.swing.JComboBox<>();
         btnOk = new javax.swing.JToggleButton();
         btnCancel = new javax.swing.JToggleButton();
-        btnTitle = new java.awt.Label();
+        btnTitle = new javax.swing.JLabel();
+        lblClass = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         btnCheckIndividualResult1 = new javax.swing.JButton();
         btnComment1 = new javax.swing.JButton();
         btnRegisterClass1 = new javax.swing.JButton();
-        btnHome = new java.awt.Button();
-
-        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
-        jDialog1.getContentPane().setLayout(jDialog1Layout);
-        jDialog1Layout.setHorizontalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog1Layout.setVerticalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        btnHome = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -95,6 +110,7 @@ private void loadTxtFileIntoComboBox(){
         });
 
         btnOk.setText("OK");
+        btnOk.setPreferredSize(new java.awt.Dimension(80, 30));
         btnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOkActionPerformed(evt);
@@ -102,16 +118,20 @@ private void loadTxtFileIntoComboBox(){
         });
 
         btnCancel.setText("Cancel");
+        btnCancel.setPreferredSize(new java.awt.Dimension(80, 30));
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
         });
 
-        btnTitle.setFont(new java.awt.Font("Eras Light ITC", 1, 24)); // NOI18N
-        btnTitle.setText("Choose which module need to comment");
+        btnTitle.setFont(new java.awt.Font("Eras Light ITC", 1, 20)); // NOI18N
+        btnTitle.setText("Choose which class to comment on");
+
+        lblClass.setText("Select Class:");
 
         jPanel1.setBackground(new java.awt.Color(181, 172, 252));
+        jPanel1.setPreferredSize(new java.awt.Dimension(170, 400));
 
         btnCheckIndividualResult1.setBackground(new java.awt.Color(181, 172, 252));
         btnCheckIndividualResult1.setText("Check Individual Result");
@@ -145,7 +165,7 @@ private void loadTxtFileIntoComboBox(){
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnRegisterClass1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnCheckIndividualResult1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+            .addComponent(btnCheckIndividualResult1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
             .addComponent(btnComment1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -157,10 +177,10 @@ private void loadTxtFileIntoComboBox(){
                 .addComponent(btnCheckIndividualResult1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnComment1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(198, Short.MAX_VALUE))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
 
-        btnHome.setLabel("HOME");
+        btnHome.setText("HOME");
         btnHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHomeActionPerformed(evt);
@@ -173,86 +193,95 @@ private void loadTxtFileIntoComboBox(){
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnCancel))
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblClass, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnHome)
+                                .addContainerGap())))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(68, 68, 68)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnOk)
-                    .addComponent(btnCancel))
-                .addGap(53, 53, 53))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnHome)
+                .addGap(10, 10, 10)
+                .addComponent(btnTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblClass, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        btnTitle.getAccessibleContext().setAccessibleName("label1");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
+        // Class selection changed - no module loading needed
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        // TODO add your handling code here:
         StudentDashboard main = new StudentDashboard();
         main.setVisible(true);
-        this.dispose();    
+        this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        // TODO add your handling code here:
-        JDialogFeedback dialog = new JDialogFeedback (this,true);
-        
-        //show the dialog
-        dialog.setVisible (true);
+        String selectedClassName = (String) jComboBox1.getSelectedItem();
+
+        if (selectedClassName == null || selectedClassName.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a class first!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String classId = classNameToIdMap.get(selectedClassName);
+        JDialogFeedback dialog = new JDialogFeedback(this, true, classId, selectedClassName);
+        dialog.setVisible(true);
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void btnCheckIndividualResult1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckIndividualResult1ActionPerformed
-        // TODO add your handling code here:
         Assessment checkMark = new Assessment();
-        checkMark. setVisible(true);
+        checkMark.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnCheckIndividualResult1ActionPerformed
 
     private void btnComment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComment1ActionPerformed
-        // TODO add your handling code here:
         feedbackForm comment = new feedbackForm();
-        comment.setVisible (true);
+        comment.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnComment1ActionPerformed
 
     private void btnRegisterClass1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterClass1ActionPerformed
-        // TODO add your handling code here:
         Class registerClass = new Class();
-        registerClass. setVisible(true);
+        registerClass.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnRegisterClass1ActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
-        // TODO add your handling code here:
         StudentDashboard home = new StudentDashboard();
-        home. setVisible(true);
+        home.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnHomeActionPerformed
 
@@ -263,7 +292,7 @@ private void loadTxtFileIntoComboBox(){
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -285,14 +314,12 @@ private void loadTxtFileIntoComboBox(){
     private javax.swing.JToggleButton btnCancel;
     private javax.swing.JButton btnCheckIndividualResult1;
     private javax.swing.JButton btnComment1;
-    private java.awt.Button btnHome;
+    private javax.swing.JButton btnHome;
     private javax.swing.JToggleButton btnOk;
     private javax.swing.JButton btnRegisterClass1;
-    private java.awt.Label btnTitle;
-    private javax.swing.JColorChooser jColorChooser1;
+    private javax.swing.JLabel btnTitle;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JDialog jDialog1;
-    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblClass;
     // End of variables declaration//GEN-END:variables
 }

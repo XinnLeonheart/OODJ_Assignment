@@ -26,8 +26,11 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="Notification" min="-2" pref="170" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="166" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lblTitle" min="-2" pref="170" max="-2" attributes="0"/>
+                  <Component id="scrollPane" pref="450" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -36,8 +39,10 @@
           <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="Notification" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="96" pref="256" max="32767" attributes="0"/>
+              <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="scrollPane" pref="400" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,17 +86,15 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="java.awt.Label" name="Notification">
+    <Component class="javax.swing.JLabel" name="lblTitle">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dubai Light" size="24" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Notification"/>
+        <Property name="text" type="java.lang.String" value="Notifications"/>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Notification"/>
-        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value=""/>
-      </AccessibilityProperties>
     </Component>
+    <Container class="javax.swing.JScrollPane" name="scrollPane">
+    </Container>
   </SubComponents>
 </Form>

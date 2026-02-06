@@ -4,19 +4,35 @@
  */
 package Student;
 
+import Main.LogIn2;
+
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
 /**
  *
  * @author Xenia Thor
  */
 public class JconfirmationSubmitHW extends javax.swing.JDialog {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JconfirmationSubmitHW.class.getName());
+
+    private String classID;
+    private String className;
 
     /**
      * Creates new form JconfirmationSubmitHW
      */
     public JconfirmationSubmitHW(java.awt.Frame parent, boolean modal) {
+        this(parent, modal, "", "");
+    }
+
+    public JconfirmationSubmitHW(java.awt.Frame parent, boolean modal, String classID, String className) {
         super(parent, modal);
+        this.classID = classID;
+        this.className = className;
         initComponents();
     }
 
@@ -102,15 +118,51 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
 //        RegisterClass backToMain = new RegisterClass();
 //        backToMain.setVisible(true);
 //        this.dispose(); 
-        
+
+        // Save assignment submission and send notification
+        String studentID = LogIn2.loggedInID;
+        String studentName = LogIn2.loggedInName;
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+        if (studentID != null && !studentID.isEmpty() && className != null && !className.isEmpty()) {
+            // Write to AssignmentSubmission file (replace previous submission for same student+class)
+            ArrayList<String> lines = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssignmentSubmission"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] parts = line.split(";");
+                    if (!(parts.length >= 3
+                            && parts[0].trim().equals(studentID)
+                            && parts[1].trim().equals(classID))
+                            && parts[2].trim().equals(className)) {
+                        lines.add(line);
+                    }
+                }
+            } catch (IOException e) {
+                // File doesn't exist yet
+            }
+            lines.add(studentID + ";" + classID + ";" + className + ";" + dateTime + ";Submitted");
+            try (FileWriter fw = new FileWriter("src/TextFiles/AssignmentSubmission")) {
+                for (String l : lines) {
+                    fw.write(l + "\n");
+                }
+            } catch (IOException e) {
+                // Error writing file
+            }
+
+            String message = studentName + " has submitted assignment for " + className + " (" + classID + ")";
+            NotificationHelper.addNotification(studentID, "ASSIGNMENT", message);
+        }
+
         java.awt.Window parentWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
         if (parentWindow != null){
             parentWindow.dispose();
-        } this.dispose();
-                
+        }
+        this.dispose();
+
         Class backToMain = new Class();
         backToMain.setVisible(true);
-        this.dispose(); 
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     /**

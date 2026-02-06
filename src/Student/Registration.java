@@ -4,19 +4,30 @@
  */
 package Student;
 
+import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import Main.LogIn2;
+
 /**
  *
  * @author Xenia Thor
  */
 public class Registration extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Registration.class.getName());
+    private final ArrayList<String[]> classList = new ArrayList<>();
 
     /**
      * Creates new form NewJFrame
      */
     public Registration() {
         initComponents();
+        loadClasses();
     }
 
     /**
@@ -34,6 +45,23 @@ public class Registration extends javax.swing.JFrame {
         btnRegisterClass = new javax.swing.JButton();
         label1 = new java.awt.Label();
         btnHome = new java.awt.Button();
+        checkbox1 = new java.awt.Checkbox();
+        checkbox2 = new java.awt.Checkbox();
+        checkbox3 = new java.awt.Checkbox();
+        checkbox4 = new java.awt.Checkbox();
+        checkbox5 = new java.awt.Checkbox();
+        checkbox6 = new java.awt.Checkbox();
+        checkbox7 = new java.awt.Checkbox();
+        checkbox8 = new java.awt.Checkbox();
+        btnChooseModule = new java.awt.Button();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,6 +80,7 @@ public class Registration extends javax.swing.JFrame {
         btnComment.setText("Comment");
         btnComment.setBorder(null);
         btnComment.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCommentActionPerformed(evt);
             }
@@ -61,6 +90,7 @@ public class Registration extends javax.swing.JFrame {
         btnRegisterClass.setText("Register Class");
         btnRegisterClass.setBorder(null);
         btnRegisterClass.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegisterClassActionPerformed(evt);
             }
@@ -91,10 +121,50 @@ public class Registration extends javax.swing.JFrame {
 
         btnHome.setLabel("HOME");
         btnHome.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHomeActionPerformed(evt);
             }
         });
+
+        checkbox1.setLabel("checkbox1");
+
+        checkbox2.setLabel("checkbox2");
+
+        checkbox3.setLabel("checkbox3");
+
+        checkbox4.setLabel("checkbox4");
+
+        checkbox5.setLabel("checkbox5");
+
+        checkbox6.setLabel("checkbox6");
+
+        checkbox7.setLabel("checkbox7");
+
+        checkbox8.setLabel("checkbox8");
+
+        btnChooseModule.setLabel("Confirm");
+        btnChooseModule.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnChooseModuleActionPerformed(e);
+            }
+        });
+        jLabel1.setText("English");
+
+        jLabel2.setText("Mathematics");
+
+        jLabel3.setText("Science");
+
+        jLabel4.setText("Statistics");
+
+        jLabel5.setText("Physics");
+
+        jLabel6.setText("Biology");
+
+        jLabel7.setText("Chemistry");
+
+        jLabel8.setText("Accounting");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,20 +172,91 @@ public class Registration extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
-                .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkbox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkbox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkbox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkbox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkbox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkbox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkbox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkbox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(53, 53, 53))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(152, 152, 152)
+                                .addComponent(btnChooseModule, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                        .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(13, 13, 13)
+                                                .addComponent(checkbox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jLabel1))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(checkbox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel2))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(checkbox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel3))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(checkbox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel4))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(checkbox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel5))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(checkbox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkbox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel7))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(checkbox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel8))
+                        .addGap(36, 36, 36)
+                        .addComponent(btnChooseModule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 7, Short.MAX_VALUE))
         );
 
         pack();
@@ -138,7 +279,7 @@ public class Registration extends javax.swing.JFrame {
     private void btnRegisterClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterClassActionPerformed
         // TODO add your handling code here:
         Class registerClass = new Class();
-        registerClass. setVisible(true);
+        registerClass.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnRegisterClassActionPerformed
 
@@ -148,6 +289,136 @@ public class Registration extends javax.swing.JFrame {
         home. setVisible(true);
         dispose();
     }//GEN-LAST:event_btnHomeActionPerformed
+
+    private void loadClasses() {
+        String filePath = "src/TextFiles/Class";
+        javax.swing.JLabel[] labels = {jLabel1, jLabel2, jLabel3, jLabel4,
+                                       jLabel5, jLabel6, jLabel7, jLabel8};
+        java.awt.Checkbox[] checkboxes = {checkbox1, checkbox2, checkbox3, checkbox4,
+                                          checkbox5, checkbox6, checkbox7, checkbox8};
+
+        classList.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] data = line.split(";");
+                    if (data.length >= 2) {
+                        classList.add(data);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading Class file: " + e.getMessage());
+        }
+
+        for (int i = 0; i < labels.length; i++) {
+            if (i < classList.size()) {
+                labels[i].setText(classList.get(i)[1].trim());
+                labels[i].setVisible(true);
+                checkboxes[i].setVisible(true);
+            } else {
+                labels[i].setVisible(false);
+                checkboxes[i].setVisible(false);
+            }
+        }
+    }
+
+    private void btnChooseModuleActionPerformed(ActionEvent evt) {
+        String filePath = "src/TextFiles/Registration";
+        String studentID = LogIn2.loggedInID;
+        String studentName = LogIn2.loggedInName;
+
+        java.awt.Checkbox[] checkboxes = {checkbox1, checkbox2, checkbox3, checkbox4,
+                                          checkbox5, checkbox6, checkbox7, checkbox8};
+
+        ArrayList<String> selectedClassIDs = new ArrayList<>();
+        for (int i = 0; i < classList.size() && i < checkboxes.length; i++) {
+            if (checkboxes[i].getState()) {
+                selectedClassIDs.add(classList.get(i)[0].trim());
+            }
+        }
+
+        if (selectedClassIDs.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select at least one class.");
+            return;
+        }
+
+        ArrayList<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    lines.add(line);
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading Registration file: " + e.getMessage());
+        }
+
+        // Remove existing class registrations for this student
+        lines.removeIf(line -> line.startsWith(studentID + ";"));
+
+        String newLine = studentID + ";" + String.join(";", selectedClassIDs);
+        lines.add(newLine);
+
+        try (FileWriter fw = new FileWriter(filePath)) {
+            for (String l : lines) {
+                fw.write(l + System.lineSeparator());
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage());
+            return;
+        }
+
+        // Clear all previous data for this student
+        clearStudentData(studentID);
+
+        // Append notification for each registered class
+        for (int i = 0; i < classList.size() && i < checkboxes.length; i++) {
+            if (checkboxes[i].getState()) {
+                String classID = classList.get(i)[0].trim();
+                String className = classList.get(i)[1].trim();
+                NotificationHelper.addNotification(studentID, "REGISTRATION",
+                    studentName + " have registered for " + className + " (" + classID + ")");
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "Classes registered successfully!");
+        Class registerClass = new Class();
+        registerClass.setVisible(true);
+        dispose();
+    }
+
+    private void clearStudentData(String studentID) {
+        String[] files = {
+            "src/TextFiles/AssessmentMark",
+            "src/TextFiles/ClassTestSubmission",
+            "src/TextFiles/AssignmentSubmission",
+            "src/TextFiles/Feedback",
+            "src/TextFiles/Notification"
+        };
+        for (String file : files) {
+            ArrayList<String> kept = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (!line.trim().isEmpty() && !line.startsWith(studentID + ";")) {
+                        kept.add(line);
+                    }
+                }
+            } catch (IOException e) {
+                continue;
+            }
+            try (FileWriter fw = new FileWriter(file)) {
+                for (String l : kept) {
+                    fw.write(l + System.lineSeparator());
+                }
+            } catch (IOException e) {
+                // silently skip
+            }
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -176,9 +447,26 @@ public class Registration extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCheckIndividualResult;
+    private java.awt.Button btnChooseModule;
     private javax.swing.JButton btnComment;
     private java.awt.Button btnHome;
     private javax.swing.JButton btnRegisterClass;
+    private java.awt.Checkbox checkbox1;
+    private java.awt.Checkbox checkbox2;
+    private java.awt.Checkbox checkbox3;
+    private java.awt.Checkbox checkbox4;
+    private java.awt.Checkbox checkbox5;
+    private java.awt.Checkbox checkbox6;
+    private java.awt.Checkbox checkbox7;
+    private java.awt.Checkbox checkbox8;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private java.awt.Label label1;
     // End of variables declaration//GEN-END:variables

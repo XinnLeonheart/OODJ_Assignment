@@ -155,10 +155,11 @@ public class StudentDashboard extends javax.swing.JFrame {
 
         jLabelWelcome.setBackground(new java.awt.Color(240, 240, 240));
         jLabelWelcome.setFont(new java.awt.Font("Yu Gothic UI", 1, 18)); // NOI18N
-        jLabelWelcome.setText("PrintName");
+        jLabelWelcome.setText(LogIn2.loggedInName);
 
         btnNotification.setText("Notification");
         btnNotification.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNotificationActionPerformed(evt);
             }
@@ -250,6 +251,8 @@ public class StudentDashboard extends javax.swing.JFrame {
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         // TODO add your handling code here:
+        LogIn2.loggedInID = "";
+        LogIn2.loggedInName = "";
         LogIn2 logout = new LogIn2();
         logout.setVisible(true);
         dispose();

@@ -34,7 +34,7 @@ public class AccountManage extends javax.swing.JPanel {
 //            String line;
 //            while (tfaccountID.text)
 //    }
-}
+
 
 
 
@@ -267,3 +267,4 @@ public class AccountManage extends javax.swing.JPanel {
     private javax.swing.JTextField tfAccountID;
     // End of variables declaration//GEN-END:variables
 }
+

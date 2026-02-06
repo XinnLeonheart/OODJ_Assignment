@@ -4,20 +4,32 @@
  */
 package Student;
 
-import Student.Registration;
+import Main.LogIn2;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.*;
 /**
  *
  * @author Xenia Thor
  */
 public class Class extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Class.class.getName());
+
+    private ArrayList<String[]> studentCourses = new ArrayList<>();
+    private int currentCourseIndex = 0;
+    public static String currentClassID = "";
+    public static String currentClassName = "";
 
     /**
      * Creates new form RegisterClass
      */
     public Class() {
         initComponents();
+        loadStudentCourses();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -29,37 +41,65 @@ public class Class extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollBar1 = new javax.swing.JScrollBar();
         label1 = new java.awt.Label();
+        btnPrevCourse = new javax.swing.JButton();
+        labelCourseName = new javax.swing.JLabel();
+        btnNextCourse = new javax.swing.JButton();
+        labelCourseIndex = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        btnNext2 = new javax.swing.JButton();
-        btnNext1 = new javax.swing.JButton();
         btnNext = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        btnNext1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        btnNext2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         btnBack = new java.awt.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(20, 10, 69));
-
-        jScrollBar1.setBackground(new java.awt.Color(181, 172, 252));
+        setTitle("My Course");
+        setPreferredSize(new java.awt.Dimension(600, 420));
 
         label1.setFont(new java.awt.Font("Gabriola", 1, 24)); // NOI18N
         label1.setText("My Course");
 
-        jLabel1.setText("Module");
-
-        jLabel2.setText("Submit Assignment");
-
-        jLabel3.setText("Class Test");
-
-        btnNext2.setText("NEXT");
-        btnNext2.addActionListener(new java.awt.event.ActionListener() {
+        btnPrevCourse.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        btnPrevCourse.setText("<");
+        btnPrevCourse.setPreferredSize(new java.awt.Dimension(50, 30));
+        btnPrevCourse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNext2ActionPerformed(evt);
+                btnPrevCourseActionPerformed(evt);
             }
         });
+
+        labelCourseName.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        labelCourseName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCourseName.setText("Loading...");
+
+        btnNextCourse.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        btnNextCourse.setText(">");
+        btnNextCourse.setPreferredSize(new java.awt.Dimension(50, 30));
+        btnNextCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextCourseActionPerformed(evt);
+            }
+        });
+
+        labelCourseIndex.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        labelCourseIndex.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCourseIndex.setText(" ");
+
+        jLabel1.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel1.setText("Progress");
+
+        btnNext.setText("VIEW");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel3.setText("Class Test");
 
         btnNext1.setText("NEXT");
         btnNext1.addActionListener(new java.awt.event.ActionListener() {
@@ -68,14 +108,18 @@ public class Class extends javax.swing.JFrame {
             }
         });
 
-        btnNext.setText("NEXT");
-        btnNext.addActionListener(new java.awt.event.ActionListener() {
+        jLabel2.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel2.setText("Submit Assignment");
+
+        btnNext2.setText("NEXT");
+        btnNext2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNextActionPerformed(evt);
+                btnNext2ActionPerformed(evt);
             }
         });
 
         jPanel1.setBackground(new java.awt.Color(181, 172, 252));
+        jPanel1.setPreferredSize(new java.awt.Dimension(120, 400));
 
         btnBack.setActionCommand("BACK");
         btnBack.setLabel("BACK");
@@ -99,55 +143,69 @@ public class Class extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(349, Short.MAX_VALUE))
+                .addContainerGap(369, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
+                        .addGap(3, 3, 3)
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnNext1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnNext2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(labelCourseIndex, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnNext1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnPrevCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(labelCourseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(10, 10, 10)
+                                .addComponent(btnNextCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnNext2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(14, 14, 14))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrevCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelCourseName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNextCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNext1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnNext2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(labelCourseIndex, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNext1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNext2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -155,26 +213,122 @@ public class Class extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        // TODO add your handling code here:
+        if (!currentClassID.isEmpty()) {
+            showProgressDialog();
+        }
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnNext1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNext1ActionPerformed
-        // TODO add your handling code here:
+        if (!currentClassID.isEmpty()) {
+            ClassTest classTest = new ClassTest(currentClassID, currentClassName);
+            classTest.setVisible(true);
+            dispose();
+        }
     }//GEN-LAST:event_btnNext1ActionPerformed
 
     private void btnNext2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNext2ActionPerformed
-        // TODO add your handling code here:
-        SubmitHW submit = new SubmitHW();
-        submit. setVisible(true);
+        SubmitHW submit = new SubmitHW(currentClassID, currentClassName);
+        submit.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnNext2ActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
         Registration registration = new Registration();
-        registration. setVisible(true);
+        registration.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnPrevCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevCourseActionPerformed
+        if (!studentCourses.isEmpty()) {
+            currentCourseIndex = (currentCourseIndex - 1 + studentCourses.size()) % studentCourses.size();
+            updateCourseDisplay();
+        }
+    }//GEN-LAST:event_btnPrevCourseActionPerformed
+
+    private void btnNextCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextCourseActionPerformed
+        if (!studentCourses.isEmpty()) {
+            currentCourseIndex = (currentCourseIndex + 1) % studentCourses.size();
+            updateCourseDisplay();
+        }
+    }//GEN-LAST:event_btnNextCourseActionPerformed
+
+    private void showProgressDialog() {
+        JDialogProgress dialog = new JDialogProgress(this, true, currentClassID, currentClassName);
+        dialog.setVisible(true);
+    }
+
+    private void loadStudentCourses() {
+        studentCourses.clear();
+        String studentID = LogIn2.loggedInID;
+
+        if (studentID == null || studentID.isEmpty()) {
+            currentCourseIndex = 0;
+            updateCourseDisplay();
+            return;
+        }
+
+        ArrayList<String> classIDs = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Registration"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.trim().split(";");
+                if (parts.length >= 2 && parts[0].trim().equals(studentID)) {
+                    for (int i = 1; i < parts.length; i++) {
+                        classIDs.add(parts[i].trim());
+                    }
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading Registration file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        for (String classID : classIDs) {
+            String className = "";
+            try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.trim().split(";");
+                    if (parts.length >= 2 && parts[0].trim().equals(classID)) {
+                        className = parts[1].trim();
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error reading Class file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            String[] classInfo = {classID, className};
+            studentCourses.add(classInfo);
+        }
+
+        currentCourseIndex = 0;
+        updateCourseDisplay();
+    }
+
+    private void updateCourseDisplay() {
+        if (studentCourses.isEmpty()) {
+            labelCourseName.setText("No courses registered");
+            labelCourseIndex.setText("");
+            currentClassID = "";
+            currentClassName = "";
+            btnPrevCourse.setEnabled(false);
+            btnNextCourse.setEnabled(false);
+            btnNext.setEnabled(false);
+            btnNext1.setEnabled(false);
+            btnNext2.setEnabled(false);
+        } else {
+            String[] course = studentCourses.get(currentCourseIndex);
+            currentClassID = course[0];
+            currentClassName = course[1];
+            labelCourseName.setText(currentClassName);
+            labelCourseIndex.setText((currentCourseIndex + 1) + " / " + studentCourses.size());
+            btnPrevCourse.setEnabled(true);
+            btnNextCourse.setEnabled(true);
+            btnNext.setEnabled(true);
+            btnNext1.setEnabled(true);
+            btnNext2.setEnabled(true);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -183,7 +337,7 @@ public class Class extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -206,11 +360,14 @@ public class Class extends javax.swing.JFrame {
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnNext1;
     private javax.swing.JButton btnNext2;
+    private javax.swing.JButton btnNextCourse;
+    private javax.swing.JButton btnPrevCourse;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollBar jScrollBar1;
     private java.awt.Label label1;
+    private javax.swing.JLabel labelCourseIndex;
+    private javax.swing.JLabel labelCourseName;
     // End of variables declaration//GEN-END:variables
 }

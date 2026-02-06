@@ -4,6 +4,7 @@
  */
 package Student;
 
+import Main.LogIn2;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,18 +21,64 @@ import java.time.format.DateTimeFormatter;
  * @author Xenia Thor
  */
 public class SubmitHW extends javax.swing.JFrame {
-    
-    
+
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SubmitHW.class.getName());
+
+    private String classID;
+    private String className;
 
     /**
      * Creates new form SubmitHW
      */
     public SubmitHW() {
+        this("", "");
+    }
+
+    public SubmitHW(String classID, String className) {
+        this.classID = classID;
+        this.className = className;
         initComponents();
-        
+
+        // Update header to show class name
+        if (!className.isEmpty()) {
+            jLabel1.setText("Submit Assignment for " + className);
+        }
+
+        // Rebuild layout without module combo box
+        getContentPane().removeAll();
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
+
+        getContentPane().add(jPanel1);
+        getContentPane().add(Box.createVerticalStrut(10));
+
+        JPanel notifPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        jLabelNotification.setPreferredSize(new Dimension(514, 80));
+        notifPanel.add(jLabelNotification);
+        getContentPane().add(notifPanel);
+
+        getContentPane().add(Box.createVerticalStrut(10));
+
+        JPanel checkPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        checkPanel.add(btnConfirmation);
+        getContentPane().add(checkPanel);
+
+        getContentPane().add(Box.createVerticalStrut(5));
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
+        buttonPanel.add(btnOk2);
+        buttonPanel.add(btnCancel2);
+        getContentPane().add(buttonPanel);
+
+        getContentPane().add(Box.createVerticalStrut(10));
+
+        setSize(600, 400);
+        setLocationRelativeTo(null);
+        revalidate();
+        repaint();
+
         btnOk2.setEnabled(false);
-        
+
         //add itemListener to the checkbox
         btnConfirmation.addItemListener (new ItemListener() {
             @Override
@@ -39,6 +86,49 @@ public class SubmitHW extends javax.swing.JFrame {
                 btnOk2.setEnabled (btnConfirmation.getState());
             }
         });
+    }
+
+    private boolean isAlreadySubmitted() {
+        String studentID = LogIn2.loggedInID;
+        if (studentID == null || studentID.isEmpty()) {
+            return false;
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssignmentSubmission"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.trim().split(";");
+                if (parts.length >= 3
+                        && parts[0].trim().equals(studentID)
+                        && parts[1].trim().equals(classID)
+                        && parts[2].trim().equals(className)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            // File doesn't exist yet
+        }
+        return false;
+    }
+
+    private boolean isClassGraded() {
+        String studentID = LogIn2.loggedInID;
+        if (studentID == null || studentID.isEmpty()) {
+            return false;
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssessmentMark"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.trim().split(";");
+                if (parts.length >= 2
+                        && parts[0].trim().equals(studentID)
+                        && parts[1].trim().equals(classID)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading AssessmentMark file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
     }
 
     /**
@@ -156,12 +246,25 @@ public class SubmitHW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOk2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOk2ActionPerformed
-        // TODO add your handling code here:
-        JconfirmationSubmitHW SubmitHW = new JconfirmationSubmitHW (this,true);
-        
+        if (isClassGraded()) {
+            JOptionPane.showMessageDialog(this,
+                    "This class has already been graded. You cannot submit again.",
+                    "Submission Not Allowed",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (isAlreadySubmitted()) {
+            JOptionPane.showMessageDialog(this,
+                    "You have already submitted the assignment for this class.",
+                    "Submission Not Allowed",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        JconfirmationSubmitHW confirmDialog = new JconfirmationSubmitHW(this, true, classID, className);
+
         //show the dialog
-        SubmitHW.setVisible (true);
-        
+        confirmDialog.setVisible(true);
+
     }//GEN-LAST:event_btnOk2ActionPerformed
 
     private void btnConfirmationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfirmationMouseClicked
@@ -170,7 +273,9 @@ public class SubmitHW extends javax.swing.JFrame {
 
     private void btnCancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancel2ActionPerformed
         // TODO add your handling code here:
-        
+        Class backClass = new Class();
+        backClass.setVisible(true);
+        this.dispose(); 
     }//GEN-LAST:event_btnCancel2ActionPerformed
 
     /**

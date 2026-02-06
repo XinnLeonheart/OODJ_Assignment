@@ -7,14 +7,21 @@ package Student;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import Main.LogIn2;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author Xenia Thor
  */
 public class JDialogFeedback extends javax.swing.JDialog {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JDialogFeedback.class.getName());
+    private String classId;
+    private String className;
 
     /**
      * Creates new form NewJDialog
@@ -23,6 +30,37 @@ public class JDialogFeedback extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent); //set the dialog to center
+    }
+
+    public JDialogFeedback(java.awt.Frame parent, boolean modal, String classId, String className) {
+        super(parent, modal);
+        this.classId = classId;
+        this.className = className;
+        initComponents();
+        setLocationRelativeTo(parent);
+
+        // Update label to show selected class
+        jLabel1.setText("Comment on " + className + ":");
+        setupFocusListener();
+    }
+
+    private void setupFocusListener() {
+        // Add focus listener to clear placeholder text
+        jTextField1.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (jTextField1.getText().equals("Text your comments here")) {
+                    jTextField1.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField1.getText().trim().isEmpty()) {
+                    jTextField1.setText("Text your comments here");
+                }
+            }
+        });
     }
 
     /**
@@ -114,27 +152,35 @@ public class JDialogFeedback extends javax.swing.JDialog {
 
     private void btnCancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancel2ActionPerformed
         // TODO add your handling code here:
-        feedbackForm form = new feedbackForm();
-        form.setVisible(true);
-        this.dispose();   
+        dispose();
     }//GEN-LAST:event_btnCancel2ActionPerformed
 
     private void btnSubmit2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmit2ActionPerformed
         // TODO add your handling code here:
         String comment = jTextField1.getText().trim();
-        
+
         //validation
-        if (comment.isEmpty()) {
-            JOptionPane.showMessageDialog (this, "Feedback cannot be empty!" , "Error" , JOptionPane.ERROR_MESSAGE);
+        if (comment.isEmpty() || comment.equals("Text your comments here")) {
+            JOptionPane.showMessageDialog (this, "Comment cannot be empty!" , "Error" , JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        try (FileWriter fw = new FileWriter ("C:\\Users\\Xenia Thor\\Desktop\\OODJ_Assignment\\src\\TextFiles\\Feedback", true)) {
-            fw.write (comment+ System.lineSeparator());
-            JOptionPane.showMessageDialog(this, "Feedback saved successfully! ");
+
+        // Get student ID from logged in user
+        String studentId = LogIn2.loggedInID;
+        String studentName = LogIn2.loggedInName;
+
+        // Get current date time
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+        try (FileWriter fw = new FileWriter ("src/TextFiles/Feedback", true)) {
+            // Format: StudentID;ClassID;Comment;DateTime
+            fw.write(studentId + ";" + classId + ";" + comment + ";" + dateTime + "\n");
+            NotificationHelper.addNotification(studentId, "FEEDBACK",
+                  studentName + " has submitted feedback for " + className + " (" + classId + ")");
+            JOptionPane.showMessageDialog(this, "Comment saved successfully!");
             dispose(); //this function is to return to the JFrame
         } catch (IOException e){
-            JOptionPane.showMessageDialog(this, "Error saving the feedback! ");
+            JOptionPane.showMessageDialog(this, "Error saving the comment: " + e.getMessage());
         }
     }//GEN-LAST:event_btnSubmit2ActionPerformed
 
