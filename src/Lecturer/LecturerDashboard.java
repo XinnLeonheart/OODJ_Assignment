@@ -17,6 +17,9 @@ public class LecturerDashboard extends javax.swing.JFrame {
      */
     public LecturerDashboard() {
         initComponents();
+        // test
+        // test2
+        //test3
     }
 
     /**
