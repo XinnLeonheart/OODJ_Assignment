@@ -1,0 +1,6 @@
+admin1;admin;admin;admin@admin.com;password;0101111111;female;40;admin
+leader1;leader;john;john@leader.com;password;0123456789;male;30;academicleader
+lecturer1;lecturer;sammy;sammy@lecturer.com;password;0123456789;female;25;lecturer
+student1;student;david;david@student.com;password;0123456789;male;21;student
+student2;student2;miao;miao@student.com;password;0123456789;female;23;student
+
