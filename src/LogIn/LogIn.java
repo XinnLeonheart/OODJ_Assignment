@@ -44,7 +44,7 @@ public class LogIn extends javax.swing.JFrame {
                 break;
 
             case "lecturer":
-                NavigateToDashboard.goToLecturerDashboard(this);
+                NavigateToDashboard.goToLecturerMainPage(this);
                 break;
 
             case "student":
