@@ -6,17 +6,20 @@ package AcademicLeader;
 
 /**
  *
- * @author Xinn
+ * @author 
  */
 public class AcademicLeaderDashboard extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AcademicLeaderDashboard.class.getName());
+    private final String currentLeaderID;
 
     /**
-     * Creates new form ALDashboard
+     * Creates new form AcademicLeaderDashboard
+     * @param leaderID
      */
-    public AcademicLeaderDashboard() {
+    public AcademicLeaderDashboard(String leaderID) {
         initComponents();
+        this.currentLeaderID = leaderID;
+        lblWelcome.setText("Welcome, Academic Leader " + leaderID);
     }
 
     /**
@@ -28,47 +31,124 @@ public class AcademicLeaderDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnAssignLecturer = new javax.swing.JButton();
+        btnViewReport = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
+        btnEditProfile = new javax.swing.JButton();
+        btnManageModule = new javax.swing.JButton();
+        lblWelcome = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btnAssignLecturer.setText("Assign Lecturer");
+        btnAssignLecturer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAssignLecturerActionPerformed(evt);
+            }
+        });
+
+        btnViewReport.setText("View Reports");
+        btnViewReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewReportActionPerformed(evt);
+            }
+        });
+
+        btnLogout.setText("Log Out");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        btnEditProfile.setText("Edit Profile");
+        btnEditProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditProfileActionPerformed(evt);
+            }
+        });
+
+        btnManageModule.setText("Manage Modules");
+        btnManageModule.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageModuleActionPerformed(evt);
+            }
+        });
+
+        lblWelcome.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
+        lblWelcome.setText("Academic Leader Dashboard");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblWelcome)
+                .addGap(191, 191, 191))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 84, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnLogout)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnManageModule)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnAssignLecturer, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(75, 75, 75))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(lblWelcome)
+                .addGap(59, 59, 59)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnManageModule, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAssignLecturer, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addComponent(btnLogout)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnAssignLecturerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignLecturerActionPerformed
+        new AssignLecturerFrame(currentLeaderID).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnAssignLecturerActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new AcademicLeaderDashboard().setVisible(true));
-    }
+    private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
+        new ReportFrame(currentLeaderID).setVisible(true);
+        this.dispose();        
+    }//GEN-LAST:event_btnViewReportActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
+        new EditProfileFrame(currentLeaderID).setVisible(true);
+        this.dispose();        
+    }//GEN-LAST:event_btnEditProfileActionPerformed
+
+    private void btnManageModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageModuleActionPerformed
+        new ModuleManagementFrame(currentLeaderID).setVisible(true);
+        this.dispose();        
+    }//GEN-LAST:event_btnManageModuleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAssignLecturer;
+    private javax.swing.JButton btnEditProfile;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnManageModule;
+    private javax.swing.JButton btnViewReport;
+    private javax.swing.JLabel lblWelcome;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,8 +6,16 @@ package AcademicLeader;
 
 /**
  *
- * @author Xinn
+ * @author 
  */
 public class AcademicLeader {
-    
+
+    public static void main(String[] args) {
+        // Fake Academic Leader ID for testing
+        String testLeaderID = "AL001";
+
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new AcademicLeaderDashboard(testLeaderID).setVisible(true);
+        });
+    }
 }
