@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import Main.LogIn2;
+import LogIn.LogIn;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class Assessment extends javax.swing.JFrame {
         initComponents();
         loadClassNames();
 
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.loggedInID;
         if (studentID == null || studentID.isEmpty()) {
             studentID = "guest";
         }
