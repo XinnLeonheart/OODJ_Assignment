@@ -107,6 +107,7 @@ public class JconfirmationClassTest extends javax.swing.JDialog {
             parentWindow.dispose();
         }
         dispose();
+        
 
         Student.Class backToMain = new Student.Class();
         backToMain.setVisible(true);

@@ -27,6 +27,9 @@ public class LogIn extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LogIn.class.getName());
     public static String accID;
+    public static String loggedInID;
+    public static String loggedInName;
+    public static String LoggedInName;
 
     /**
      * Creates new form LogIn

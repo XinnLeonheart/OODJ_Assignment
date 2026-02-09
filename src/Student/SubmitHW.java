@@ -89,7 +89,7 @@ public class SubmitHW extends javax.swing.JFrame {
     }
 
     private boolean isAlreadySubmitted() {
-        String studentID = LogIn.loggedInID;
+        String studentID = LogIn.accID;
         if (studentID == null || studentID.isEmpty()) {
             return false;
         }

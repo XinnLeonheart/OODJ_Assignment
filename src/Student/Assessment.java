@@ -30,7 +30,7 @@ public class Assessment extends javax.swing.JFrame {
         initComponents();
         loadClassNames();
 
-        String studentID = LogIn.loggedInID;
+        String studentID = LogIn.accID;
         if (studentID == null || studentID.isEmpty()) {
             studentID = "guest";
         }
@@ -103,7 +103,7 @@ public class Assessment extends javax.swing.JFrame {
 
     private void savePDF() {
         String downloadsPath = System.getProperty("user.home") + java.io.File.separator + "Downloads";
-        String studentID = LogIn2.loggedInID != null ? LogIn2.loggedInID : "unknown";
+        String studentID = LogIn.loggedInID != null ? LogIn.loggedInID : "unknown";
         String fileName = "AssessmentReport_" + studentID + ".pdf";
         String fullPath = downloadsPath + java.io.File.separator + fileName;
 
@@ -120,7 +120,7 @@ public class Assessment extends javax.swing.JFrame {
         content.append("BT /F1 18 Tf 50 ").append(pageHeight - 50).append(" Td (Assessment Report) Tj ET\n");
 
         // Student info
-        String studentInfo = "Student ID: " + studentID + "    Name: " + (LogIn2.loggedInName != null ? LogIn2.loggedInName : "");
+        String studentInfo = "Student ID: " + studentID + "    Name: " + (LogIn.loggedInName != null ? LogIn.loggedInName : "");
         content.append("BT /F1 11 Tf 50 ").append(pageHeight - 80).append(" Td (").append(escapePdf(studentInfo)).append(") Tj ET\n");
 
         // CGPA

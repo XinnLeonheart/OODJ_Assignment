@@ -232,42 +232,42 @@
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox1">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox1"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox2">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox2"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox3">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox3"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox4">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox4"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox5">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox5"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox6">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox6"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox7">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox7"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Checkbox" name="checkbox8">
       <Properties>
-        <Property name="label" type="java.lang.String" value="checkbox8"/>
+        <Property name="label" type="java.lang.String" value="Tick"/>
       </Properties>
     </Component>
     <Component class="java.awt.Button" name="btnChooseModule">

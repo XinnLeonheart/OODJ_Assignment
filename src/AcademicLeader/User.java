@@ -9,7 +9,11 @@ package AcademicLeader;
  * @author 
  */
 public class User {
-    protected String accID, username, name, email, password, phone, gender, age, role;
+
+    public String accID;
+    public String username;
+    public String name;
+    public String email, password, phone, gender, age, role;
 
     public User(String accID, String username, String name, String email,
                 String password, String phone, String gender, String age, String role) {

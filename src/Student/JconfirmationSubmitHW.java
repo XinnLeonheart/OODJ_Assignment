@@ -4,7 +4,7 @@
  */
 package Student;
 
-import Main.LogIn2;
+import LogIn.LogIn;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -120,8 +120,8 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
 //        this.dispose(); 
 
         // Save assignment submission and send notification
-        String studentID = LogIn2.loggedInID;
-        String studentName = LogIn2.loggedInName;
+        String studentID = LogIn.loggedInID;
+        String studentName = LogIn.loggedInName;
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         if (studentID != null && !studentID.isEmpty() && className != null && !className.isEmpty()) {

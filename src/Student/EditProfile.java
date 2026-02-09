@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-import Main.LogIn2;
+import LogIn.LogIn;
 
 
 /**
@@ -40,7 +40,7 @@ public class EditProfile extends javax.swing.JFrame {
     private void loadStudentData(){
         // Load student data from file
         String filePath = "src/TextFiles/Account";
-        String targetID = LogIn2.loggedInID;
+        String targetID = LogIn.loggedInID;
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));

@@ -4,7 +4,7 @@
  */
 package Student;
 
-import Main.LogIn2;
+import LogIn.LogIn;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -35,8 +35,8 @@ public class ClassTest extends javax.swing.JFrame {
     private boolean timerActive = false;
 
     public ClassTest() {
-        this.classID = Student.Class.currentClassID;
-        this.className = Student.Class.currentClassName;
+        this.classID = Class.currentClassID;
+        this.className = Class.currentClassName;
         initComponents();
         setupAfterInit();
     }
@@ -170,7 +170,7 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private boolean isClassLocked() {
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.loggedInID;
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssessmentMark"))) {
             String line;
@@ -190,7 +190,7 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private boolean isAlreadySubmitted() {
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.accID;
 
         try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestSubmission"))) {
             String line;
@@ -329,8 +329,8 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private void saveSubmission(String answers, long timeTakenSeconds) {
-        String studentID = LogIn2.loggedInID;
-        String studentName = LogIn2.loggedInName;
+        String studentID = LogIn.loggedInID;
+        String studentName = LogIn.loggedInName;
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         ArrayList<String> existingLines = new ArrayList<>();
@@ -481,7 +481,7 @@ public class ClassTest extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         stopTimer();
-        Student.Class classPage = new Student.Class();
+        Class classPage = new Class();
         classPage.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnBackActionPerformed

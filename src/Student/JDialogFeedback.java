@@ -13,6 +13,7 @@ import java.awt.event.FocusEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import LogIn.LogIn;
 /**
  *
  * @author Xenia Thor
@@ -22,6 +23,7 @@ public class JDialogFeedback extends javax.swing.JDialog {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JDialogFeedback.class.getName());
     private String classId;
     private String className;
+    private String moduleName;
 
     /**
      * Creates new form NewJDialog
@@ -36,6 +38,7 @@ public class JDialogFeedback extends javax.swing.JDialog {
         super(parent, modal);
         this.classId = classId;
         this.className = className;
+        this.moduleName = moduleName;
         initComponents();
         setLocationRelativeTo(parent);
 
@@ -171,8 +174,8 @@ public class JDialogFeedback extends javax.swing.JDialog {
         }
 
         // Get student ID from logged in user
-        String studentId = User.email;
-        String studentName = User.name;
+        String studentId = LogIn.loggedInID;
+        String studentName = LogIn.loggedInName;
 
         // Get current date time
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

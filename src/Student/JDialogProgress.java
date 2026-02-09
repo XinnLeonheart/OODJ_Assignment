@@ -4,7 +4,7 @@
  */
 package Student;
 
-import Main.LogIn2;
+import LogIn.LogIn;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class JDialogProgress extends javax.swing.JDialog {
     }
 
     private void loadProgress() {
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.accID;
         if (studentID == null || studentID.isEmpty()) return;
 
         // --- Class Test Status ---

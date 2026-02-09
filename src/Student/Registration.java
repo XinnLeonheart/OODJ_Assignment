@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import Main.LogIn2;
+import LogIn.LogIn;
 
 /**
  *
@@ -80,7 +80,6 @@ public class Registration extends javax.swing.JFrame {
         btnComment.setText("Comment");
         btnComment.setBorder(null);
         btnComment.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCommentActionPerformed(evt);
             }
@@ -90,7 +89,6 @@ public class Registration extends javax.swing.JFrame {
         btnRegisterClass.setText("Register Class");
         btnRegisterClass.setBorder(null);
         btnRegisterClass.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegisterClassActionPerformed(evt);
             }
@@ -121,35 +119,29 @@ public class Registration extends javax.swing.JFrame {
 
         btnHome.setLabel("HOME");
         btnHome.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHomeActionPerformed(evt);
             }
         });
 
-        checkbox1.setLabel("checkbox1");
+        checkbox1.setLabel("Tick");
 
-        checkbox2.setLabel("checkbox2");
+        checkbox2.setLabel("Tick");
 
-        checkbox3.setLabel("checkbox3");
+        checkbox3.setLabel("Tick");
 
-        checkbox4.setLabel("checkbox4");
+        checkbox4.setLabel("Tick");
 
-        checkbox5.setLabel("checkbox5");
+        checkbox5.setLabel("Tick");
 
-        checkbox6.setLabel("checkbox6");
+        checkbox6.setLabel("Tick");
 
-        checkbox7.setLabel("checkbox7");
+        checkbox7.setLabel("Tick");
 
-        checkbox8.setLabel("checkbox8");
+        checkbox8.setLabel("Tick");
 
         btnChooseModule.setLabel("Confirm");
-        btnChooseModule.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnChooseModuleActionPerformed(e);
-            }
-        });
+
         jLabel1.setText("English");
 
         jLabel2.setText("Mathematics");
@@ -326,8 +318,8 @@ public class Registration extends javax.swing.JFrame {
 
     private void btnChooseModuleActionPerformed(ActionEvent evt) {
         String filePath = "src/TextFiles/Registration";
-        String studentID = LogIn2.loggedInID;
-        String studentName = LogIn2.loggedInName;
+        String studentID = LogIn.accID;
+        String studentName = LogIn.loggedInName;
 
         java.awt.Checkbox[] checkboxes = {checkbox1, checkbox2, checkbox3, checkbox4,
                                           checkbox5, checkbox6, checkbox7, checkbox8};

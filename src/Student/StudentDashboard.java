@@ -4,7 +4,7 @@
  */
 package Student;
 
-import Main.LogIn2;
+import LogIn.LogIn;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
@@ -24,7 +24,7 @@ import java.nio.file.*;
 import Student.Assessment;
 import Student.EditProfile;
 import Student.Class;
-import Main.LogIn2;
+import LogIn.LogIn;
 /**
  *
  * @author Xinn
@@ -59,6 +59,10 @@ public class StudentDashboard extends javax.swing.JFrame {
      */
     public StudentDashboard() {
         initComponents();
+//        setLocationRelativeTo(null);
+//        
+//        String name = (LogIn.loggedInName != null && !LogIn.loggedInName.isBlack())?LogIn.LoggedInName :"Student";
+//        jLabelWelcome.setText("Welcome! " + name);
     }
 
     /**
@@ -155,11 +159,10 @@ public class StudentDashboard extends javax.swing.JFrame {
 
         jLabelWelcome.setBackground(new java.awt.Color(240, 240, 240));
         jLabelWelcome.setFont(new java.awt.Font("Yu Gothic UI", 1, 18)); // NOI18N
-        jLabelWelcome.setText(LogIn2.loggedInName);
+        jLabelWelcome.setText("PrintName");
 
         btnNotification.setText("Notification");
         btnNotification.addActionListener(new java.awt.event.ActionListener() {
-            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNotificationActionPerformed(evt);
             }
@@ -185,16 +188,17 @@ public class StudentDashboard extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabelWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 8, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(btnNotification))
-                .addGap(65, 65, 65))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabelWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnEditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(btnNotification))
+                        .addGap(65, 65, 65))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -251,9 +255,9 @@ public class StudentDashboard extends javax.swing.JFrame {
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         // TODO add your handling code here:
-        LogIn2.loggedInID = "";
-        LogIn2.loggedInName = "";
-        LogIn2 logout = new LogIn2();
+        LogIn.accID= "";
+        LogIn.loggedInName = "";
+        LogIn logout = new LogIn();
         logout.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnLogOutActionPerformed
@@ -296,12 +300,12 @@ public class StudentDashboard extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new StudentDashboard().setVisible(true));
-        String studentName = "";
+        String username = "";
         try{
             Path path = Paths.get("Account.txt");
-            studentName = Files.readString(path).trim();
+            username = Files.readString(path).trim();
         } catch (IOException e){
-            studentName = "Unknown";
+            username = "Unknown";
             System.out.println("Error Message" + e.getMessage());            
         }
     }

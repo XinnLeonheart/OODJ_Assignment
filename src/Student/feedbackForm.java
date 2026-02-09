@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import Main.LogIn2;
+import LogIn.LogIn;
 
 /**
  *
@@ -31,7 +31,7 @@ public class feedbackForm extends javax.swing.JFrame {
         jComboBox1.removeAllItems();
         classNameToIdMap.clear();
 
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.accID;
         if (studentID == null || studentID.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please log in first!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
