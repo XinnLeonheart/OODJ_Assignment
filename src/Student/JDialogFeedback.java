@@ -7,7 +7,7 @@ package Student;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JOptionPane;
-import LogIn.LogIn;
+import AcademicLeader.User;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.time.LocalDateTime;
@@ -171,8 +171,8 @@ public class JDialogFeedback extends javax.swing.JDialog {
         }
 
         // Get student ID from logged in user
-        String studentId = LogIn.loggedInID;
-        String studentName = LogIn.loggedInName;
+        String studentId = User.email;
+        String studentName = User.name;
 
         // Get current date time
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
