@@ -12,6 +12,7 @@ package Navigation;
 import AdminStaff.AdminStaffDashboard;
 import javax.swing.JFrame;
 
+
 public class NavigateToDashboard {
     public static void goToAdminStaffDashboard(JFrame currentFrame) {
         // Open the AdminStaffDashboard
@@ -27,7 +28,7 @@ public class NavigateToDashboard {
     
     public static void goToStudentDashboard(JFrame currentFrame) {
         // Open the AdminStaffDashboard
-        StudentDashboard studentDashboard = new StudentDashboard();
+        StudentDashboard_1 studentDashboard = new StudentDashboard_1();
         studentDashboard.setVisible(true);
         studentDashboard.setLocationRelativeTo(null); // center on screen
 

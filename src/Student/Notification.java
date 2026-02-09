@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import Main.LogIn2;
+import LogIn.LogIn;
 
 import javax.swing.*;
 
@@ -43,9 +43,9 @@ public class Notification extends javax.swing.JFrame {
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] parts = line.split(";", 4);
-                    if (parts.length == 4 && parts[0].trim().equals(LogIn2.loggedInID)) {
+                    if (parts.length == 4 && parts[0].trim().equals(LogIn.loggedInID)) {
                         notifications.add(parts);
-                    } else if (parts.length == 2 && parts[0].trim().equals(LogIn2.loggedInID)) {
+                    } else if (parts.length == 2 && parts[0].trim().equals(LogIn.loggedInID)) {
                         // Legacy format: StudentID;Message
                         notifications.add(new String[]{parts[0], "REGISTRATION", parts[1].trim(), ""});
                     }

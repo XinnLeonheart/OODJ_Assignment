@@ -4,7 +4,7 @@
  */
 package Student;
 
-import Main.LogIn2;
+import LogIn.LogIn;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -89,7 +89,7 @@ public class SubmitHW extends javax.swing.JFrame {
     }
 
     private boolean isAlreadySubmitted() {
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.loggedInID;
         if (studentID == null || studentID.isEmpty()) {
             return false;
         }
@@ -111,7 +111,7 @@ public class SubmitHW extends javax.swing.JFrame {
     }
 
     private boolean isClassGraded() {
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.accID;
         if (studentID == null || studentID.isEmpty()) {
             return false;
         }

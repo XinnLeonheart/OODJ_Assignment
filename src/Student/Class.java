@@ -4,7 +4,7 @@
  */
 package Student;
 
-import Main.LogIn2;
+import LogIn.LogIn;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -259,7 +259,7 @@ public class Class extends javax.swing.JFrame {
 
     private void loadStudentCourses() {
         studentCourses.clear();
-        String studentID = LogIn2.loggedInID;
+        String studentID = LogIn.accID;
 
         if (studentID == null || studentID.isEmpty()) {
             currentCourseIndex = 0;

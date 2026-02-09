@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 public class LogIn extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LogIn.class.getName());
+    public static String accID;
 
     /**
      * Creates new form LogIn
