@@ -9,31 +9,17 @@ package AdminStaff;
  * @author Xinn
  */
 
-import java.io.File;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-//import javax.swing.JOptionPane;
 
 
-public class AccountManage extends javax.swing.JPanel {
+public class User extends javax.swing.JPanel {
 
     /**
      * Creates new form AccountManage
      */
-    public AccountManage() {
+    public User() {
         initComponents();
        
     }
-    String filePath = "Account.txt";
-    
-//    public void createAccount(){
-//        try (BufferReader br = new BufferReader(filePath)){
-//            String line;
-//            while (tfaccountID.text)
-//    }
 
 
 

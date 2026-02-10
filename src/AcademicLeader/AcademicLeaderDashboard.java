@@ -4,13 +4,15 @@
  */
 package AcademicLeader;
 
+import Navigation.NavigateToLogInPage;
+
 /**
  *
  * @author 
  */
 public class AcademicLeaderDashboard extends javax.swing.JFrame {
     
-    private final String currentLeaderID;
+    public final String currentLeaderID;
 
     /**
      * Creates new form AcademicLeaderDashboard
@@ -20,6 +22,7 @@ public class AcademicLeaderDashboard extends javax.swing.JFrame {
         initComponents();
         this.currentLeaderID = leaderID;
         lblWelcome.setText("Welcome, Academic Leader " + leaderID);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -130,7 +133,7 @@ public class AcademicLeaderDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-
+        NavigateToLogInPage.goToLogInPage(this);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed

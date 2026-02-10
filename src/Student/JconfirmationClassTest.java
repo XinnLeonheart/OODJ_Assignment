@@ -5,7 +5,6 @@
 package Student;
 
 import javax.swing.*;
-
 /**
  *
  * @author Xenia Thor

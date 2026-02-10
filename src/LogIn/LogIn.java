@@ -14,6 +14,7 @@ import java.io.*;
 import javax.swing.*;
 import AdminStaff.AdminStaffDashboard;
 import AcademicLeader.AcademicLeaderDashboard;
+import AcademicLeader.User;
 import Student.StudentDashboard;
 import Lecturer.LecturerDashboard;
 import Navigation.NavigateToDashboard;
@@ -38,8 +39,7 @@ public class LogIn extends javax.swing.JFrame {
         initComponents();
     }
     
-    private void navigateToAccordingDashboard(String role, String accID, String name) {
-        this.dispose(); // close login window
+    private void navigateToAccordingDashboard(String role, String accID, String name, User user) {
 
         switch (role.toLowerCase()) {
 
@@ -56,7 +56,7 @@ public class LogIn extends javax.swing.JFrame {
                 break;
                 
             case "academic leader":
-                NavigateToDashboard.goToAcademicLeaderDashboard(this);
+                NavigateToDashboard.goToAcademicLeaderDashboard(this, user);
                 break;            
 
             default:
@@ -138,8 +138,10 @@ public class LogIn extends javax.swing.JFrame {
                     loginSuccess = true;
                     JOptionPane.showMessageDialog(this,
                             "Login successful! Welcome " + name);
-
-                    navigateToAccordingDashboard(role, accID, name);
+                    
+                     User user = new User(accID, username, name, email, password, phone, gender, age, role);
+                     
+                    navigateToAccordingDashboard(role, accID, name, user);
                     break;
                 }
             }

@@ -9,6 +9,7 @@ package AdminStaff;
  * @author lolipop
  */
 
+import Navigation.NavigateToLogInPage;
 import Navigation.NavigateToDashboard;
 import java.io.File;
 import java.io.BufferedReader;
@@ -378,13 +379,12 @@ public class ManageAccount extends javax.swing.JFrame {
     }
     
     public void autoGenerateAccID() {
-
         String prefix = "ACC";
-        int nextID = 1;
+        int maxNumber = 0;
 
         File file = new File(ACCOUNT_FILE);
 
-        // If file does not exist or empty → start from ACC001
+        // File not exist / empty -> start from 001
         if (!file.exists() || file.length() == 0) {
             tfAccountID.setText(prefix + "001");
             return;
@@ -392,25 +392,31 @@ public class ManageAccount extends javax.swing.JFrame {
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            String lastID = null;
 
             while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] data = line.split(";");
-                    lastID = data[0].trim(); 
+                if (line.trim().isEmpty()) continue;
+
+                String[] data = line.split(";");
+                if (data.length == 0) continue;
+
+                String accId = data[0].trim(); // e.g. ACC011
+                if (!accId.startsWith(prefix)) continue;
+
+                String numPart = accId.substring(prefix.length()); // "011"
+                try {
+                    int n = Integer.parseInt(numPart);
+                    if (n > maxNumber) maxNumber = n;
+                } catch (NumberFormatException ignore) {
+                    // skip invalid IDs
                 }
             }
 
-            if (lastID != null && lastID.startsWith(prefix)) {
-                int number = Integer.parseInt(lastID.substring(3));
-                nextID = number + 1;
-            }
-
+            int nextID = maxNumber + 1;
             tfAccountID.setText(prefix + String.format("%03d", nextID));
 
-        } catch (IOException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(null,
-                "Error generating Account ID!");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error generating Account ID: " + e.getMessage());
+            tfAccountID.setText(prefix + "001");
         }
     }
     
@@ -494,6 +500,7 @@ public class ManageAccount extends javax.swing.JFrame {
 
             loadAccountTable();
             clearAllTextFields();
+            autoGenerateAccID(); 
 
             JOptionPane.showMessageDialog(this, "Account deleted successfully!");
 
@@ -670,7 +677,8 @@ public class ManageAccount extends javax.swing.JFrame {
     
     public void clearAllTextFields() {
         tableAccountDetail.clearSelection();
-
+        
+        tfAccountID.setText("");
         tfUserName.setText("");
         tfName.setText("");
         tfEmail.setText("");
@@ -916,7 +924,7 @@ public class ManageAccount extends javax.swing.JFrame {
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(tfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jLabel7)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1083,6 +1091,7 @@ public class ManageAccount extends javax.swing.JFrame {
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         clearAllTextFields();
         loadAccountTable();
+        autoGenerateAccID();
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void tableAccountDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAccountDetailMouseClicked

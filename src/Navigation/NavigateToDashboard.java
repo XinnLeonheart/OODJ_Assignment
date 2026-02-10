@@ -10,6 +10,7 @@ package Navigation;
  */
 
 import AcademicLeader.AcademicLeaderDashboard;
+import AcademicLeader.User;
 import AdminStaff.AdminStaffDashboard;
 import Lecturer.LecturerMain;
 import Student.StudentDashboard;
@@ -41,11 +42,11 @@ public class NavigateToDashboard {
         }
     }
     
-    public static void goToAcademicLeaderDashboard(JFrame currentFrame) {
+    public static void goToAcademicLeaderDashboard(javax.swing.JFrame currentFrame, AcademicLeader.User user) {
         // Open the AdminStaffDashboard
-        AcademicLeaderDashboard academicLeaderDashboard = new AcademicLeaderDashboard();
+        AcademicLeaderDashboard academicLeaderDashboard = new AcademicLeaderDashboard(user.accID);
         academicLeaderDashboard.setVisible(true);
-        academicLeaderDashboard.setLocationRelativeTo(null); // center on screen
+        academicLeaderDashboard.setLocationRelativeTo(null); 
 
         // Close the current frame
         if (currentFrame != null) {
@@ -56,8 +57,8 @@ public class NavigateToDashboard {
     public static void goToLecturerMainPage(JFrame currentFrame) {
         // Open the AdminStaffDashboard
         LecturerMain lecturerMainPage = new LecturerMain();
-        LecturerMain.setVisible(true);
-        LecturerMain.setLocationRelativeTo(null); // center on screen
+        lecturerMainPage.setLocationRelativeTo(null);
+        lecturerMainPage.setVisible(true);
 
         // Close the current frame
         if (currentFrame != null) {
