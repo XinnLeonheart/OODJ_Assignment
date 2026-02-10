@@ -39,16 +39,36 @@ public class ViewFeedbacks extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
             model.setColumnIdentifiers(columnsName);
             model.setRowCount(0);
+            
+                        // Find the index of the ClassID column
+            int classIdColumnIndex = -1;
+            for(int i = 0; i < columnsName.length; i++){
+                if(columnsName[i].equalsIgnoreCase("ClassID") || 
+                   columnsName[i].equalsIgnoreCase("Class ID")){
+                    classIdColumnIndex = i;
+                    break;
+                }
+            }
+
             //get line from txt file
             Object[] tableLines = br.lines().toArray();
             
             //extract data from lines
             //set data to jtable model
+            // Extract and filter data based on classId
             for(int i = 0; i < tableLines.length; i++){
                 String line = tableLines[i].toString().trim();
                 String[] dataRow = line.split(";");
-                model.addRow(dataRow);
+            
+                //only display the studentsubmission which related to courseId
+                //show own students submission only base on courseId
+                if(classIdColumnIndex != -1 && 
+                    dataRow.length > classIdColumnIndex &&
+                    dataRow[classIdColumnIndex].equals(parent.getLecturerClassId())){
+                    model.addRow(dataRow);
+                }
             }
+            br.close();
             
         } catch (IOException ex){
             System.getLogger(ViewClassessTest.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);

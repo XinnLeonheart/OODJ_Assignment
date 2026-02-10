@@ -27,15 +27,33 @@ public class LecturerAssignments extends FeedbackandGPA2 {
     
     private DefaultTableModel model;
     private TableRowSorter<DefaultTableModel> sorter;
+    
+        //Add these instance variables to store the value
+    private String lecturerName;
+    private String lecturerClassId;
     /**
      * Creates new form LecturerAssignments
      */
-    public LecturerAssignments(String lecturerName, String courseId) {
-        super(lecturerName, courseId);// call parent
+    public LecturerAssignments(String lecturerName, String classId) {
+        super(lecturerName, classId);// call parent
+        
+        //Store the values as instance variables
+        this.lecturerName = lecturerName;
+        this.lecturerClassId = classId;
+        
         initComponents();
         loadTableData();
         setupTableSorter();
         setupCardLayout();
+    }
+    
+    
+    public String getClassId(){
+        return this.lecturerClassId;
+    }
+    
+    public String getLecturerName(){
+        return this.lecturerName;
     }
     
     
@@ -110,7 +128,7 @@ public class LecturerAssignments extends FeedbackandGPA2 {
     }
     
     private void loadTableData(){
-        String filePath = "src/TextFiles/loliapplyclass.txt";
+        String filePath = "src/TextFiles/lolicourse.txt";
         File file = new File(filePath);
         
         try {

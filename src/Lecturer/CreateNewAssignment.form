@@ -124,17 +124,17 @@
                                   <EmptySpace min="-2" pref="185" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="jLabeldurationhours" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabeltestname" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelassignmentname" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabelclasscode" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabellecturerclasscode" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="testNamefield" alignment="0" pref="159" max="32767" attributes="0"/>
+                                          <Component id="AssignmentNamefield" alignment="0" pref="159" max="32767" attributes="0"/>
                                           <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <Component id="btncreatetest" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btncreateassignment" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -149,8 +149,8 @@
                           <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabeltestname" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="testNamefield" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelassignmentname" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="AssignmentNamefield" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -163,7 +163,7 @@
                               <Component id="jLabellecturerclasscode" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="39" max="32767" attributes="0"/>
-                          <Component id="btncreatetest" min="-2" max="-2" attributes="0"/>
+                          <Component id="btncreateassignment" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                           <Component id="btnback" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
@@ -180,15 +180,15 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnbackActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JTextField" name="testNamefield">
+                <Component class="javax.swing.JTextField" name="AssignmentNamefield">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="testname"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testNamefieldActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AssignmentNamefieldActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabeltestname">
+                <Component class="javax.swing.JLabel" name="jLabelassignmentname">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Test Name :"/>
                   </Properties>
@@ -204,12 +204,12 @@
                     <Property name="text" type="java.lang.String" value="CreateNewAssignment"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btncreatetest">
+                <Component class="javax.swing.JButton" name="btncreateassignment">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="createtest"/>
+                    <Property name="text" type="java.lang.String" value="create assignment"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btncreatetestActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btncreateassignmentActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabelclasscode">

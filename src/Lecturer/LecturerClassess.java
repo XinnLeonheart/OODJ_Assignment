@@ -29,18 +29,35 @@ public class LecturerClassess extends FeedbackandGPA2 {
     private DefaultTableModel model;
     private TableRowSorter<DefaultTableModel> sorter;
 
-
+    //Add these instance variables to store the value
+    private String lecturerName;
+    private String lecturerClassId;
+;
+    
+    
     /**
      * Creates new form LecturerClassess
      */
-    public LecturerClassess(String lecturerName, String courseId) {
-        super(lecturerName, courseId);// call parent
+    public LecturerClassess(String lecturerName, String classId) {
+        super(lecturerName, classId);// call parent
+        
+        //Store the values as instance variables
+        this.lecturerName = lecturerName;
+        this.lecturerClassId = classId;
+        
         initComponents();
         loadTableData();
         setupTableSorter();
         setupCardLayout();
     }
     
+    public String getClassId(){
+        return this.lecturerClassId;
+    }
+    
+    public String getLecturerName(){
+        return this.lecturerName;
+    }
     
     private void setupCardLayout(){
         cardLayout = new CardLayout();
@@ -114,7 +131,7 @@ public class LecturerClassess extends FeedbackandGPA2 {
     }
     
     private void loadTableData(){
-        String filePath = "src/TextFiles/loliapplyclass.txt";
+        String filePath = "src/TextFiles/lolicourse.txt";
         File file = new File(filePath);
         
         try {
@@ -213,6 +230,15 @@ public class LecturerClassess extends FeedbackandGPA2 {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jTable1AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         All.setText("All");
@@ -548,6 +574,10 @@ public class LecturerClassess extends FeedbackandGPA2 {
         // TODO add your handling code here:
         showStudentGPA();
     }//GEN-LAST:event_btnstudentgpaMouseClicked
+
+    private void jTable1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTable1AncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1AncestorAdded
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

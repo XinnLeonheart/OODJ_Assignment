@@ -10,7 +10,7 @@ package Lecturer;
  */
 public class LecturerMain extends javax.swing.JFrame {
     private String lecturerName;
-    private String lecturerCourseId;
+    private String lecturerClassId;
     private LecturerClassess lecturerClassess;
     
     LecturerAssignments a;
@@ -24,15 +24,15 @@ public class LecturerMain extends javax.swing.JFrame {
     /**
      * Creates new form LecturerDashboard
      */
-    public LecturerMain(String lecturerName, String courseId) {
+    public LecturerMain(String lecturerName, String classId) {
         this.lecturerName = lecturerName;
-        this.lecturerCourseId = courseId;
+        this.lecturerClassId = classId;
         initComponents();
         
-        a = new LecturerAssignments(lecturerName, courseId);
-        b = new LecturerClassess(lecturerName, courseId);
-        c = new LecturerDashboard(lecturerName, courseId);
-        d = new LecturerProfile(lecturerName, courseId);
+        a = new LecturerAssignments(lecturerName, classId);
+        b = new LecturerClassess(lecturerName, classId);
+        c = new LecturerDashboard(lecturerName, classId);
+        d = new LecturerProfile(lecturerName, classId);
         
         
         
@@ -58,8 +58,8 @@ public class LecturerMain extends javax.swing.JFrame {
         return lecturerName;
     }
     
-    public String getLecturerCourseId() {
-        return lecturerCourseId;
+    public String getLecturerClassId() {
+        return lecturerClassId;
     }
 
     /**

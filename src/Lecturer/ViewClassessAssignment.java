@@ -32,7 +32,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
     
     
     private void loadTableData(){
-        String filePath = "src/TextFiles/classassignment.txt";
+        String filePath = "src/TextFiles/assignment.txt";
         File file = new File(filePath);
         
         try{
@@ -85,7 +85,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         jButtonrefresh = new javax.swing.JButton();
         jLabelclasscode = new javax.swing.JLabel();
         jLabel1baseonwhichlecturer = new javax.swing.JLabel();
-        jTextFieldtestname = new javax.swing.JTextField();
+        jTextFieldassignmentname = new javax.swing.JTextField();
         jLabeleditcode = new javax.swing.JLabel();
         jLabeltestname = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -169,6 +169,11 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         });
 
         jButtondelete.setText("Delete");
+        jButtondelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtondeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -191,7 +196,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jTextFielddurationhours, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                            .addComponent(jTextFieldtestname, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jTextFieldassignmentname, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelclasscode)
@@ -212,7 +217,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
                             .addComponent(jLabelclasscode))
                         .addGap(2, 2, 2)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldtestname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldassignmentname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1baseonwhichlecturer))
                         .addGap(20, 20, 20)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -330,7 +335,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRow = jTable1.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        jTextFieldtestname.setText(model.getValueAt(selectedRow, 0).toString());
+        jTextFieldassignmentname.setText(model.getValueAt(selectedRow, 0).toString());
         jTextFielddurationhours.setText(model.getValueAt(selectedRow, 1).toString());
         jLabel1baseonwhichlecturer.setText(model.getValueAt(selectedRow, 2).toString());
     }//GEN-LAST:event_jTable1MouseClicked
@@ -348,12 +353,12 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         if(i >= 0){
             int confirm = JOptionPane.showConfirmDialog(null,
                 "Confirm Update?",
-                "Confirmation",
+                "Update Confirmation",
                 JOptionPane.YES_NO_OPTION
             );
 
             if(confirm == JOptionPane.YES_OPTION){
-                model.setValueAt(jTextFieldtestname.getText(), i, 0);
+                model.setValueAt(jTextFieldassignmentname.getText(), i, 0);
                 model.setValueAt(jTextFielddurationhours.getText(), i, 1);
                 model.setValueAt(jLabel1baseonwhichlecturer.getText(), i, 2);
 
@@ -368,10 +373,55 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonupdateActionPerformed
 
+    private void jButtondeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtondeleteActionPerformed
+        // TODO add your handling code here:
+                // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+    
+        if (selectedRow >= 0) {
+            // Show confirmation dialog
+            int confirm = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure you want to delete this assignment?",
+                "Delete Confirmation",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Get the table model
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+                // Remove the selected row from table
+                model.removeRow(selectedRow);
+
+                // Update the file
+                updateAssignmentFile();
+
+                // Clear the text fields
+                jTextFieldassignmentname.setText("");
+                jTextFielddurationhours.setText("");
+                jLabel1baseonwhichlecturer.setText("base on which lecturer");
+
+                // Show success message
+                JOptionPane.showMessageDialog(null, 
+                    "Assignment deleted successfully!"
+                );
+            }
+        } else {
+            // No row selected
+            JOptionPane.showMessageDialog(
+                null, 
+                "Please select a row to delete!", 
+                "No Selection", 
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_jButtondeleteActionPerformed
+
     private void updateAssignmentFile() {
         try {
             // Create FileWriter - replace with your file path
-            FileWriter writer = new FileWriter("src/TextFiles/classassignment.txt");
+            FileWriter writer = new FileWriter("src/TextFiles/assignment.txt");
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
             // Write header
@@ -387,7 +437,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
             }
 
             writer.close();
-            System.out.println("classassignment.txt updated successfully!");
+            System.out.println("assignment.txt updated successfully!");
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error updating file: " + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
@@ -417,7 +467,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextFieldassignmentname;
     private javax.swing.JTextField jTextFielddurationhours;
-    private javax.swing.JTextField jTextFieldtestname;
     // End of variables declaration//GEN-END:variables
 }

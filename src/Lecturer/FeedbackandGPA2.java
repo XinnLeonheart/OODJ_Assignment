@@ -14,7 +14,7 @@ import java.awt.CardLayout;
 public class FeedbackandGPA2 extends javax.swing.JPanel {
     //ENCAPSULATION = protected
     protected String lecturerName;
-    protected String lecturerCourseId;
+    protected String lecturerClassId;
     
     
     protected StudentGPA studentGPA;
@@ -25,9 +25,9 @@ public class FeedbackandGPA2 extends javax.swing.JPanel {
     /**
      * Creates new form FeedbackandGPA2
      */
-    public FeedbackandGPA2(String lecturerName, String courseId) {
+    public FeedbackandGPA2(String lecturerName, String classId) {
         this.lecturerName = lecturerName;
-        this.lecturerCourseId = courseId;
+        this.lecturerClassId = classId;
         initComponents();
     }
 
@@ -49,8 +49,8 @@ public class FeedbackandGPA2 extends javax.swing.JPanel {
         return viewFeedbacks;
     }
     
-    public String getLecturerCourseId() {
-        return this.lecturerCourseId;
+    public String getLecturerClassId() {
+        return this.lecturerClassId;
     }
     
     public String getLecturerName(){

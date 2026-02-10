@@ -336,7 +336,7 @@ public class ViewClassessTest extends javax.swing.JPanel {
         if(i >= 0){
             int confirm = JOptionPane.showConfirmDialog(null,
                 "Confirm Update?",
-                "Confirmation",
+                "Update Confirmation",
                 JOptionPane.YES_NO_OPTION
             );
             
@@ -360,48 +360,44 @@ public class ViewClassessTest extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRow = jTable1.getSelectedRow();
     
-    if (selectedRow >= 0) {
-        // Show confirmation dialog
-        int confirm = JOptionPane.showConfirmDialog(
-            null,
-            "Are you sure you want to delete this test?",
-            "Confirm Delete",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE
-        );
-        
-        if (confirm == JOptionPane.YES_OPTION) {
-            // Get the table model
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            
-            // Remove the selected row from table
-            model.removeRow(selectedRow);
-            
-            // Update the file
-            updateClassTestFile();
-            
-            // Clear the text fields
-            jTextFieldtestname.setText("");
-            jTextFielddurationhours.setText("");
-            jLabel1baseonwhichlecturer.setText("base on which lecturer");
-            
-            // Show success message
+        if (selectedRow >= 0) {
+            // Show confirmation dialog
+            int confirm = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure you want to delete this test?",
+                "Delete Confirmation",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Get the table model
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+                // Remove the selected row from table
+                model.removeRow(selectedRow);
+
+                // Update the file
+                updateClassTestFile();
+
+                // Clear the text fields
+                jTextFieldtestname.setText("");
+                jTextFielddurationhours.setText("");
+                jLabel1baseonwhichlecturer.setText("base on which lecturer");
+
+                // Show success message
+                JOptionPane.showMessageDialog(null, 
+                    "Test deleted successfully!"
+                );
+            }
+        } else {
+            // No row selected
             JOptionPane.showMessageDialog(
                 null, 
-                "Test deleted successfully!", 
-                "Success", 
-                JOptionPane.INFORMATION_MESSAGE
+                "Please select a row to delete!", 
+                "No Selection", 
+                JOptionPane.WARNING_MESSAGE
             );
         }
-    } else {
-        // No row selected
-        JOptionPane.showMessageDialog(
-            null, 
-            "Please select a row to delete!", 
-            "No Selection", 
-            JOptionPane.WARNING_MESSAGE
-        );
-    }
     }//GEN-LAST:event_jButtondeleteActionPerformed
 
     // METHOD TO WRITE TABLE DATA TO classtest.txt

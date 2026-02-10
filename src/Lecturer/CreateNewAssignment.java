@@ -38,10 +38,10 @@ public class CreateNewAssignment extends javax.swing.JPanel {
         jLabel17 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
         btnback = new javax.swing.JButton();
-        testNamefield = new javax.swing.JTextField();
-        jLabeltestname = new javax.swing.JLabel();
+        AssignmentNamefield = new javax.swing.JTextField();
+        jLabelassignmentname = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        btncreatetest = new javax.swing.JButton();
+        btncreateassignment = new javax.swing.JButton();
         jLabelclasscode = new javax.swing.JLabel();
         jLabellecturerclasscode = new javax.swing.JLabel();
         jLabeldurationhours = new javax.swing.JLabel();
@@ -65,23 +65,23 @@ public class CreateNewAssignment extends javax.swing.JPanel {
             }
         });
 
-        testNamefield.setText("testname");
-        testNamefield.addActionListener(new java.awt.event.ActionListener() {
+        AssignmentNamefield.setText("testname");
+        AssignmentNamefield.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testNamefieldActionPerformed(evt);
+                AssignmentNamefieldActionPerformed(evt);
             }
         });
 
-        jLabeltestname.setText("Test Name :");
+        jLabelassignmentname.setText("Test Name :");
 
         jLabel6.setBackground(new java.awt.Color(0, 0, 0));
         jLabel6.setFont(new java.awt.Font("Leelawadee UI", 1, 24)); // NOI18N
         jLabel6.setText("CreateNewAssignment");
 
-        btncreatetest.setText("createtest");
-        btncreatetest.addActionListener(new java.awt.event.ActionListener() {
+        btncreateassignment.setText("create assignment");
+        btncreateassignment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btncreatetestActionPerformed(evt);
+                btncreateassignmentActionPerformed(evt);
             }
         });
 
@@ -114,15 +114,15 @@ public class CreateNewAssignment extends javax.swing.JPanel {
                         .addGap(185, 185, 185)
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabeldurationhours)
-                            .addComponent(jLabeltestname)
+                            .addComponent(jLabelassignmentname)
                             .addComponent(jLabelclasscode))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabellecturerclasscode)
                             .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(testNamefield, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                                .addComponent(AssignmentNamefield, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
                                 .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(btncreatetest))))
+                            .addComponent(btncreateassignment))))
                 .addContainerGap(237, Short.MAX_VALUE))
         );
         jPanel15Layout.setVerticalGroup(
@@ -132,8 +132,8 @@ public class CreateNewAssignment extends javax.swing.JPanel {
                 .addComponent(jLabel6)
                 .addGap(34, 34, 34)
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabeltestname)
-                    .addComponent(testNamefield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelassignmentname)
+                    .addComponent(AssignmentNamefield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabeldurationhours)
@@ -143,7 +143,7 @@ public class CreateNewAssignment extends javax.swing.JPanel {
                     .addComponent(jLabelclasscode)
                     .addComponent(jLabellecturerclasscode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(btncreatetest)
+                .addComponent(btncreateassignment)
                 .addGap(32, 32, 32)
                 .addComponent(btnback)
                 .addGap(68, 68, 68))
@@ -198,26 +198,26 @@ public class CreateNewAssignment extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnbackActionPerformed
 
-    private void testNamefieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testNamefieldActionPerformed
+    private void AssignmentNamefieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AssignmentNamefieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_testNamefieldActionPerformed
+    }//GEN-LAST:event_AssignmentNamefieldActionPerformed
 
-    private void btncreatetestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncreatetestActionPerformed
+    private void btncreateassignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncreateassignmentActionPerformed
         // TODO add your handling code here:
-        String testname = testNamefield.getText();
+        String assignmentname = AssignmentNamefield.getText();
         String durationhours = (String) jComboBox1.getSelectedItem();
         String classcode = jLabellecturerclasscode.getText();
 
-        if (testname.isEmpty() || classcode.isEmpty()) {
+        if (assignmentname.isEmpty() || classcode.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please fill in all fields!");
             return;
         }
         try
         {
-            String filePath = "src/TextFiles/classassignment.txt";
+            String filePath = "src/TextFiles/assignment.txt";
             FileWriter writer = new FileWriter(filePath, true);
 
-            String line = testname + "," + durationhours + "," + classcode;
+            String line = assignmentname + "," + durationhours + "," + classcode;
             writer.write(line);
             writer.write(System.getProperty("line.separator"));
             writer.close();
@@ -230,7 +230,7 @@ public class CreateNewAssignment extends javax.swing.JPanel {
         {
             JOptionPane.showMessageDialog(null,"Error");
         }
-    }//GEN-LAST:event_btncreatetestActionPerformed
+    }//GEN-LAST:event_btncreateassignmentActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
@@ -239,19 +239,19 @@ public class CreateNewAssignment extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField AssignmentNamefield;
     private javax.swing.JButton btnback;
-    private javax.swing.JButton btncreatetest;
+    private javax.swing.JButton btncreateassignment;
     private javax.swing.JPanel dashboard;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabelassignmentname;
     private javax.swing.JLabel jLabelclasscode;
     private javax.swing.JLabel jLabeldurationhours;
     private javax.swing.JLabel jLabellecturerclasscode;
-    private javax.swing.JLabel jLabeltestname;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel15;
-    private javax.swing.JTextField testNamefield;
     // End of variables declaration//GEN-END:variables
 }

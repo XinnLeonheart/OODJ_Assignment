@@ -38,12 +38,12 @@ public class StudentGPA extends javax.swing.JPanel {
         
         try{
             // Load test and assignment definitions
-            loadTestDefinitions("src/TextFiles/createclasstest.txt");
+            loadTestDefinitions("src/TextFiles/classtest.txt");
             loadAssignmentDefinitions("src/TextFiles/assignment.txt");
 
             // Load student marks
-            loadStudentTestMarks("src/TextFiles/Gradeclasstest.txt");
-            loadStudentAssignmentMarks("src/TextFiles/Gradeassignment.txt");
+            loadStudentTestMarks("src/TextFiles/gradeclasstest.txt");
+            loadStudentAssignmentMarks("src/TextFiles/gradeassignment.txt");
 
             // Create and populate table
             createAndPopulateTable();

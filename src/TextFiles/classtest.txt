@@ -1,0 +1,4 @@
+Test Name;Duration Hours;Class Code
+test;45 min;base on which lecturer
+testjingjie ;45 min;base on which lecturer
+testxyyyy;2 hrs;base on which lecturer

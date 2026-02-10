@@ -46,31 +46,35 @@ public class GradeClassessTest extends javax.swing.JPanel {
             model.setColumnIdentifiers(columnsName);
             model.setRowCount(0);
             
-            // Get the course ID of the logged-in lecturer
-            String lecturerCourseId = parentPanel.getLecturerCourseId(); 
-            
-            // Find the index of the course ID column
-            int courseIdColumnIndex = -1;
+            // Find the index of the ClassID column
+            int classIdColumnIndex = -1;
             for(int i = 0; i < columnsName.length; i++){
-                if(columnsName[i].equalsIgnoreCase("courseId") || columnsName[i].equalsIgnoreCase("course_id")){
-                    courseIdColumnIndex = i;
+                if(columnsName[i].equalsIgnoreCase("ClassID") || 
+                   columnsName[i].equalsIgnoreCase("Class ID")){
+                    classIdColumnIndex = i;
                     break;
                 }
             }
-            //get line from txt file
+            
+            //get all lines from txt file
             Object[] tableLines = br.lines().toArray();
             
             //extract data from lines
             //set data to jtable model
+            // Extract and filter data based on classId
             for(int i = 0; i < tableLines.length; i++){
                 String line = tableLines[i].toString().trim();
                 String[] dataRow = line.split(";");
                 
-                // Only add row if course ID matches lecturer's course
-                if(courseIdColumnIndex != -1 && dataRow[courseIdColumnIndex].equals(lecturerCourseId)){
+                //only display the studentsubmission which related to courseId
+                //show own students submission only base on courseId
+                if(classIdColumnIndex != -1 && 
+                    dataRow.length > classIdColumnIndex &&
+                    dataRow[classIdColumnIndex].equals(parentPanel.getClassId())){
                     model.addRow(dataRow);
                 }
             }
+            br.close();
             
         } catch (IOException ex){
             System.getLogger(ViewClassessTest.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -97,9 +101,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButtonrefresh = new javax.swing.JButton();
-        jTextFieldtestname = new javax.swing.JTextField();
         jLabelgradetest = new javax.swing.JLabel();
-        jTextFielddurationhours = new javax.swing.JTextField();
         jLabelstudentsubmissionlist = new javax.swing.JLabel();
         jLabelstudentid = new javax.swing.JLabel();
         jLabelstudent1field = new javax.swing.JLabel();
@@ -182,26 +184,15 @@ public class GradeClassessTest extends javax.swing.JPanel {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelgradetest)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonrefresh)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextFielddurationhours, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                            .addComponent(jTextFieldtestname, javax.swing.GroupLayout.Alignment.LEADING))))
-                .addContainerGap(176, Short.MAX_VALUE))
+                    .addComponent(jButtonrefresh)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 727, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(277, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jTextFieldtestname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(jTextFielddurationhours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonrefresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -223,7 +214,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
         jLabelstatusfield.setText("submitted");
 
         jLabelcourseid.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelcourseid.setText("Course ID:");
+        jLabelcourseid.setText("Class ID:");
 
         jLabelcoursefield.setText("C001");
 
@@ -268,45 +259,44 @@ public class GradeClassessTest extends javax.swing.JPanel {
                         .addGap(16, 16, 16)
                         .addComponent(jLabelstudentsubmissionlist))
                     .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnback))
-                    .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelcourseid)
-                            .addComponent(jLabelstudentid)
-                            .addComponent(jLabelstatus))
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabelcourseid)
+                                    .addComponent(jLabelstudentid)
+                                    .addComponent(jLabelstatus)))
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(btnback)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel16Layout.createSequentialGroup()
-                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel16Layout.createSequentialGroup()
-                                        .addComponent(jLabelstatusfield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabeltestmarks))
-                                    .addGroup(jPanel16Layout.createSequentialGroup()
-                                        .addComponent(jLabelcoursefield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabelanswer))
-                                    .addGroup(jPanel16Layout.createSequentialGroup()
-                                        .addComponent(jLabelstudent1field, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabeltestname)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel16Layout.createSequentialGroup()
-                                        .addComponent(jLabeltestnamefield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel1))
-                                    .addGroup(jPanel16Layout.createSequentialGroup()
-                                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabelanswerfield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jComboBoxmarksfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabelcoursefield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabelanswer))
                             .addGroup(jPanel16Layout.createSequentialGroup()
-                                .addGap(158, 158, 158)
-                                .addComponent(jButtongrade)))))
+                                .addComponent(jLabelstudent1field, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabeltestname))
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addComponent(jLabelstatusfield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtongrade)
+                                    .addComponent(jLabeltestmarks))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addComponent(jLabeltestnamefield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1))
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelanswerfield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBoxmarksfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
@@ -336,17 +326,18 @@ public class GradeClassessTest extends javax.swing.JPanel {
                             .addComponent(jLabelstatus)
                             .addComponent(jLabelstatusfield)
                             .addComponent(jLabeltestmarks)
-                            .addComponent(jComboBoxmarksfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jComboBoxmarksfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnback)
+                            .addComponent(jButtongrade))
+                        .addGap(35, 35, 35))
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnback)
-                    .addComponent(jButtongrade))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
-        dashboard1.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 730, 380));
+        dashboard1.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 750, 380));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -412,33 +403,45 @@ public class GradeClassessTest extends javax.swing.JPanel {
     private void jButtongradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtongradeActionPerformed
         // TODO add your handling code here:
         String studentname = jLabelstudent1field.getText();
-        String coursename = jLabelcoursefield.getText();
+        String classid = jLabelcoursefield.getText();
+        String status = jLabelstatusfield.getText();
         String testname = jLabeltestnamefield.getText();
         String testmarks = (String) jComboBoxmarksfield.getSelectedItem();
-
-        if (studentname.isEmpty() || coursename.isEmpty() || testname.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Please select a row to grade!");
-        return;
-    }
+        String feedback = jTextArea1.getText();
+        
+        if (studentname.isEmpty() || classid.isEmpty() || testname.isEmpty() || feedback.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please select a row to grade and give feedback!");
+            return;
+        }else if(status.equals("Graded")){
+            JOptionPane.showMessageDialog(null, "Have been Graded!");
+            return;
+        }
         try
-        {
+            {
             String filePath = "src/TextFiles/gradeclasstest.txt";
             FileWriter writer = new FileWriter(filePath, true);
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String timestamp = now.format(formatter);
 
-            String line = studentname + ";" + coursename + ";" + testname + ";" + testmarks + ";" + timestamp;
+            String line = studentname + ";" + classid + ";" + testname + ";" + testmarks + ";" + feedback + ";"+ timestamp;
             writer.write(line);
             writer.write(System.getProperty("line.separator"));
             writer.close();
             
             //Updata ClassTestSubmission.txt status to "Graded"
-            updateClassTestSubmissionStatus(studentname, coursename, testname);
+            updateClassTestSubmissionStatus(studentname, classid, testname);
 
             JOptionPane.showMessageDialog(null,"Success");
+            
+            // Clear the form after successful grading
+            jTextArea1.setText("");
+            jLabelstatusfield.setText("Graded");
+            loadTableData();
+            
             setVisible(false);
             parentPanel.showGradeTest();
+            
         }
         catch(Exception e)
         {
@@ -446,7 +449,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtongradeActionPerformed
 
-    private void updateClassTestSubmissionStatus(String studentId, String courseId, String testName) {
+    private void updateClassTestSubmissionStatus(String studentId, String classId, String testName) {
     String filePath = "src/TextFiles/ClassTestSubmission.txt";
     File file = new File(filePath);
     
@@ -466,7 +469,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
             // Format: Student Id;Course Id;Test Name;Answer;Date Time;Status;Duration Complete Time
             if(data.length >= 6 && 
                data[0].trim().equals(studentId.trim()) && 
-               data[1].trim().equals(courseId.trim()) && 
+               data[1].trim().equals(classId.trim()) && 
                data[2].trim().equals(testName.trim())) {
                 
                 // Update the status (column index 5) from "Submitted" to "Graded"
@@ -519,7 +522,5 @@ public class GradeClassessTest extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextFielddurationhours;
-    private javax.swing.JTextField jTextFieldtestname;
     // End of variables declaration//GEN-END:variables
 }
