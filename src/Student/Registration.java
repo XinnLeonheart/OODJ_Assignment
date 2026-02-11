@@ -275,9 +275,6 @@ public class Registration extends javax.swing.JFrame {
 
     private void btnRegisterClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterClassActionPerformed
         // TODO add your handling code here:
-        LearningPage registerClass = new LearningPage();
-        registerClass.setVisible(true);
-        dispose();
     }//GEN-LAST:event_btnRegisterClassActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
