@@ -25,17 +25,21 @@ import Student.Assessment;
 import Student.EditProfile;
 import Student.LearningPage;
 import LogIn.LogIn;
+import static LogIn.LogIn.accID;
 /**
  *
  * @author Xinn
  */
 public class StudentDashboard extends javax.swing.JFrame {
+
+    private String username;
     public StudentDashboard (String studentName){
         setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JLabel welcomeLabel = new JLabel ("Welcome!" +studentName);
         add(welcomeLabel);
         setVisible(true);
+        initComponents();
     }
     
 //    public String studentName;
@@ -59,10 +63,10 @@ public class StudentDashboard extends javax.swing.JFrame {
      */
     public StudentDashboard() {
         initComponents();
-//        setLocationRelativeTo(null);
-//        
-//        String name = (LogIn.loggedInName != null && !LogIn.loggedInName.isBlack())?LogIn.LoggedInName :"Student";
-//        jLabelWelcome.setText("Welcome! " + name);
+        setLocationRelativeTo(null);
+        
+        String name = (LogIn.loggedInName != null && !LogIn.loggedInName.isBlank())? LogIn.loggedInName : "Student";
+        jLabelWelcome.setText("Welcome! " + name);
     }
 
     /**
@@ -255,8 +259,8 @@ public class StudentDashboard extends javax.swing.JFrame {
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         // TODO add your handling code here:
-        LogIn.accID= "";
-        LogIn.loggedInName = "";
+        LogIn.accID= accID;
+        LogIn.loggedInName = username;
         LogIn logout = new LogIn();
         logout.setVisible(true);
         dispose();
@@ -264,6 +268,7 @@ public class StudentDashboard extends javax.swing.JFrame {
 
     private void btnCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentActionPerformed
         // TODO add your handling code here:
+        
         feedbackForm comment = new feedbackForm();
         comment.setVisible (true);
         dispose();
@@ -302,7 +307,7 @@ public class StudentDashboard extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new StudentDashboard().setVisible(true));
         String username = "";
         try{
-            Path path = Paths.get("Account.txt");
+            Path path = Paths.get("src/TextFiles/Account.txt");
             username = Files.readString(path).trim();
         } catch (IOException e){
             username = "Unknown";

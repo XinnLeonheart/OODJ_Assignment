@@ -39,7 +39,7 @@ public class EditProfile extends javax.swing.JFrame {
     
     private void loadStudentData(){
         // Load student data from file
-        String filePath = "src/TextFiles/Account";
+        String filePath = "src/TextFiles/Account.txt";
         String targetID = LogIn.loggedInID;
 
         try {

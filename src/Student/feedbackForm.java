@@ -38,7 +38,7 @@ public class feedbackForm extends javax.swing.JFrame {
         }
 
         java.util.ArrayList<String> registeredClassIDs = new java.util.ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Registration"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Registration.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split(";");
@@ -58,7 +58,7 @@ public class feedbackForm extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
