@@ -79,39 +79,39 @@ public class Account extends javax.swing.JPanel {
         return role; 
     }
 
-    public void getAccID(String accID) { 
+    public void setAccID(String accID) { 
          this.accID = accID; 
     }
     
-    public void getUserName(String UserName) { 
+    public void setUserName(String UserName) { 
         this.userName = UserName;
     }
     
-    public void getName(String name) {
+    public void setName(String name) {
         this.name = name; 
     }
     
-    public void getEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
     
-    public void getPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
     
-    public void getPhone(String phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
     
-    public void getGender(String gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
     
-    public void getAge(String age) {
+    public void setAge(String age) {
         this.age = age; 
     }
     
-    public void getRole(String role) {
+    public void setRole(String role) {
         this.role = role; 
     }
     

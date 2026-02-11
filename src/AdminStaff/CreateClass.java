@@ -33,10 +33,25 @@ public class CreateClass extends javax.swing.JFrame {
     private String originalTableData = "";
 
     public CreateClass() {
-        initComponents();
+        initComponents(); 
+
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][] {},
+            new String[] {"Class ID", "Class Name", "Module", "Action"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Only Class Name + Module editable, Action clickable
+                return column == 1 || column == 2 || column == 3;
+            }
+        };
+
+        tableClass.setModel(model);
+        tableClass.getColumnModel().getColumn(0).setResizable(false);
+        setupDeleteColumn();
         displayModuleSelectionOnTable();
         autoGenerateClassID();
-        loadTableClass();        
+        loadTableClass();       
     }
     
     public void autoGenerateClassID(){
@@ -221,7 +236,7 @@ public class CreateClass extends javax.swing.JFrame {
                 String[] data = line.split(";");
 
                 model.addRow(new Object[]{
-                    data[0], data[1], data[2]
+                    data[0], data[1], data[2], "Delete"
                 });
                 
                 snapshot.append(line).append("\n");
@@ -239,6 +254,131 @@ public class CreateClass extends javax.swing.JFrame {
         tfClassName.setText("");
     }
     
+    public void deleteClassById(String classId) {
+        File file = new File(CLASS_FILE);
+
+        StringBuilder keptLines = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                if (!line.startsWith(classId + ";")) {
+                    keptLines.append(line).append("\n");
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading file");
+            return;
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write(keptLines.toString());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving file");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Class deleted successfully!");
+        loadTableClass();
+        autoGenerateClassID();
+    }
+
+    
+    private void setupDeleteColumn() {
+        int actionCol = 3;
+
+        tableClass.getColumnModel()
+                .getColumn(actionCol)
+                .setCellRenderer(new ButtonRenderer());
+
+        tableClass.getColumnModel()
+                .getColumn(actionCol)
+                .setCellEditor(new ButtonEditor(new JCheckBox(), tableClass));
+    }
+
+
+    
+    class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
+
+        public ButtonRenderer() {
+            setText("Delete");
+            setBackground(java.awt.Color.RED);
+            setForeground(java.awt.Color.WHITE);
+            setOpaque(true);
+            setBorderPainted(false);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable table, Object value,
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
+
+            // keep same style even when selected
+            setText("Delete");
+            setBackground(java.awt.Color.RED);
+            setForeground(java.awt.Color.WHITE);
+            return this;
+        }
+    }
+
+    class ButtonEditor extends javax.swing.DefaultCellEditor {
+
+        private final javax.swing.JButton button;
+        private String classId;
+        private final javax.swing.JTable table;
+
+        public ButtonEditor(javax.swing.JCheckBox checkBox, javax.swing.JTable table) {
+            super(checkBox);
+            this.table = table;
+
+            button = new javax.swing.JButton("Delete");
+            button.setBackground(java.awt.Color.RED);
+            button.setForeground(java.awt.Color.WHITE);
+            button.setOpaque(true);
+            button.setBorderPainted(false);
+
+            button.addActionListener(e -> {
+                fireEditingStopped(); // stop editing first
+
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    CreateClass parent =
+                            (CreateClass) javax.swing.SwingUtilities.getWindowAncestor(table);
+
+                    // optional confirmation (remove if you don’t want)
+                    int result = JOptionPane.showConfirmDialog(
+                            table,
+                            "Are you sure you want to delete this class?",
+                            "Confirm Delete",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (result == JOptionPane.YES_OPTION) {
+                        parent.deleteClassById(classId);
+                    }
+                });
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable table, Object value,
+                boolean isSelected, int row, int column) {
+
+            classId = table.getValueAt(row, 0).toString();
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "Delete";
+        }
+    }
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
