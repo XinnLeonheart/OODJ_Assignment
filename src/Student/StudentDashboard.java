@@ -23,7 +23,7 @@ import java.nio.file.*;
 
 import Student.Assessment;
 import Student.EditProfile;
-import Student.Class;
+import Student.LearningPage;
 import LogIn.LogIn;
 /**
  *

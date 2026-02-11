@@ -14,9 +14,9 @@ import javax.swing.*;
  *
  * @author Xenia Thor
  */
-public class Class extends javax.swing.JFrame {
+public class LearningPage extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Class.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LearningPage.class.getName());
 
     private ArrayList<String[]> studentCourses = new ArrayList<>();
     private int currentCourseIndex = 0;
@@ -26,7 +26,7 @@ public class Class extends javax.swing.JFrame {
     /**
      * Creates new form RegisterClass
      */
-    public Class() {
+    public LearningPage() {
         initComponents();
         loadStudentCourses();
         setLocationRelativeTo(null);
@@ -57,7 +57,6 @@ public class Class extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("My Course");
-        setPreferredSize(new java.awt.Dimension(600, 420));
 
         label1.setFont(new java.awt.Font("Gabriola", 1, 24)); // NOI18N
         label1.setText("My Course");
@@ -352,7 +351,7 @@ public class Class extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Class().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new LearningPage().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -35,8 +35,8 @@ public class ClassTest extends javax.swing.JFrame {
     private boolean timerActive = false;
 
     public ClassTest() {
-        this.classID = Class.currentClassID;
-        this.className = Class.currentClassName;
+        this.classID = LearningPage.currentClassID;
+        this.className = LearningPage.currentClassName;
         initComponents();
         setupAfterInit();
     }
@@ -481,7 +481,7 @@ public class ClassTest extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         stopTimer();
-        Class classPage = new Class();
+        LearningPage classPage = new LearningPage();
         classPage.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnBackActionPerformed

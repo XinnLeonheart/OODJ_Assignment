@@ -239,7 +239,7 @@ public class feedbackForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // Class selection changed - no module loading needed
+        // LearningPage selection changed - no module loading needed
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -274,7 +274,7 @@ public class feedbackForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnComment1ActionPerformed
 
     private void btnRegisterClass1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterClass1ActionPerformed
-        Class registerClass = new Class();
+        LearningPage registerClass = new LearningPage();
         registerClass.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnRegisterClass1ActionPerformed

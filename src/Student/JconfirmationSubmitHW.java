@@ -161,7 +161,7 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
         }
         this.dispose();
 
-        Class backToMain = new Class();
+        LearningPage backToMain = new LearningPage();
         backToMain.setVisible(true);
     }//GEN-LAST:event_btnSubmitActionPerformed
 

@@ -273,7 +273,7 @@ public class SubmitHW extends javax.swing.JFrame {
 
     private void btnCancel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancel2ActionPerformed
         // TODO add your handling code here:
-        Class backClass = new Class();
+        LearningPage backClass = new LearningPage();
         backClass.setVisible(true);
         this.dispose(); 
     }//GEN-LAST:event_btnCancel2ActionPerformed

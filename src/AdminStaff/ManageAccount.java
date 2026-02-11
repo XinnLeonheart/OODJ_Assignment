@@ -33,8 +33,8 @@ public class ManageAccount extends javax.swing.JFrame {
         initComponents();
         tfAccountID.setEditable(false);
         tfEmailDomain.setEditable(false);
-        autoGenerateAccID();
         loadAccountTable();
+        autoGenerateAccID();       
         
         tableAccountDetail.getSelectionModel().addListSelectionListener(e -> {
         if (!e.getValueIsAdjusting()) {
@@ -133,8 +133,7 @@ public class ManageAccount extends javax.swing.JFrame {
                 );    
         
         fw.close();
-        }
-       
+        }      
     }
     
     public void editAccInfoInDatabase() {
@@ -677,8 +676,7 @@ public class ManageAccount extends javax.swing.JFrame {
     
     public void clearAllTextFields() {
         tableAccountDetail.clearSelection();
-        
-        tfAccountID.setText("");
+
         tfUserName.setText("");
         tfName.setText("");
         tfEmail.setText("");

@@ -26,13 +26,13 @@ public class Account extends javax.swing.JPanel {
     public String name;
     public String email;
     public String password;
-    public String phone;
+    public int phone;
     public String gender;
     public String age;
     public String role;
 
     public Account(String accID, String userName, String name, String email, 
-            String password, String phone, String gender, String age, String role) {
+            String password, int phone, String gender, String age, String role) {
         this.accID = accID;
         this.userName = userName;
         this.name = name;
@@ -64,7 +64,7 @@ public class Account extends javax.swing.JPanel {
         return password; 
     }
     
-    public String getPhone() {
+    public int getPhone() {
         return phone; 
     }
     
@@ -79,31 +79,67 @@ public class Account extends javax.swing.JPanel {
     public String getRole() {
         return role; 
     }
+
+    public void getAccID(String accID) { 
+         this.accID = accID; 
+    }
+    
+    public void getUserName(String UserName) { 
+        this.userName = UserName;
+    }
+    
+    public void getName(String name) {
+        this.name = name; 
+    }
+    
+    public void getEmail(String email) {
+        this.email = email;
+    }
+    
+    public void getPassword(String password) {
+        this.password = password;
+    }
+    
+    public void getPhone(int phone) {
+        this.phone = phone;
+    }
+    
+    public void getGender(String gender) {
+        this.gender = gender;
+    }
+    
+    public void getAge(String age) {
+        this.age = age; 
+    }
+    
+    public void getRole(String role) {
+        this.role = role; 
+    }
     
     public class AdminStaff extends Account {
         public AdminStaff(String accID, String userName, String name, String email,
-                          String password, String phone, String gender, String age) {
+                          String password, int phone, String gender, String age) {
             super(accID, userName, name, email, password, phone, gender, age, "Admin Staff");
         }
     }
 
     public class AcademicLeader extends Account {
         public AcademicLeader(String accID, String userName, String name, String email,
-                          String password, String phone, String gender, String age) {
-            super(accID, userName, name, email, password, phone, gender, age, "Admin Staff");
+                          String password, int phone, String gender, String age) {
+            super(accID, userName, name, email, password, phone, gender, age, "Academic Leader");
         }
     }
 
     public class Lecturer extends Account {
         public Lecturer(String accID, String userName, String name, String email,
-                          String password, String phone, String gender, String age) {
-            super(accID, userName, name, email, password, phone, gender, age, "Admin Staff");
+                          String password, int phone, String gender, String age) {
+            super(accID, userName, name, email, password, phone, gender, age, "Lecturer");
         }
     }
 
     public class Student extends Account {
         public Student(String accID, String userName, String name, String email,
-                       String password, String phone, String gender, String age) {
+                       String password, int phone, String gender, String age) {
             super(accID, userName, name, email, password, phone, gender, age, "Student");
         }
     }
