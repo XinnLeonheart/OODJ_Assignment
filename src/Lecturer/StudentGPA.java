@@ -124,7 +124,7 @@ public class StudentGPA extends javax.swing.JPanel {
                     String[] parts = line.split(";");
                     if (parts.length >= 4) {
                         String studentName = parts[0].trim();
-                        String courseId = parts[1].trim();
+                        String classId = parts[1].trim();
                         String testName = parts[2].trim();
                         double marks = Double.parseDouble(parts[3].trim());
 
