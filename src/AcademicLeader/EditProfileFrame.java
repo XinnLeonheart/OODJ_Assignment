@@ -5,19 +5,21 @@
 package AcademicLeader;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
  *
- * @author 
+ * @author
  */
 public class EditProfileFrame extends javax.swing.JFrame {
-    
+
     private final String currentLeaderID;
 
     /**
      * Creates new form EditProfile
+     *
      * @param leaderID
      */
     public EditProfileFrame(String leaderID) {
@@ -25,14 +27,27 @@ public class EditProfileFrame extends javax.swing.JFrame {
         this.currentLeaderID = leaderID;
         loadProfile();
     }
-    
-        private void loadProfile() {
-        try (BufferedReader br = new BufferedReader(new FileReader("account.txt"))) {
+
+    private void loadProfile() {
+
+        try {
+
+            File file = new File("src/TextFiles/Account.txt");
+
+            if (!file.exists()) {
+                JOptionPane.showMessageDialog(this, "Account file not found");
+                return;
+            }
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
             String line;
             while ((line = br.readLine()) != null) {
+
                 String[] data = line.split(";");
 
-                if (data[0].equals(currentLeaderID)) {
+                if (data.length >= 9 && data[0].equals(currentLeaderID)) {
+
                     txtName.setText(data[2]);
                     txtEmail.setText(data[3]);
                     txtPassword.setText(data[4]);
@@ -40,8 +55,12 @@ public class EditProfileFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (IOException e) {
+
+            br.close();
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading profile");
+            e.printStackTrace();
         }
     }
 
@@ -125,27 +144,29 @@ public class EditProfileFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(71, 71, 71)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(71, 71, 71))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(txtPhone, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                                         .addComponent(txtEmail)
-                                        .addComponent(txtName)))))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(txtName))
+                                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 81, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnEdit)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnCreate))
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(50, Short.MAX_VALUE))))
+                        .addComponent(jLabel4)
+                        .addGap(120, 120, 120)
+                        .addComponent(btnEdit)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCreate)
+                        .addContainerGap(82, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,12 +183,12 @@ public class EditProfileFrame extends javax.swing.JFrame {
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCreate)
@@ -179,46 +200,77 @@ public class EditProfileFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        String newName = txtName.getText().trim();
+        String newEmail = txtEmail.getText().trim();
+        String newPassword = txtPassword.getText().trim();
+        String newPhone = txtPhone.getText().trim();
 
-        String name = txtName.getText().trim();
-        String email = txtEmail.getText().trim();
-        String phone = txtPhone.getText().trim();
-        String password = txtPassword.getText().trim();
+        if (newName.isEmpty() || newEmail.isEmpty()
+                || newPassword.isEmpty() || newPhone.isEmpty()) {
 
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill in all fields");
+            JOptionPane.showMessageDialog(this, "All fields are required");
             return;
         }
 
-        ArrayList<String> updatedData = new ArrayList<>();
+        try {
 
-        try (BufferedReader br = new BufferedReader(new FileReader("account.txt"))) {
+            File file = new File("src/TextFiles/Account.txt");
+
+            if (!file.exists()) {
+                JOptionPane.showMessageDialog(this, "Account file not found");
+                return;
+            }
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            ArrayList<String> updatedLines = new ArrayList<>();
+
             String line;
+
             while ((line = br.readLine()) != null) {
+
                 String[] data = line.split(";");
 
-                if (data[0].equals(currentLeaderID)) {
-                    data[2] = name;
-                    data[3] = email;
-                    data[4] = password;
-                    data[5] = phone;
-                    line = String.join(";", data);
-                }
-                updatedData.add(line);
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error updating profile");
-        }
+                // Make sure row has enough columns
+                if (data.length >= 9 && data[0].equals(currentLeaderID)) {
 
-        try (PrintWriter pw = new PrintWriter(new FileWriter("account.txt"))) {
-            for (String l : updatedData) {
+                    // Update only editable fields
+                    data[2] = newName;
+                    data[3] = newEmail;
+                    data[4] = newPassword;
+                    data[5] = newPhone;
+
+                    // Rebuild full line (keep same format + trailing ;)
+                    line = data[0] + ";"
+                            + data[1] + ";"
+                            + data[2] + ";"
+                            + data[3] + ";"
+                            + data[4] + ";"
+                            + data[5] + ";"
+                            + data[6] + ";"
+                            + data[7] + ";"
+                            + data[8] + ";";
+                }
+
+                updatedLines.add(line);
+            }
+
+            br.close();
+
+            // Rewrite entire file
+            PrintWriter pw = new PrintWriter(new FileWriter(file));
+
+            for (String l : updatedLines) {
                 pw.println(l);
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving file");
-        }
 
-        JOptionPane.showMessageDialog(this, "Profile updated successfully");
+            pw.close();
+
+            JOptionPane.showMessageDialog(this, "Profile updated successfully");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error saving profile");
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed

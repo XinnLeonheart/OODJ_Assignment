@@ -12,11 +12,14 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author 
+ * @author
  */
 public class ReportFrame extends javax.swing.JFrame {
-    
+
     private String currentLeaderID;
+
+    private final String REPORT_PATH
+            = System.getProperty("user.dir") + "/src/TextFiles/Report.txt";
 
     /**
      * Creates new form ReportFrame
@@ -26,31 +29,36 @@ public class ReportFrame extends javax.swing.JFrame {
         this.currentLeaderID = leaderID;
         loadReports();
     }
-    
+
     private void loadReports() {
-    DefaultTableModel model = (DefaultTableModel) tblReport.getModel();
-    model.setRowCount(0); // clear table
 
-    try (BufferedReader br = new BufferedReader(new FileReader("report.txt"))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] data = line.split(";");
+        DefaultTableModel model = (DefaultTableModel) tblReport.getModel();
+        model.setRowCount(0);
 
-            // show ONLY this Academic Leader's reports
-            if (data[1].equals(currentLeaderID)) {
-                model.addRow(new Object[]{
-                    data[0], // report ID
-                    data[2], // report type
-                    data[3], // reference
-                    data[4]  // result
-                });
+        try (BufferedReader br = new BufferedReader(new FileReader(REPORT_PATH))) {
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+
+                String[] data = line.split(";");
+
+                if (data.length >= 5 && data[1].equals(currentLeaderID)) {
+
+                    model.addRow(new Object[]{
+                        data[0], // report ID
+                        data[2], // report type
+                        data[3], // reference
+                        data[4] // result
+                    });
+                }
             }
-        }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "Error loading reports");
-    }
-    }
 
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Report file not found or empty.");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -125,8 +133,8 @@ public class ReportFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-    new AcademicLeaderDashboard(currentLeaderID).setVisible(true);
-    this.dispose();        // TODO add your handling code here:
+        new AcademicLeaderDashboard(currentLeaderID).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_btnBackActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

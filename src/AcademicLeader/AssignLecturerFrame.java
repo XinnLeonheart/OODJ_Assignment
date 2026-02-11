@@ -14,51 +14,66 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author 
+ * @author
  */
 public class AssignLecturerFrame extends javax.swing.JFrame {
-    
+
     private String currentLeaderID;
+
+    private final String FILE_PATH = System.getProperty("user.dir")
+            + "/src/TextFiles/Module.txt";
 
     /**
      * Creates new form AssignLecturer
      */
     public AssignLecturerFrame(String leaderID) {
-    initComponents();
-    this.currentLeaderID = leaderID;
-    loadModules();
-    loadLecturers();
+        initComponents();
+        this.currentLeaderID = leaderID;
+        loadModules();
+        loadLecturers();
     }
-    
+
     private void loadModules() {
-    cmbModule.removeAllItems();
+        cmbModule.removeAllItems();
 
-    try (BufferedReader br = new BufferedReader(new FileReader("module.txt"))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] data = line.split(";");
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
 
-            // only this Academic Leader's modules
-            if (data[2].equals(currentLeaderID)) {
-                cmbModule.addItem(data[0]); // moduleID
+                // only this Academic Leader's modules
+                if (data[2].equals(currentLeaderID)) {
+                    cmbModule.addItem(data[0]); // moduleID
+                }
             }
+        } catch (IOException e) {
         }
-    } catch (IOException e) {}
     }
-    
+
     private void loadLecturers() {
-    cmbLecturer.removeAllItems();
 
-    try (BufferedReader br = new BufferedReader(new FileReader("account.txt"))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] data = line.split(";");
+        cmbLecturer.removeAllItems();
 
-            if (data[8].equals("Lecturer")) {
-                cmbLecturer.addItem(data[0]); // lecturerID
+        try (BufferedReader br = new BufferedReader(
+                new FileReader(System.getProperty("user.dir")
+                        + "/src/TextFiles/Account.txt"))) {
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+
+                String[] data = line.split(";");
+
+                if (data.length >= 9
+                        && data[8].trim().equalsIgnoreCase("Lecturer")) {
+
+                    cmbLecturer.addItem(data[0]);  // add Lecturer ID
+                }
             }
+
+        } catch (IOException e) {
+            System.out.println("Error loading lecturers: " + e.getMessage());
         }
-    } catch (IOException e) {}
     }
 
     /**
@@ -154,50 +169,55 @@ public class AssignLecturerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAssignActionPerformed
- if (cmbModule.getSelectedItem() == null || cmbLecturer.getSelectedItem() == null) {
-        JOptionPane.showMessageDialog(this, "Please select module and lecturer");
-        return;
-    }
-
-    String moduleID = cmbModule.getSelectedItem().toString();
-    String lecturerID = cmbLecturer.getSelectedItem().toString();
-
-    // check lecturer already assigned
-    try (BufferedReader br = new BufferedReader(new FileReader("module.txt"))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            if (line.endsWith(";" + lecturerID)) {
-                JOptionPane.showMessageDialog(this, "Lecturer already assigned to a module");
-                return;
-            }
+        if (cmbModule.getSelectedItem() == null || cmbLecturer.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Please select module and lecturer");
+            return;
         }
-    } catch (IOException e) {}
 
-    ArrayList<String> updated = new ArrayList<>();
+        String moduleID = cmbModule.getSelectedItem().toString();
+        String lecturerID = cmbLecturer.getSelectedItem().toString();
 
-    try (BufferedReader br = new BufferedReader(new FileReader("module.txt"))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] data = line.split(";");
-
-            if (data[0].equals(moduleID) && data[2].equals(currentLeaderID)) {
-                data[3] = lecturerID; // assign lecturer
-                line = String.join(";", data);
+        // check lecturer already assigned
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.endsWith(";" + lecturerID)) {
+                    JOptionPane.showMessageDialog(this, "Lecturer already assigned to a module");
+                    return;
+                }
             }
-            updated.add(line);
+        } catch (IOException e) {
         }
-    } catch (IOException e) {}
 
-    try (PrintWriter pw = new PrintWriter(new FileWriter("module.txt"))) {
-        for (String l : updated) pw.println(l);
-    } catch (IOException e) {}
+        ArrayList<String> updated = new ArrayList<>();
 
-    JOptionPane.showMessageDialog(this, "Lecturer assigned successfully");        // TODO add your handling code here:
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+
+                if (data[0].equals(moduleID) && data[2].equals(currentLeaderID)) {
+                    data[3] = lecturerID; // assign lecturer
+                    line = String.join(";", data);
+                }
+                updated.add(line);
+            }
+        } catch (IOException e) {
+        }
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
+            for (String l : updated) {
+                pw.println(l);
+            }
+        } catch (IOException e) {
+        }
+
+        JOptionPane.showMessageDialog(this, "Lecturer assigned successfully");        // TODO add your handling code here:
     }//GEN-LAST:event_btnAssignActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-    new AcademicLeaderDashboard(currentLeaderID).setVisible(true);
-    this.dispose();        // TODO add your handling code here:
+        new AcademicLeaderDashboard(currentLeaderID).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_btnBackActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
