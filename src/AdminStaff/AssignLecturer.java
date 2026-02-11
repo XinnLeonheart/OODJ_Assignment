@@ -35,13 +35,20 @@ public class AssignLecturer extends javax.swing.JFrame {
      */
     
     private static final String ACCOUNT_FILE = "src/TextFiles/Account.txt";
-    private static final String LECTURER_FILE = "src/TextFiles/Lecturer.txt";
-
+    private static final String LECTURER_FILE = "src/TextFiles/LecturerAssigned.txt";
+    private AccountFileRepository accountRepo;
+    private LecturerAssignRepository lecturerRepo;
+    
     public AssignLecturer() {
         initComponents();
+
+        accountRepo = new AccountFileRepository(ACCOUNT_FILE);
+        lecturerRepo = new LecturerAssignRepository(LECTURER_FILE);
+
         tableAssignLecturer.setSelectionMode(
             javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
         );
+
         displayAcademicLeaderListOnTable();
         loadLecturerInformationOnTable();
     }
@@ -50,120 +57,47 @@ public class AssignLecturer extends javax.swing.JFrame {
         JComboBox<String> academicLeaderCombo = new JComboBox<>();
         academicLeaderCombo.addItem("-- Select Academic Leader --");
 
-
-        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                String[] data = line.split(";");
-                String name = data[2].trim();
-                String role = data[8].trim();
-
-                if (role.equalsIgnoreCase("Academic Leader")) {
-                    academicLeaderCombo.addItem(name);
+        try {
+            for (Account a : accountRepo.readAll()) {
+                if (a.getRole() != null && a.getRole().equalsIgnoreCase("Academic Leader")) {
+                    academicLeaderCombo.addItem(a.getName());
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this,
-                "Error loading academic leaders");
+            JOptionPane.showMessageDialog(this, "Error loading academic leaders");
             return;
         }
 
-        // Column 3 = Academic Leader dropdown-list
-        tableAssignLecturer.getColumnModel()
-                .getColumn(3) // Academic Leader column (index 3)
+        tableAssignLecturer.getColumnModel().getColumn(3)
                 .setCellEditor(new DefaultCellEditor(academicLeaderCombo));
-
-        // Set JComboBox as renderer for column 3
-        tableAssignLecturer.getColumnModel()
-                .getColumn(3)
-                .setCellRenderer(new DefaultTableCellRenderer() {
-                    @Override
-                    public java.awt.Component getTableCellRendererComponent(
-                            JTable table, Object value, boolean isSelected,
-                            boolean hasFocus, int row, int column) {
-
-                        JComboBox<String> rendererCombo = new JComboBox<>();
-                        rendererCombo.addItem("-- Select Academic Leader --");
-
-                        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
-                            String line;
-                            while ((line = br.readLine()) != null) {
-                                if (line.trim().isEmpty()) continue;
-
-                                String[] data = line.split(";");
-                                String name = data[2].trim();
-                                String role = data[8].trim();
-
-                                if (role.equalsIgnoreCase("Academic Leader")) {
-                                    rendererCombo.addItem(name);
-                                }
-                            }
-                        } catch (IOException e) {
-                            // ignore for rendering
-                        }
-
-                        rendererCombo.setSelectedItem(value);
-
-                        if (isSelected) {
-                            rendererCombo.setBackground(table.getSelectionBackground());
-                        }
-
-                        return rendererCombo;
-                    }
-                });
-
     }
 
-    public void loadLecturerInformationOnTable(){
+    public void loadLecturerInformationOnTable() {
         DefaultTableModel model = (DefaultTableModel) tableAssignLecturer.getModel();
-        model.setRowCount(0); // Clear table first
-        
-        Map<String, String> assignedLeaders = new LinkedHashMap<>();
+        model.setRowCount(0);
 
-        File lecturerFile = new File(LECTURER_FILE);
-        if (lecturerFile.exists()) {
-            try (BufferedReader br = new BufferedReader(new FileReader(lecturerFile))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (line.trim().isEmpty()) continue;
-
-                    String[] data = line.split(";");
-                    // data[0] = Lecturer ID
-                    // data[3] = Academic Leader
-                    assignedLeaders.put(data[0].trim(), data[3].trim());
-                }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this,
-                    "Error loading lecturer assignments");
-            }
+        Map<String, String> assignedLeaders;
+        try {
+            assignedLeaders = lecturerRepo.readAllAssignments();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading lecturer assignments");
+            assignedLeaders = new LinkedHashMap<>();
         }
-    
-        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
 
-                String[] data = line.split(";");
+        try {
+            for (Account a : accountRepo.readAll()) {
+                if (a.getRole() != null && a.getRole().equalsIgnoreCase("Lecturer")) {
 
-                String accID = data[0].trim();
-                String name = data[2].trim();
-                String email = data[3].trim();
-                String role = data[8].trim();
+                    String leader = assignedLeaders.getOrDefault(
+                            a.getAccID(),
+                            "-- Select Academic Leader --"
+                    );
 
-                // Only show lecturers
-                if (role.equalsIgnoreCase("Lecturer")) {
-                    String academicLeader = assignedLeaders.getOrDefault(accID,
-                        "-- Select Academic Leader --"
-                );
-                                    
-                    model.addRow(new Object[] {
-                        accID,
-                        name,
-                        email,
-                        academicLeader    // Academic Leader ComboBox column
+                    model.addRow(new Object[]{
+                            a.getAccID(),
+                            a.getName(),
+                            a.getEmail(),
+                            leader
                     });
                 }
             }
@@ -171,7 +105,7 @@ public class AssignLecturer extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error loading lecturers");
         }
 
-        displayAcademicLeaderListOnTable(); // Set up the combo box in the column
+        displayAcademicLeaderListOnTable();
     }
     
     public void searchLecturer() {
@@ -293,37 +227,13 @@ public class AssignLecturer extends javax.swing.JFrame {
             }
     }
 
-    
-    public void saveAssignInfoIntoDatabase(){
-        DefaultTableModel model =
-            (DefaultTableModel) tableAssignLecturer.getModel();
 
-        Map<String, String> lecturerMap = new LinkedHashMap<>();
+    public void saveAssignInfoIntoDatabase() {
+        DefaultTableModel model = (DefaultTableModel) tableAssignLecturer.getModel();
+        Map<String, String> lecturerIdToLeader = new LinkedHashMap<>();
 
-        // Load existing record
-        File file = new File(LECTURER_FILE);
-        if (file.exists()) {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (line.trim().isEmpty()) continue;
-
-                    String[] data = line.split(";");
-                    lecturerMap.put(data[0], line);
-                }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this,
-                    "Error reading lecturer file");
-                return;
-            }
-        }
-
-        // Update/ Add from table
         for (int i = 0; i < model.getRowCount(); i++) {
-
             String lecturerID = model.getValueAt(i, 0).toString();
-            String lecturerName = model.getValueAt(i, 1).toString();
-            String lecturerEmail = model.getValueAt(i, 2).toString();
             Object leaderObj = model.getValueAt(i, 3);
 
             if (leaderObj == null ||
@@ -331,38 +241,23 @@ public class AssignLecturer extends javax.swing.JFrame {
                 leaderObj.toString().equals("-- Select Academic Leader --")) {
 
                 JOptionPane.showMessageDialog(this,
-                    "Please assign Academic Leader for all lecturers");
+                        "Please assign Academic Leader for all lecturers");
                 return;
             }
 
-            String academicLeader = leaderObj.toString();
-
-            String newLine =
-                lecturerID + ";" +
-                lecturerName + ";" +
-                lecturerEmail + ";" +
-                academicLeader;
-
-            lecturerMap.put(lecturerID, newLine); // overwrite if exists
+            lecturerIdToLeader.put(lecturerID, leaderObj.toString());
         }
 
-        // Rewrite file
-        try (BufferedWriter bw = new BufferedWriter(
-                new FileWriter(LECTURER_FILE))) {
-
-            for (String record : lecturerMap.values()) {
-                bw.write(record);
-                bw.newLine();
-            }
-
+        try {
+            lecturerRepo.saveAllAssignments(lecturerIdToLeader, accountRepo);
             JOptionPane.showMessageDialog(this,
-                "Lecturer assignment updated successfully");
-
+                    "Lecturer assignment updated successfully");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this,
-                "Error saving lecturer assignment");
+                    "Error saving lecturer assignment:\n" + e.getMessage());
         }
     }
+
     
     public void clearTextField(){
         tfSearchLecturer.setText("");
