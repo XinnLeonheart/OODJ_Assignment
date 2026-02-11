@@ -79,6 +79,8 @@ public class ManageAccount extends javax.swing.JFrame {
             if (line.trim().isEmpty()) continue;
 
             String[] data = line.split(";");
+            if (data.length < 9) 
+                continue;
 
             String accID = data[0].toLowerCase();
             String username = data[1].toLowerCase();
@@ -131,8 +133,6 @@ public class ManageAccount extends javax.swing.JFrame {
                     cbRole.getSelectedItem().toString().trim() + ";" + 
                     "\n"
                 );    
-        
-        fw.close();
         }      
     }
     
@@ -657,9 +657,11 @@ public class ManageAccount extends javax.swing.JFrame {
             // Split email into ID and domain
             String[] emailParts = email.split("@", 2);
             tfEmail.setText(emailParts[0]);
-            tfEmailDomain.setText("@" + emailParts[1]);
-            
-            tfPassword.setText(password);
+            if (emailParts.length == 2) {
+                tfEmailDomain.setText("@" + emailParts[1]);
+            } else {
+                tfEmailDomain.setText("@mail.uni.edu.my"); 
+            }            
             tfPassword.setText(password);
             tfPhoneNum.setText(phoneNum);
             cbGender.setSelectedItem(gender);
@@ -675,6 +677,8 @@ public class ManageAccount extends javax.swing.JFrame {
     }
     
     public void clearAllTextFields() {
+        btnCreate.setEnabled(true);
+        
         tableAccountDetail.clearSelection();
 
         tfUserName.setText("");
@@ -700,7 +704,6 @@ public class ManageAccount extends javax.swing.JFrame {
 
 
     public void loadAccountTable() {
-        getAccountInformation();
         DefaultTableModel model =
             (DefaultTableModel) tableAccountDetail.getModel();
         model.setRowCount(0);
@@ -710,6 +713,9 @@ public class ManageAccount extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 String[] data = line.split(";");
+                
+                if (data.length < 9) 
+                    continue;
 
                 model.addRow(new Object[]{
                     data[0], data[1], data[2], data[3], data[4],
@@ -723,6 +729,8 @@ public class ManageAccount extends javax.swing.JFrame {
     
     private void updateAgeBasedOnRole() {
         String selectedRole = cbRole.getSelectedItem().toString();
+        if (selectedRole == null) 
+            return;
 
         cbAge.removeAllItems(); // clear old ages
 
