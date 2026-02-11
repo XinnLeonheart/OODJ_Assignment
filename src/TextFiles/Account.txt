@@ -1,5 +1,1 @@
-ACC001;jdtygfh;jghfd;abc@mail.uni.edu.my;abc;0098765432;Male;18;Admin Staff;ACC002;abc;abc;abcd@mail.uni.edu.my;abc;0085172495;Male;22;Academic Leader;
-ACC002;abc;abc;abcd@mail.uni.edu.my;abcd;00781246723641;Male;18;Academic Leader;
-ACC003;abcde;abcde;abcde@mail.uni.edu.my;abcde;00812458674;Male;18;Lecturer;
-ACC005;abcdefg;abcdefg;abcdefg@mail.uni.edu.my;abcdefg;001234986123;Male;18;Lecturer;
-ACC006;abcdefgh;abcdefgh;abcdefgh@mail.uni.edu.my;abcdefgh;00148923741234;Male;25;Lecturer;
+ACC001;ali;ali;ali@mail.uni.edu.my;ali;00123456789;Male;18;Admin Staff;

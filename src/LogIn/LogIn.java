@@ -30,7 +30,7 @@ public class LogIn extends javax.swing.JFrame {
     public static String accID;
     public static String loggedInID;
     public static String loggedInName;
-    public static String LoggedInName;
+
 
     /**
      * Creates new form LogIn
@@ -43,8 +43,8 @@ public class LogIn extends javax.swing.JFrame {
 
         switch (role.toLowerCase()) {
 
-            case "admin":
-                NavigateToDashboard.goToAdminStaffDashboard(this);
+            case "admin staff":
+                NavigateToDashboard.goToAdminStaffDashboard(this, LogIn.loggedInName);
                 break;
 
             case "lecturer":
@@ -116,9 +116,9 @@ public class LogIn extends javax.swing.JFrame {
             String line;
             while ((line = br.readLine()) != null) {
 
-                String[] data = line.split("\\|");
+                String[] data = line.split(";");
 
-                if (data.length != 9) {
+                if (data.length < 9) {
                     continue; // skip corrupted lines
                 }
 
@@ -136,6 +136,10 @@ public class LogIn extends javax.swing.JFrame {
                     password.equals(passwordInput)) {
 
                     loginSuccess = true;
+                    
+                    LogIn.loggedInID = accID;
+                    LogIn.loggedInName = name;
+
                     JOptionPane.showMessageDialog(this,
                             "Login successful! Welcome " + name);
                     

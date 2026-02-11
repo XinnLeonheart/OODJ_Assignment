@@ -9,6 +9,7 @@ package AdminStaff;
  * @author lolipop
  */
 
+import LogIn.LogIn;
 import Navigation.NavigateToDashboard;
 import java.io.File;
 import java.io.BufferedReader;
@@ -496,7 +497,7 @@ public class AssignLecturer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        NavigateToDashboard.goToAdminStaffDashboard(this);
+        NavigateToDashboard.goToAdminStaffDashboard(this, LogIn.loggedInName);
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**

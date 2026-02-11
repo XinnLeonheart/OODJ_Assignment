@@ -9,6 +9,7 @@ package AdminStaff;
  * @author lolipop
  */
 
+import LogIn.LogIn;
 import Navigation.NavigateToLogInPage;
 import Navigation.NavigateToDashboard;
 import java.io.File;
@@ -27,12 +28,14 @@ public class ManageAccount extends javax.swing.JFrame {
     /**
      * Creates new form ManageAccount
      */
+    private AccountFileRepository repository;
     private static final String ACCOUNT_FILE = "src/TextFiles/Account.txt";
     
     public ManageAccount() {
         initComponents();
         tfAccountID.setEditable(false);
         tfEmailDomain.setEditable(false);
+        repository = new AccountFileRepository(ACCOUNT_FILE); 
         loadAccountTable();
         autoGenerateAccID();       
         
@@ -72,33 +75,26 @@ public class ManageAccount extends javax.swing.JFrame {
             return;
         }    
 
-        try (BufferedReader br = new BufferedReader (new FileReader(ACCOUNT_FILE))){
-            String line;
+        try {
+            for (Account acc : repository.readAll()) {
+                if (acc.getAccID().toLowerCase().contains(searchText) ||
+                    acc.getUserName().toLowerCase().contains(searchText) ||
+                    acc.getName().toLowerCase().contains(searchText)) {
 
-            while ((line = br.readLine()) != null) {
-            if (line.trim().isEmpty()) continue;
-
-            String[] data = line.split(";");
-            if (data.length < 9) 
-                continue;
-
-            String accID = data[0].toLowerCase();
-            String username = data[1].toLowerCase();
-
-            if (accID.contains(searchText) || username.contains(searchText)) {
-                model.addRow(new Object[]{
-                        data[0], data[1], data[2], data[3], data[4],
-                        data[5], data[6], data[7], data[8], "Delete"
-                });
+                    model.addRow(new Object[]{
+                            acc.getAccID(), acc.getUserName(), acc.getName(), acc.getEmail(),
+                            acc.getPassword(), acc.getPhone(), acc.getGender(), acc.getAge(),
+                            acc.getRole(), "Delete"
+                    });
+                }
             }
-        }
 
-        if (model.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this,
-                    "No matching account found.");
-        }                       
-        } catch (IOException e){
-            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());           
+            if (model.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "No matching account found.");
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error searching:\n" + e.getMessage());
         }
     }   
     
@@ -119,70 +115,36 @@ public class ManageAccount extends javax.swing.JFrame {
         return false;
     }  
     
-    public void writeAccInfoIntoDatabase() throws IOException{
-        try (FileWriter fw = new FileWriter(ACCOUNT_FILE, true)){
-             fw.write(
-                    tfAccountID.getText().trim() + ";" +
-                    tfUserName.getText().trim() + ";" +
-                    tfName.getText().trim() + ";" +
-                    tfEmail.getText().trim() + tfEmailDomain.getText().trim() + ";" + 
-                    tfPassword.getText().trim() + ";" + 
-                    tfPhoneNum.getText().trim() + ";" +
-                    cbGender.getSelectedItem().toString().trim() + ";" +
-                    cbAge.getSelectedItem().toString().trim() + ";" +
-                    cbRole.getSelectedItem().toString().trim() + ";" + 
-                    "\n"
-                );    
-        }      
+    public void writeAccInfoIntoAccountTextFile() throws IOException{
+        Account account = new Account(
+                    tfAccountID.getText().trim(),
+                    tfUserName.getText().trim(),
+                    tfName.getText().trim(),
+                    tfEmail.getText().trim() + tfEmailDomain.getText().trim(),
+                    tfPassword.getText().trim(),
+                    tfPhoneNum.getText().trim(),
+                    cbGender.getSelectedItem().toString(),
+                    cbAge.getSelectedItem().toString(),
+                    cbRole.getSelectedItem().toString()
+            );
+
+            repository.add(account);
     }
     
-    public void editAccInfoInDatabase() {
-        String selectedAccID = tfAccountID.getText().trim();
+    public void editAccInfoInAccountTextFile() throws IOException{
+        Account updated = new Account(
+        tfAccountID.getText().trim(),
+        tfUserName.getText().trim(),
+        tfName.getText().trim(),
+        tfEmail.getText().trim() + tfEmailDomain.getText().trim(),
+        tfPassword.getText().trim(),
+        tfPhoneNum.getText().trim(),
+        cbGender.getSelectedItem().toString(),
+        cbAge.getSelectedItem().toString(),
+        cbRole.getSelectedItem().toString()
+        );
 
-        try {
-            // 1. Read all lines
-            BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE));
-            java.util.ArrayList<String> lines = new java.util.ArrayList<>();
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    lines.add(line);
-                }
-            }
-            br.close();
-
-            // 2. Rewrite file with updated data
-            try (FileWriter fw = new FileWriter(ACCOUNT_FILE)) {
-                for (String existingLine : lines) {
-                    String[] data = existingLine.split(";");
-
-                    // Match by Account ID
-                    if (data[0].trim().equals(selectedAccID)) {
-                        fw.write(
-                            tfAccountID.getText().trim() + ";" +
-                            tfUserName.getText().trim() + ";" +
-                            tfName.getText().trim() + ";" +
-                            tfEmail.getText().trim() + tfEmailDomain.getText().trim() + ";" +
-                            tfPassword.getText().trim() + ";" +
-                            tfPhoneNum.getText().trim() + ";" +
-                            cbGender.getSelectedItem().toString().trim() + ";" +
-                            cbAge.getSelectedItem().toString().trim() + ";" +
-                            cbRole.getSelectedItem().toString().trim() + ";\n"
-                        );
-                    } else {
-                        fw.write(existingLine + "\n");
-                    }
-                }
-            }
-
-            loadAccountTable();
-            clearAllTextFields();
-            autoGenerateAccID();
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error editing account:\n" + e.getMessage());
-        }
+        repository.update(updated);
     }
 
     public boolean makeSureTfAreFilled(){
@@ -395,44 +357,12 @@ public class ManageAccount extends javax.swing.JFrame {
     }
     
     public void autoGenerateAccID() {
-        String prefix = "ACC";
-        int maxNumber = 0;
-
-        File file = new File(ACCOUNT_FILE);
-
-        // File not exist / empty -> start from 001
-        if (!file.exists() || file.length() == 0) {
-            tfAccountID.setText(prefix + "001");
-            return;
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                String[] data = line.split(";");
-                if (data.length == 0) continue;
-
-                String accId = data[0].trim(); // e.g. ACC011
-                if (!accId.startsWith(prefix)) continue;
-
-                String numPart = accId.substring(prefix.length()); // "011"
-                try {
-                    int n = Integer.parseInt(numPart);
-                    if (n > maxNumber) maxNumber = n;
-                } catch (NumberFormatException ignore) {
-                    // skip invalid IDs
-                }
-            }
-
-            int nextID = maxNumber + 1;
-            tfAccountID.setText(prefix + String.format("%03d", nextID));
-
+        try {
+            tfAccountID.setText(repository.getNextAccId());
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error generating Account ID: " + e.getMessage());
-            tfAccountID.setText(prefix + "001");
+            JOptionPane.showMessageDialog(this,
+                    "Error generating Account ID:\n" + e.getMessage());
+            tfAccountID.setText("ACC001");
         }
     }
     
@@ -457,7 +387,7 @@ public class ManageAccount extends javax.swing.JFrame {
         
         // Once user choose "YES", the account will be created
         if (result == JOptionPane.YES_OPTION){
-            writeAccInfoIntoDatabase();
+            writeAccInfoIntoAccountTextFile();
             loadAccountTable();
             JOptionPane.showMessageDialog(null, "Account has been created successfully!");
             clearAllTextFields();
@@ -498,23 +428,7 @@ public class ManageAccount extends javax.swing.JFrame {
         }
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE));
-            java.util.ArrayList<String> lines = new java.util.ArrayList<>();
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (!line.startsWith(accID + ";")) {
-                    lines.add(line);
-                }
-            }
-            br.close();
-
-            try (FileWriter fw = new FileWriter(ACCOUNT_FILE)) {
-                for (String l : lines) {
-                    fw.write(l + "\n");
-                }
-            }
-
+            repository.delete(accID);
             loadAccountTable();
             clearAllTextFields();
             autoGenerateAccID(); 
@@ -559,7 +473,10 @@ public class ManageAccount extends javax.swing.JFrame {
                 JOptionPane.QUESTION_MESSAGE);
         
         if (result == JOptionPane.YES_OPTION){
-            editAccInfoInDatabase();
+            editAccInfoInAccountTextFile();
+            loadAccountTable();
+            clearAllTextFields();
+            autoGenerateAccID();
             JOptionPane.showMessageDialog(this, "Account information has been edited successfully!");
         }
         else{
@@ -727,22 +644,24 @@ public class ManageAccount extends javax.swing.JFrame {
             (DefaultTableModel) tableAccountDetail.getModel();
         model.setRowCount(0);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-                String[] data = line.split(";");
-                
-                if (data.length < 9) 
-                    continue;
-
+        try {
+            for (Account acc : repository.readAll()) {
                 model.addRow(new Object[]{
-                    data[0], data[1], data[2], data[3], data[4],
-                    data[5], data[6], data[7], data[8], "Delete"
+                        acc.getAccID(),
+                        acc.getUserName(),
+                        acc.getName(),
+                        acc.getEmail(),
+                        acc.getPassword(),
+                        acc.getPhone(),
+                        acc.getGender(),
+                        acc.getAge(),
+                        acc.getRole(),
+                        "Delete"
                 });
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading accounts");
+            JOptionPane.showMessageDialog(this,
+                    "Error loading accounts:\n" + e.getMessage());
         }
     }
     
@@ -1124,7 +1043,7 @@ public class ManageAccount extends javax.swing.JFrame {
     }//GEN-LAST:event_tableAccountDetailMouseClicked
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        NavigateToDashboard.goToAdminStaffDashboard(this);
+        NavigateToDashboard.goToAdminStaffDashboard(this, LogIn.loggedInName);
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**

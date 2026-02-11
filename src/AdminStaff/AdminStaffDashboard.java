@@ -18,8 +18,9 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     /**
      * Creates new form ASDashboard
      */
-    public AdminStaffDashboard() {
+    public AdminStaffDashboard(String adminName) {
         initComponents();
+        jLabelWelcomeAdminStaff.setText("Welcome " + adminName + "!");
     }
     
     public void goToManageAccountDashboard(JFrame currentFrame) {
@@ -81,6 +82,7 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
         btnGradingSystem = new javax.swing.JButton();
         btnCreateClass = new javax.swing.JButton();
         btnLogOut = new javax.swing.JButton();
+        jLabelWelcomeAdminStaff = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,7 +93,7 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
             }
         });
 
-        btnAssignLecturer.setText("Assign Lecturers");
+        btnAssignLecturer.setText("Assign Lecturer");
         btnAssignLecturer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAssignLecturerActionPerformed(evt);
@@ -108,7 +110,7 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
             }
         });
 
-        btnCreateClass.setText("Create Classes");
+        btnCreateClass.setText("Create Class");
         btnCreateClass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateClassActionPerformed(evt);
@@ -122,25 +124,32 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
             }
         });
 
+        jLabelWelcomeAdminStaff.setText("Welcome xx!");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnLogOut)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
+                            .addComponent(btnLogOut)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAccountManage)
-                                .addGap(40, 40, 40)
-                                .addComponent(btnAssignLecturer)
-                                .addGap(38, 38, 38)
-                                .addComponent(btnGradingSystem)))
-                        .addGap(45, 45, 45)
-                        .addComponent(btnCreateClass)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnAccountManage)
+                                        .addGap(40, 40, 40)
+                                        .addComponent(btnAssignLecturer)
+                                        .addGap(38, 38, 38)
+                                        .addComponent(btnGradingSystem)))
+                                .addGap(45, 45, 45)
+                                .addComponent(btnCreateClass))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(238, 238, 238)
+                        .addComponent(jLabelWelcomeAdminStaff)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -148,7 +157,9 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(jLabel1)
-                .addGap(74, 74, 74)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelWelcomeAdminStaff)
+                .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAssignLecturer, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGradingSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -204,7 +215,9 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new AdminStaffDashboard().setVisible(true));
+        java.awt.EventQueue.invokeLater(() ->
+            new AdminStaffDashboard("Admin Staff").setVisible(true)
+        );
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -214,5 +227,6 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     private javax.swing.JButton btnGradingSystem;
     private javax.swing.JButton btnLogOut;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelWelcomeAdminStaff;
     // End of variables declaration//GEN-END:variables
 }

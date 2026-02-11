@@ -18,9 +18,9 @@ import javax.swing.JFrame;
 
 
 public class NavigateToDashboard {
-    public static void goToAdminStaffDashboard(JFrame currentFrame) {
+    public static void goToAdminStaffDashboard(JFrame currentFrame, String adminName) {
         // Open the AdminStaffDashboard
-        AdminStaffDashboard dashboard = new AdminStaffDashboard();
+        AdminStaffDashboard dashboard = new AdminStaffDashboard(adminName);
         dashboard.setVisible(true);
         dashboard.setLocationRelativeTo(null); // center on screen
 
