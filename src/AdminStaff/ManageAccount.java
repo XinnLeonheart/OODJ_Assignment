@@ -285,6 +285,23 @@ public class ManageAccount extends javax.swing.JFrame {
         return true;
     }
     
+    public boolean makeSureEmailNoCapitalLetters() {
+        String emailId = tfEmail.getText().trim(); // only the part before domain
+
+        // If contains any A-Z
+        if (emailId.matches(".*[A-Z].*")) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Email cannot contain capital letters.\nExample: tp123456 (NOT Tp123456)",
+                "Invalid Email",
+                JOptionPane.ERROR_MESSAGE
+            );
+            tfEmail.requestFocus();
+            return false;
+        }
+        return true;
+    }
+    
     public boolean makeSureAccIDNotSame() {
         String newAccID = tfAccountID.getText().trim();
 
@@ -424,6 +441,7 @@ public class ManageAccount extends javax.swing.JFrame {
         if (!makeSureNameNotContainNumber()) return;
         if (!makeSurePhoneNoIsValid()) return;
         if (!makeSuretfEmailNotContainDomain()) return;
+        if (!makeSureEmailNoCapitalLetters()) return; 
         if (!makeSureAccIDNotSame()) return;
         if (!makeSureUsernameNotSame()) return;
         if (!makeSureEmailNotSame()) return;
@@ -527,6 +545,7 @@ public class ManageAccount extends javax.swing.JFrame {
         if (!makeSureNameNotContainNumber()) return;
         if (!makeSurePhoneNoIsValid()) return;
         if (!makeSuretfEmailNotContainDomain()) return;
+        if (!makeSureEmailNoCapitalLetters()) return; 
         if (!makeSureUsernameNotSameOnEdit()) return;
         if (!makeSureEmailNotSameOnEdit()) return;       
 
