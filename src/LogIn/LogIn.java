@@ -105,10 +105,10 @@ public class LogIn extends javax.swing.JFrame {
             return;
         }
 
-        String emailInput = tfLogInEmail.getText().trim();
+        String emailInput = tfLogInEmail.getText();
         String passwordInput = new String(pfLogInPw.getPassword());
 
-        String filePath = "accounts.txt"; // adjust path if needed
+        String filePath = "src/TextFiles/Account.txt"; // adjust path if needed
         boolean loginSuccess = false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -125,8 +125,8 @@ public class LogIn extends javax.swing.JFrame {
                 String accID    = data[0];
                 String username = data[1];
                 String name     = data[2];
-                String email    = data[3];
-                String password = data[4];
+                String email    = data[3].trim();
+                String password = data[4].trim();
                 String phone    = data[5];
                 String gender   = data[6];
                 String age      = data[7];
