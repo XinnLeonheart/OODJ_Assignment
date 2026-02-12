@@ -21,33 +21,55 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     public DefineGradingSystem() {
         initComponents();
         displayGradeSelectionOnTable();
+        loadAllFromGradeClassTest();
     }
     
+    private static final String INPUT_FILE = "src/TextFiles/gradeclasstest.txt";
+    
     public void searchStudent(){
-        String keyword = tfSearchStudent.getText().trim();
+        String keyword = tfSearchStudent.getText().trim().toLowerCase();
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
-        model.setRowCount(0); // Clear previous rows
+        model.setRowCount(0);
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("Assessment.txt"))) {
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(INPUT_FILE))) {
             String line;
-            while ((line = br.readLine()) != null) {
-                // Format: ID,Name,AssessmentMark
-                String[] parts = line.split(",");
-                if (parts.length >= 3) {
-                    String id = parts[0].trim();
-                    String name = parts[1].trim();
-                    String assessmentStr = parts[2].trim();
+            boolean firstLine = true;
 
-                    if (id.equalsIgnoreCase(keyword) || name.equalsIgnoreCase(keyword)) {
-                        String grade = convertMarkToGrade(assessmentStr); // auto-select grade
-                        model.addRow(new Object[]{id, name, assessmentStr, grade});
-                    }
-                }
+            while ((line = br.readLine()) != null) {
+                if (firstLine) { firstLine = false; continue; }
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split(";");
+                if (parts.length < 4) continue;
+
+                String studentName = parts[0].trim();
+                String classId = parts[1].trim();
+                String testName = parts[2].trim();
+                String markStr = parts[3].trim().replace("%", "");
+
+                // match by name (ID doesn't exist in file)
+                if (!studentName.toLowerCase().contains(keyword)) continue;
+
+                double mark;
+                try { mark = Double.parseDouble(markStr); }
+                catch (NumberFormatException e) { continue; }
+
+                String grade = convertMarkToGrade(String.valueOf(mark));
+
+                model.addRow(new Object[]{
+                    "N/A",
+                    studentName,
+                    classId,
+                    testName,
+                    String.format("%.0f", mark),
+                    grade
+                });
             }
         } catch (java.io.IOException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error reading Assessment.txt: " + ex.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(this, "Error reading gradeclasstest.txt: " + ex.getMessage());
         }
     }
+
     
     private String convertMarkToGrade(String markStr) {
         try {
@@ -69,31 +91,136 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     }
     
     public void saveGradingInformation() {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
-        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter("StudentGrade.txt", true))) {
-            for (int i = 0; i < model.getRowCount(); i++) {
-                String id = model.getValueAt(i, 0).toString();
-                String name = model.getValueAt(i, 1).toString();
-                String assessment = model.getValueAt(i, 2).toString();
-                String grade = model.getValueAt(i, 3).toString();
+        // Step 1: Build a quick lookup key -> grade from JTable
+        // Key format: studentName|classId|testName|testMark
+        java.util.Map<String, String> gradeMap = new java.util.HashMap<>();
+        javax.swing.table.DefaultTableModel tModel = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
 
-                bw.write(id + "," + name + "," + assessment + "," + grade);
+        for (int i = 0; i < tModel.getRowCount(); i++) {
+            String studentName = tModel.getValueAt(i, 1).toString().trim();
+            String classId = tModel.getValueAt(i, 2).toString().trim();
+            String testName = tModel.getValueAt(i, 3).toString().trim();
+            String testMark = tModel.getValueAt(i, 4).toString().trim();
+            String grade = tModel.getValueAt(i, 5).toString().trim();
+
+            String key = studentName + "|" + classId + "|" + testName + "|" + testMark;
+            gradeMap.put(key, grade);
+        }
+
+        // Step 2: Read original file and rewrite with grade appended
+        java.util.List<String> outputLines = new java.util.ArrayList<>();
+
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(INPUT_FILE))) {
+            String line;
+            boolean firstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    // Ensure header has Grade column
+                    if (!line.toLowerCase().contains("grade")) {
+                        outputLines.add(line + ";Grade");
+                    } else {
+                        outputLines.add(line);
+                    }
+                    continue;
+                }
+
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split(";", -1);
+                if (parts.length < 6) continue;
+
+                String studentName = parts[0].trim();
+                String classId = parts[1].trim();
+                String testName = parts[2].trim();
+
+                String markStr = parts[3].trim().replace("%", "");
+                double mark;
+                try { mark = Double.parseDouble(markStr); }
+                catch (NumberFormatException e) { continue; }
+
+                String testMarkKey = String.format("%.0f", mark);
+                String key = studentName + "|" + classId + "|" + testName + "|" + testMarkKey;
+
+                // If admin selected grade use it, else auto grade
+                String grade = gradeMap.getOrDefault(key, convertMarkToGrade(String.valueOf(mark)));
+
+                // Rebuild line: keep original 6 fields (including feedback, timestamp), then append grade
+                String base6 = parts[0] + ";" + parts[1] + ";" + parts[2] + ";" + parts[3] + ";" + parts[4] + ";" + parts[5];
+                outputLines.add(base6 + ";" + grade);
+            }
+
+        } catch (java.io.IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error reading gradeclasstest.txt: " + ex.getMessage());
+            return;
+        }
+
+        // Step 3: Write all lines back (overwrite file)
+        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(INPUT_FILE, false))) {
+            for (String out : outputLines) {
+                bw.write(out);
                 bw.newLine();
             }
-            javax.swing.JOptionPane.showMessageDialog(this, "Grades saved successfully!");
+            javax.swing.JOptionPane.showMessageDialog(this, "Grade updated into gradeclasstest.txt successfully!");
         } catch (java.io.IOException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error saving grades: " + ex.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(this, "Error writing gradeclasstest.txt: " + ex.getMessage());
         }
     }
     
     public void displayGradeSelectionOnTable(){
-        // Grades array
         String[] grade = {"A+", "A", "B+", "B", "C+", "C", "C-", "D", "F+", "F", "F-", ""};
 
-        // Set the 4th column to use JComboBox
-        javax.swing.table.TableColumn gradeColumn = tableGrading.getColumnModel().getColumn(3);
+        javax.swing.table.TableColumn gradeColumn = tableGrading.getColumnModel().getColumn(5);
         javax.swing.JComboBox<String> comboBox = new javax.swing.JComboBox<>(grade);
         gradeColumn.setCellEditor(new javax.swing.DefaultCellEditor(comboBox));
+    }
+    
+    public void loadAllFromGradeClassTest() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
+        model.setRowCount(0);
+
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(INPUT_FILE))) {
+            String line;
+            boolean firstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (firstLine) { firstLine = false; continue; }
+                if (line.trim().isEmpty()) continue;
+
+                // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade(optional)
+                String[] parts = line.split(";", -1); // keep empty last column if any
+                if (parts.length < 6) continue;
+
+                String studentName = parts[0].trim();
+                String classId = parts[1].trim();
+                String testName = parts[2].trim();
+
+                String markStr = parts[3].trim().replace("%", "");
+                double mark;
+                try { mark = Double.parseDouble(markStr); }
+                catch (NumberFormatException e) { continue; }
+
+                // If grade exists in file use it, else auto convert
+                String grade = (parts.length >= 7) ? parts[6].trim() : convertMarkToGrade(String.valueOf(mark));
+
+                model.addRow(new Object[]{
+                    "N/A",
+                    studentName,
+                    classId,
+                    testName,
+                    String.format("%.0f", mark),
+                    grade
+                });
+            }
+
+        } catch (java.io.IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error reading gradeclasstest.txt: " + ex.getMessage());
+        }
+    }
+
+    public void clearTextField(){
+        tfSearchStudent.setText("");
     }
     
     /**
@@ -113,25 +240,26 @@ public class DefineGradingSystem extends javax.swing.JFrame {
         btnSearch = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblGradingSystem.setFont(new java.awt.Font("Maiandra GD", 1, 24)); // NOI18N
-        lblGradingSystem.setText("Define Grading System");
+        lblGradingSystem.setText("Grading System");
 
         tableGrading.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Student ID", "Student Name", "Overall Assessment Mark", "Grade"
+                "Student ID", "Student Name", "Class ID", "Test Name", "Test Mark", "Grade"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, true, false, true
+                false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -139,6 +267,14 @@ public class DefineGradingSystem extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tableGrading);
+        if (tableGrading.getColumnModel().getColumnCount() > 0) {
+            tableGrading.getColumnModel().getColumn(0).setResizable(false);
+            tableGrading.getColumnModel().getColumn(1).setResizable(false);
+            tableGrading.getColumnModel().getColumn(2).setResizable(false);
+            tableGrading.getColumnModel().getColumn(3).setResizable(false);
+            tableGrading.getColumnModel().getColumn(4).setResizable(false);
+            tableGrading.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         jLabel1.setText("Search Student (ID/ Name): ");
 
@@ -150,6 +286,9 @@ public class DefineGradingSystem extends javax.swing.JFrame {
 
         btnBack.setText("Back");
         btnBack.addActionListener(this::btnBackActionPerformed);
+
+        btnClear.setText("Clear");
+        btnClear.addActionListener(this::btnClearActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -170,8 +309,10 @@ public class DefineGradingSystem extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addGap(18, 18, 18)
                             .addComponent(tfSearchStudent)
-                            .addGap(211, 211, 211)
-                            .addComponent(btnSearch))
+                            .addGap(18, 18, 18)
+                            .addComponent(btnSearch)
+                            .addGap(121, 121, 121)
+                            .addComponent(btnClear))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(62, Short.MAX_VALUE))
         );
@@ -189,7 +330,8 @@ public class DefineGradingSystem extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(tfSearchStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch))
+                    .addComponent(btnSearch)
+                    .addComponent(btnClear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -211,6 +353,12 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         NavigateToDashboard.goToAdminStaffDashboard(this, LogIn.loggedInName);
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clearTextField();
+        displayGradeSelectionOnTable();
+        loadAllFromGradeClassTest();
+    }//GEN-LAST:event_btnClearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -239,6 +387,7 @@ public class DefineGradingSystem extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
