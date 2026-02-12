@@ -364,7 +364,7 @@ public class Registration extends javax.swing.JFrame {
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] data = line.split(";");
-                    if (data.length >= 2) {
+                    if (data.length >= 3) {
                         classList.add(data);
                     }
                 }
@@ -375,7 +375,9 @@ public class Registration extends javax.swing.JFrame {
 
         for (int i = 0; i < labels.length; i++) {
             if (i < classList.size()) {
-                labels[i].setText(classList.get(i)[1].trim());
+                String module = classList.get(i)[2].trim(); 
+                labels[i].setText(module);
+
                 labels[i].setVisible(true);
                 checkboxes[i].setVisible(true);
             } else {
