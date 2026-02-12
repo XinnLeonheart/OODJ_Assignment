@@ -22,9 +22,9 @@ public class Assessment extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Assessment.class.getName());
 
-    private String filePath = "src/TextFiles/AssessmentMark.txt";
+    private String filePath = "src/TextFiles/AssessmentMark";
     private double overallCGPA = 0.0;
-    private java.util.Map<String, String> classIdToNameMap = new java.util.HashMap<>();
+    private final java.util.Map<String, String> classIdToNameMap = new java.util.HashMap<>();
 
     public Assessment(){
         initComponents();

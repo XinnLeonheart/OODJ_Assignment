@@ -40,21 +40,15 @@ public class feedbackForm extends javax.swing.JFrame {
         java.util.ArrayList<String> registeredClassIDs = new java.util.ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Registration.txt"))) {
             String line;
-        while ((line = br.readLine()) != null) {
-            if (line.trim().isEmpty()) continue;
-
-            String[] part = line.split(";");
-            // Expected format: classID;className;...
-            if (part.length >= 2) {
-                String classId = part[0].trim();
-                String className = part[1].trim();
-
-                if (registeredClassIDs.contains(classId)) {
-                    jComboBox1.addItem(className);
-                    classNameToIdMap.put(className, classId);
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.trim().split(";");
+                if (parts.length >= 2 && parts[0].trim().equals(studentID)) {
+                    for (int i = 1; i < parts.length; i++) {
+                        registeredClassIDs.add(parts[i].trim());
+                    }
+                    break;
                 }
             }
-        }
         } catch (IOException e) {
             // Registration file doesn't exist
         }
@@ -68,14 +62,16 @@ public class feedbackForm extends javax.swing.JFrame {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] part = line.split(";");
-        // parts: [0]=accID, [1]=username, [2]=password, [3..]=classIDs
-                if (part.length >= 4 && part[0].trim().equals(studentID)) {
-                    for (int i = 3; i < part.length; i++) {
-                    registeredClassIDs.add(part[i].trim());
+                if (!line.trim().isEmpty()) {
+                    String classId = part[0].trim();
+                    String className = part[1].trim();
+
+                    if (registeredClassIDs.contains(classId)) {
+                        jComboBox1.addItem(className);
+                        classNameToIdMap.put(className, classId);
+                    }
+                }
             }
-            break;
-        }
-    }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
