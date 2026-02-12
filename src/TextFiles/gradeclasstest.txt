@@ -1,6 +1,9 @@
-Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp
-student2;C001;test;100;good job stupid;2026-02-10 16:47:24
-student1;C001;testfu;33;hoho u fail;2026-02-10 17:01:12
-student6;C001;testfuckuagain;100;good kid;2026-02-10 17:04:03
-student7;C001;testlololo;100;good kid;2026-02-10 17:04:19
-student4;C001;testlili;33;stupid;2026-02-10 17:06:44
+    Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade
+    student3;C001;Statistics;100;good job stupid;2026-02-10 16:47:24;A+
+    student5;C001;Statistics;33;hoho u fail;2026-02-10 17:01:12;F-
+    student5;C001;Statistics;100;good kid;2026-02-10 17:04:03;A+
+    student5;C001;Statistics;100;good kid;2026-02-10 17:04:19;A+
+    student4;C001;Statistics;33;stupid;2026-02-10 17:06:44;F-
+    student3;C001;Statistics;33;hh;2026-02-10 17:07:01;F-
+    student6;C001;Statistics;33;fuXk my life;2026-02-10 19:15:59;F-
+    student7;C001;Statistics;33%;hhshha;2026-02-11 22:11:47;C+
