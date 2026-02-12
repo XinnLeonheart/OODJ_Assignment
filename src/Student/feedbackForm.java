@@ -61,14 +61,17 @@ public class feedbackForm extends javax.swing.JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] part = line.split(";");
-                if (!line.trim().isEmpty()) {
-                    String classId = part[0].trim();
-                    String className = part[1].trim();
 
-                    if (registeredClassIDs.contains(classId)) {
-                        jComboBox1.addItem(className);
-                        classNameToIdMap.put(className, classId);
+                if (!line.trim().isEmpty()) {
+                    String[] part = line.split(";");
+                    if (part.length >= 3) {
+                        String classId = part[0].trim();
+                        String moduleName = part[2].trim(); // Display Module Name
+
+                        if (registeredClassIDs.contains(classId)) {
+                            jComboBox1.addItem(moduleName);
+                            classNameToIdMap.put(moduleName, classId);
+                        }
                     }
                 }
             }

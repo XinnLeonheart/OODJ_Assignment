@@ -393,10 +393,10 @@ public class GradeClassessTest extends javax.swing.JPanel {
         int selectedRow = jTable1.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         jLabelstudent1field.setText(model.getValueAt(selectedRow, 0).toString());
-        jLabelcoursefield.setText(model.getValueAt(selectedRow, 1).toString());
-        jLabeltestnamefield.setText(model.getValueAt(selectedRow, 2).toString());
-        jLabelanswerfield.setText(model.getValueAt(selectedRow, 3).toString());
-        jLabelstatusfield.setText(model.getValueAt(selectedRow, 5).toString());
+        jLabelcoursefield.setText(model.getValueAt(selectedRow, 2).toString());
+        jLabeltestnamefield.setText(model.getValueAt(selectedRow, 3).toString());
+        jLabelanswerfield.setText(model.getValueAt(selectedRow, 4).toString());
+        jLabelstatusfield.setText(model.getValueAt(selectedRow, 6).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButtonrefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonrefreshActionPerformed
@@ -475,14 +475,14 @@ public class GradeClassessTest extends javax.swing.JPanel {
             String[] data = line.split(";");
             
             // Check if this is the row we want to update
-            // Format: Student Id;Course Id;Test Name;Answer;Date Time;Status;Duration Complete Time
-            if(data.length >= 6 && 
+            // Format: Student Id;Student Name;Course Id;Test Name;Answer;Date Time;Status;Duration Complete Time
+            if(data.length >= 7 && 
                data[0].trim().equals(studentId.trim()) && 
-               data[1].trim().equals(classId.trim()) && 
-               data[2].trim().equals(testName.trim())) {
+               data[2].trim().equals(classId.trim()) && 
+               data[3].trim().equals(testName.trim())) {
                 
-                // Update the status (column index 5) from "Submitted" to "Graded"
-                data[5] = "Graded";
+                // Update the status (column index 6) from "Submitted" to "Graded"
+                data[6] = "Graded";
                 line = String.join(";", data);
             }
             
