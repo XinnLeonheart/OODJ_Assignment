@@ -57,7 +57,7 @@ public class AdminStaffDashboard extends javax.swing.JFrame {
     }
     
     public void goToAPUGradingSystem(JFrame currentFrame) {
-        DefineGradingSystem defineGradingSystemDashboard = new DefineGradingSystem();
+        GradingSystem defineGradingSystemDashboard = new GradingSystem();
         defineGradingSystemDashboard.setVisible(true);
         defineGradingSystemDashboard.setLocationRelativeTo(null); // center on screen
 

@@ -6,6 +6,9 @@ package AdminStaff;
 
 import LogIn.LogIn;
 import Navigation.NavigateToDashboard;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -24,51 +27,40 @@ public class GradingSystem extends javax.swing.JFrame {
         loadAllFromGradeClassTest();
     }
     
+    private final GradeFileRepository gradeRepo = new GradeFileRepository(INPUT_FILE);
     private static final String INPUT_FILE = "src/TextFiles/gradeclasstest.txt";
-    
-    public void searchStudent(){
+
+    public void searchStudent() {
         String keyword = tfSearchStudent.getText().trim().toLowerCase();
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
+        javax.swing.table.DefaultTableModel model =
+                (javax.swing.table.DefaultTableModel) tableGrading.getModel();
         model.setRowCount(0);
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(INPUT_FILE))) {
-            String line;
-            boolean firstLine = true;
+        try {
+            for (GradeRecord r : gradeRepo.readAll()) {
 
-            while ((line = br.readLine()) != null) {
-                if (firstLine) { firstLine = false; continue; }
-                if (line.trim().isEmpty()) continue;
+                // match by name (your file doesn't store student ID)
+                if (!r.getStudentName().toLowerCase().contains(keyword)) continue;
 
-                String[] parts = line.split(";");
-                if (parts.length < 4) continue;
-
-                String studentName = parts[0].trim();
-                String classId = parts[1].trim();
-                String testName = parts[2].trim();
-                String markStr = parts[3].trim().replace("%", "");
-
-                // match by name (ID doesn't exist in file)
-                if (!studentName.toLowerCase().contains(keyword)) continue;
-
-                double mark;
-                try { mark = Double.parseDouble(markStr); }
-                catch (NumberFormatException e) { continue; }
-
-                String grade = convertMarkToGrade(String.valueOf(mark));
+                // if grade missing -> auto generate
+                String grade = (r.getGrade() == null || r.getGrade().isBlank())
+                        ? convertMarkToGrade(String.valueOf(r.getMark()))
+                        : r.getGrade();
 
                 model.addRow(new Object[]{
-                    "N/A",
-                    studentName,
-                    classId,
-                    testName,
-                    String.format("%.0f", mark),
+                    r.getStudentId(),
+                    r.getStudentName(),
+                    r.getClassId(),
+                    r.getTestName(),
+                    String.format("%.0f", r.getMark()),
                     grade
                 });
             }
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error reading gradeclasstest.txt: " + ex.getMessage());
         }
     }
+
 
     
     private String convertMarkToGrade(String markStr) {
@@ -91,61 +83,64 @@ public class GradingSystem extends javax.swing.JFrame {
     }
     
     public void saveGradingInformation() {
-        java.util.List<String> outputLines = new java.util.ArrayList<>();
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(INPUT_FILE))) {
-            String line;
-            boolean firstLine = true;
+        List<String> outputLines = new ArrayList<>();
 
-            while ((line = br.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    // header add Grade if not exists
-                    if (!line.toLowerCase().contains("grade")) {
-                        outputLines.add(line + ";Grade");
-                    } else {
-                        outputLines.add(line);
-                    }
-                    continue;
+        // header (your file first line)
+        outputLines.add("Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade");
+
+        try {
+            // We must read the ORIGINAL file lines to keep feedback/timestamp
+            java.io.File file = new java.io.File(INPUT_FILE);
+            boolean fileExists = file.exists();
+
+            if (!fileExists) {
+                javax.swing.JOptionPane.showMessageDialog(this, "File not found: " + INPUT_FILE);
+                return;
+            }
+
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
+                String line;
+                boolean firstLine = true;
+
+                while ((line = br.readLine()) != null) {
+                    if (firstLine) { firstLine = false; continue; }
+                    if (line.trim().isEmpty()) continue;
+
+                    String[] parts = line.split(";", -1);
+                    if (parts.length < 6) continue;
+
+                    String studentName = parts[0];
+                    String classId = parts[1];
+                    String testName = parts[2];
+
+                    String markStr = parts[3].trim().replace("%", "");
+                    double mark;
+                    try { mark = Double.parseDouble(markStr); }
+                    catch (NumberFormatException e) { continue; }
+
+                    String feedback = parts[4];
+                    String timestamp = parts[5];
+
+                    String grade = convertMarkToGrade(String.valueOf(mark));
+
+                    // build using GradeRecord (OOP)
+                    GradeRecord record = new GradeRecord("N/A", studentName.trim(), classId.trim(), testName.trim(), mark, grade);
+                    outputLines.add(record.toLine(feedback, timestamp));
                 }
-
-                if (line.trim().isEmpty()) continue;
-
-                // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp(;Grade optional)
-                String[] parts = line.split(";", -1);
-                if (parts.length < 6) continue;
-
-                String markStr = parts[3].trim().replace("%", "");
-                double mark;
-                try { mark = Double.parseDouble(markStr); }
-                catch (NumberFormatException e) { continue; }
-
-                String grade = convertMarkToGrade(String.valueOf(mark));
-
-                // rebuild first 6 columns exactly
-                String base6 = parts[0] + ";" + parts[1] + ";" + parts[2] + ";" + parts[3] + ";" + parts[4] + ";" + parts[5];
-
-                // overwrite/append grade as 7th column
-                outputLines.add(base6 + ";" + grade);
             }
 
-        } catch (java.io.IOException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error reading gradeclasstest.txt: " + ex.getMessage());
-            return;
-        }
+            // overwrite file using repository
+            gradeRepo.overwriteAllRawLines(outputLines);
 
-        // overwrite the file
-        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(INPUT_FILE, false))) {
-            for (String out : outputLines) {
-                bw.write(out);
-                bw.newLine();
-            }
             javax.swing.JOptionPane.showMessageDialog(this, "System auto-generated grades saved to gradeclasstest.txt!");
-            loadAllFromGradeClassTest(); // refresh table
-        } catch (java.io.IOException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error writing gradeclasstest.txt: " + ex.getMessage());
+            loadAllFromGradeClassTest();
+
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error saving gradeclasstest.txt: " + ex.getMessage());
         }
     }
+
     
     public void displayGradeSelectionOnTable(){
         String[] grade = {"A+", "A", "B+", "B", "C+", "C", "C-", "D", "F+", "F", "F-", ""};
@@ -156,47 +151,32 @@ public class GradingSystem extends javax.swing.JFrame {
     }
     
     public void loadAllFromGradeClassTest() {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
+        javax.swing.table.DefaultTableModel model =
+                (javax.swing.table.DefaultTableModel) tableGrading.getModel();
         model.setRowCount(0);
 
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(INPUT_FILE))) {
-            String line;
-            boolean firstLine = true;
-
-            while ((line = br.readLine()) != null) {
-                if (firstLine) { firstLine = false; continue; }
-                if (line.trim().isEmpty()) continue;
-
-                // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade(optional)
-                String[] parts = line.split(";", -1); // keep empty last column if any
-                if (parts.length < 6) continue;
-
-                String studentName = parts[0].trim();
-                String classId = parts[1].trim();
-                String testName = parts[2].trim();
-
-                String markStr = parts[3].trim().replace("%", "");
-                double mark;
-                try { mark = Double.parseDouble(markStr); }
-                catch (NumberFormatException e) { continue; }
+        try {
+            for (GradeRecord r : gradeRepo.readAll()) {
 
                 // If grade exists in file use it, else auto convert
-                String grade = (parts.length >= 7) ? parts[6].trim() : convertMarkToGrade(String.valueOf(mark));
+                String grade = (r.getGrade() == null || r.getGrade().isBlank())
+                        ? convertMarkToGrade(String.valueOf(r.getMark()))
+                        : r.getGrade();
 
                 model.addRow(new Object[]{
-                    "N/A",
-                    studentName,
-                    classId,
-                    testName,
-                    String.format("%.0f", mark),
+                    r.getStudentId(),
+                    r.getStudentName(),
+                    r.getClassId(),
+                    r.getTestName(),
+                    String.format("%.0f", r.getMark()),
                     grade
                 });
             }
-
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error reading gradeclasstest.txt: " + ex.getMessage());
         }
     }
+
 
     public void clearTextField(){
         tfSearchStudent.setText("");
