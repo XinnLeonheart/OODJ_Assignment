@@ -215,7 +215,7 @@ public class ClassTest extends javax.swing.JFrame {
         currentQuestions.clear();
         answerGroups.clear();
 
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestQuestions"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestQuestions.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
