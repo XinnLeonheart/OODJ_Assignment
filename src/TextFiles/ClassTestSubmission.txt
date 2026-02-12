@@ -3,7 +3,3 @@ ACC007;alice;C002;Mathematics;C,D,A;2026-02-12 22:14;Submitted
 ACC007;alice;C005;Physics;C,A,A;2026-02-12 22:22;Submitted
 ACC007;alice;C005;Physics;C,A,A;2026-02-12 22:22;Submitted
 ACC007;alice;C005;Physics;C,A,A;2026-02-12 22:22;Submitted
-ACC008;hahaha;C005;Physics;C,A,A;2026-02-12 22:22;Submitted
-ACC008;hahaha;C002;Mathematics;C,A,A;2026-02-12 22:22;Submitted
-ACC008;hahaha;C002;Mathematics;C,A,A;2026-02-12 22:22;Submitted
-ACC008;hahaha;C005;Physics;C,A,A;2026-02-12 22:22;Submitted

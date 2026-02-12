@@ -133,10 +133,10 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
                     if (line.trim().isEmpty()) continue;
                     String[] parts = line.split(";");
                     if (!(parts.length >= 3
-                        && parts[0].trim().equals(studentID)
-                        && parts[1].trim().equals(classID)
-                        && parts[2].trim().equals(className))) {
-                    lines.add(line);
+                            && parts[0].trim().equals(studentID)
+                            && parts[1].trim().equals(classID))
+                            && parts[2].trim().equals(className)) {
+                        lines.add(line);
                     }
                 }
             } catch (IOException e) {
@@ -150,16 +150,6 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
             } catch (IOException e) {
                 // Error writing file
             }
-            
-            lines.add(studentID + ";" + classID + ";" + className + ";" + dateTime + ";Submitted");
-
-        try (FileWriter fw = new FileWriter("src/TextFiles/AssignmentSubmission.txt")) {
-            for (String l : lines) {
-                fw.write(l + "\n");
-            }
-        } catch (IOException e) {
-            // Error writing file
-        }
 
             String message = studentName + " has submitted assignment for " + className + " (" + classID + ")";
             NotificationHelper.addNotification(studentID, "ASSIGNMENT", message);
