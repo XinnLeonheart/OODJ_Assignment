@@ -180,7 +180,7 @@ public class JDialogFeedback extends javax.swing.JDialog {
         // Get current date time
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-        try (FileWriter fw = new FileWriter ("src/TextFiles/Feedback", true)) {
+        try (FileWriter fw = new FileWriter ("src/TextFiles/Feedback.txt", true)) {
             // Format: StudentID;ClassID;Comment;DateTime
             fw.write(studentId + ";" + classId + ";" + comment + ";" + dateTime + "\n");
             NotificationHelper.addNotification(studentId, "FEEDBACK",

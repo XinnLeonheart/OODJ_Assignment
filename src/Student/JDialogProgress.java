@@ -44,7 +44,7 @@ public class JDialogProgress extends javax.swing.JDialog {
 
         // --- Class Test Status ---
         String classTestStatus = "Not submitted";
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestSubmission"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestSubmission.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
@@ -65,7 +65,7 @@ public class JDialogProgress extends javax.swing.JDialog {
 
         // --- Assignment Status ---
         String assignmentStatus = "Not submitted";
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssignmentSubmission"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssignmentSubmission.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
@@ -87,7 +87,7 @@ public class JDialogProgress extends javax.swing.JDialog {
 
         // --- Grade Status ---
         String gradeStatus = "Not graded";
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssessmentMark"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssessmentMark.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;

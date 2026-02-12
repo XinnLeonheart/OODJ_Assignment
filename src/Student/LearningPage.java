@@ -268,7 +268,7 @@ public class LearningPage extends javax.swing.JFrame {
         }
 
         ArrayList<String> classIDs = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Registration"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Registration.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split(";");
@@ -285,7 +285,7 @@ public class LearningPage extends javax.swing.JFrame {
 
         for (String classID : classIDs) {
             String className = "";
-            try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class"))) {
+            try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.trim().split(";");
