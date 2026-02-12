@@ -20,13 +20,14 @@ import java.util.ArrayList;
  */
 public class Assessment extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Assessment.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger
+            .getLogger(Assessment.class.getName());
 
     private final String filePath = "src/TextFiles/AssessmentMark.txt";
     private double overallCGPA = 0.0;
     private final java.util.Map<String, String> classIdToNameMap = new java.util.HashMap<>();
 
-    public Assessment(){
+    public Assessment() {
         initComponents();
         loadClassNames();
 
@@ -57,9 +58,9 @@ public class Assessment extends javax.swing.JFrame {
     private final java.util.Map<String, java.util.List<Double>> classAssignmentMarks = new java.util.HashMap<>();
     private final java.util.Map<String, java.util.List<Double>> classTestMarks = new java.util.HashMap<>();
 
-    private void loadAssessmentMark(String studentID){
-        DefaultTableModel model = (DefaultTableModel)jTableAssessment.getModel();
-        model.setColumnIdentifiers(new String[] {"Class", "Asg Avg", "Test Avg", "Grade", "CGPA"});
+    private void loadAssessmentMark(String studentID) {
+        DefaultTableModel model = (DefaultTableModel) jTableAssessment.getModel();
+        model.setColumnIdentifiers(new String[] { "Class", "Asg Avg", "Test Avg", "Grade", "CGPA" });
         model.setRowCount(0);
 
         loadAssignmentMarks(studentID);
@@ -68,27 +69,27 @@ public class Assessment extends javax.swing.JFrame {
         double totalGradePoints = 0.0;
         int moduleCount = 0;
 
-        try (var br = new BufferedReader (new FileReader (filePath))){
+        try (var br = new BufferedReader(new FileReader(filePath))) {
             String line;
 
-            while ((line = br.readLine()) != null){
-                if (!line.trim().isEmpty()){
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
                     String[] part = line.split(";");
 
                     // Format: StudentID;ClassID;Grade;CGPA
-                    if (part.length >= 4){
+                    if (part.length >= 4) {
                         String id = part[0].trim();
                         String classId = part[1].trim();
                         String grade = part[2].trim();
                         String cgpaStr = part[3].trim();
 
-                        if (id.equals(studentID)){
+                        if (id.equals(studentID)) {
                             String className = classIdToNameMap.getOrDefault(classId, classId);
-                            
+
                             String asgAvg = calculateAverage(classAssignmentMarks.get(classId));
                             String testAvg = calculateAverage(classTestMarks.get(classId));
 
-                            model.addRow(new Object[]{className, asgAvg, testAvg, grade, cgpaStr});
+                            model.addRow(new Object[] { className, asgAvg, testAvg, grade, cgpaStr });
 
                             try {
                                 totalGradePoints += Double.parseDouble(cgpaStr);
@@ -100,8 +101,9 @@ public class Assessment extends javax.swing.JFrame {
                     }
                 }
             }
-        } catch (IOException e){
-            JOptionPane.showMessageDialog(this, "Error reading assessment mark file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading assessment mark file: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         if (moduleCount > 0) {
@@ -122,19 +124,19 @@ public class Assessment extends javax.swing.JFrame {
                 // Student Name;Class Id;Assignment Name;Assignment Marks;Feedback;Timestamp
                 if (parts.length >= 4) {
                     // Need to match Student Name. LogIn.loggedInName is the name.
-                    // But wait, the file uses "Student Name". Registration uses Student ID. 
-                    // Let's check how GradeAssignment writes it. 
-                    // It uses studentname. 
+                    // But wait, the file uses "Student Name". Registration uses Student ID.
+                    // Let's check how GradeAssignment writes it.
+                    // It uses studentname.
                     // And GradeClassessTest uses studentname.
                     // But AssessmentMark uses StudentID.
                     // AND LogIn has both.
-                    
-                     // Match using Student ID consistent with other files
-                     String nameInFile = parts[0].trim();
-                     if (nameInFile.equalsIgnoreCase(studentID)) {
-                         String classId = parts[1].trim();
-                         double mark = Double.parseDouble(parts[3].trim());
-                         classAssignmentMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
+
+                    // Match using Student ID consistent with other files
+                    String nameInFile = parts[0].trim();
+                    if (nameInFile.equalsIgnoreCase(studentID)) {
+                        String classId = parts[1].trim();
+                        double mark = Double.parseDouble(parts[3].trim());
+                        classAssignmentMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
                     }
                 }
             }
@@ -151,19 +153,19 @@ public class Assessment extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp
-                 if (parts.length >= 4) {
+                if (parts.length >= 4) {
                     String nameInFile = parts[0].trim();
-                     
+
                     if (nameInFile.equalsIgnoreCase(studentID)) {
-                         String classId = parts[1].trim();
-                         // Check for % sign and remove it
-                         String markStr = parts[3].trim().replace("%", "");
-                         try {
+                        String classId = parts[1].trim();
+                        // Check for % sign and remove it
+                        String markStr = parts[3].trim().replace("%", "");
+                        try {
                             double mark = Double.parseDouble(markStr);
                             classTestMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
-                         } catch (NumberFormatException e) {
-                             // ignore
-                         }
+                        } catch (NumberFormatException e) {
+                            // ignore
+                        }
                     }
                 }
             }
@@ -195,23 +197,26 @@ public class Assessment extends javax.swing.JFrame {
 
         // Build the text content for the PDF page
         StringBuilder content = new StringBuilder();
-        int pageHeight = 842;  // A4
+        int pageHeight = 842; // A4
         int pageWidth = 595;
 
         // Title
         content.append("BT /F1 18 Tf 50 ").append(pageHeight - 50).append(" Td (Assessment Report) Tj ET\n");
 
         // Student info
-        String studentInfo = "Student ID: " + studentID + "    Name: " + (LogIn.loggedInName != null ? LogIn.loggedInName : "");
-        content.append("BT /F1 11 Tf 50 ").append(pageHeight - 80).append(" Td (").append(escapePdf(studentInfo)).append(") Tj ET\n");
+        String studentInfo = "Student ID: " + studentID + "    Name: "
+                + (LogIn.loggedInName != null ? LogIn.loggedInName : "");
+        content.append("BT /F1 11 Tf 50 ").append(pageHeight - 80).append(" Td (").append(escapePdf(studentInfo))
+                .append(") Tj ET\n");
 
         // CGPA
         String cgpaLine = "Overall CGPA: " + String.format("%.2f", overallCGPA);
-        content.append("BT /F1 11 Tf 50 ").append(pageHeight - 100).append(" Td (").append(escapePdf(cgpaLine)).append(") Tj ET\n");
+        content.append("BT /F1 11 Tf 50 ").append(pageHeight - 100).append(" Td (").append(escapePdf(cgpaLine))
+                .append(") Tj ET\n");
 
         // Table header line
         int tableTop = pageHeight - 135;
-        int[] colX = {50, 180, 280, 380, 460};
+        int[] colX = { 50, 180, 280, 380, 460 };
         int colW = 150;
 
         // Draw header background
@@ -220,9 +225,10 @@ public class Assessment extends javax.swing.JFrame {
         content.append("0 0 0 rg\n");
 
         // Header text
-        String[] headers = {"Class", "Asg Avg", "Test Avg", "Grade", "CGPA"};
+        String[] headers = { "Class", "Asg Avg", "Test Avg", "Grade", "CGPA" };
         for (int c = 0; c < colCount && c < headers.length; c++) {
-            content.append("BT /F2 11 Tf ").append(colX[c] + 5).append(" ").append(tableTop).append(" Td (").append(headers[c]).append(") Tj ET\n");
+            content.append("BT /F2 11 Tf ").append(colX[c] + 5).append(" ").append(tableTop).append(" Td (")
+                    .append(headers[c]).append(") Tj ET\n");
         }
 
         // Table rows
@@ -237,17 +243,20 @@ public class Assessment extends javax.swing.JFrame {
             for (int c = 0; c < colCount && c < colX.length; c++) {
                 Object val = model.getValueAt(r, c);
                 String text = val != null ? val.toString() : "";
-                content.append("BT /F1 10 Tf ").append(colX[c] + 5).append(" ").append(y).append(" Td (").append(escapePdf(text)).append(") Tj ET\n");
+                content.append("BT /F1 10 Tf ").append(colX[c] + 5).append(" ").append(y).append(" Td (")
+                        .append(escapePdf(text)).append(") Tj ET\n");
             }
             y -= 22;
-            if (y < 50) break; // page overflow guard
+            if (y < 50)
+                break; // page overflow guard
         }
 
         // Draw table border lines
         content.append("0.6 0.6 0.6 RG 0.5 w\n");
         // outer border
         int tableBottom = y + 17;
-        content.append("50 ").append(tableTop + 15).append(" 480 ").append(tableBottom - tableTop - 15).append(" re S\n");
+        content.append("50 ").append(tableTop + 15).append(" 480 ").append(tableBottom - tableTop - 15)
+                .append(" re S\n");
         // header separator
         content.append("50 ").append(tableTop - 5).append(" m 530 ").append(tableTop - 5).append(" l S\n");
         // column separators
@@ -273,7 +282,8 @@ public class Assessment extends javax.swing.JFrame {
 
             // Obj 2: Pages
             offsets.add((long) baos.size());
-            baos.write("2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n".getBytes(StandardCharsets.ISO_8859_1));
+            baos.write(
+                    "2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n".getBytes(StandardCharsets.ISO_8859_1));
 
             // Obj 3: Page
             offsets.add((long) baos.size());
@@ -289,11 +299,13 @@ public class Assessment extends javax.swing.JFrame {
 
             // Obj 5: Font (Helvetica)
             offsets.add((long) baos.size());
-            baos.write("5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n".getBytes(StandardCharsets.ISO_8859_1));
+            baos.write("5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n"
+                    .getBytes(StandardCharsets.ISO_8859_1));
 
             // Obj 6: Font Bold (Helvetica-Bold)
             offsets.add((long) baos.size());
-            baos.write("6 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj\n".getBytes(StandardCharsets.ISO_8859_1));
+            baos.write("6 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj\n"
+                    .getBytes(StandardCharsets.ISO_8859_1));
 
             // Cross-reference table
             long xrefStart = baos.size();
@@ -338,7 +350,8 @@ public class Assessment extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         btnOK = new javax.swing.JButton();
@@ -370,19 +383,18 @@ public class Assessment extends javax.swing.JFrame {
 
         jTableAssessment.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         jTableAssessment.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][] {
 
-            },
-            new String [] {
-                "Class", "Grade", "CGPA"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+                },
+                new String[] {
+                        "Class", "Grade", "CGPA"
+                }) {
+            boolean[] canEdit = new boolean[] {
+                    false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTableAssessment.setRowHeight(25);
@@ -396,70 +408,77 @@ public class Assessment extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(label1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(label1)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap(15, Short.MAX_VALUE)
+                                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
-                .addGap(22, 22, 22))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
-                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
+                                .addGap(22, 22, 22))
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(127, 127, 127)
+                                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 160,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 160,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 30,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 30,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(17, 17, 17)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
+    private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnOKActionPerformed
         StudentDashboard main = new StudentDashboard();
         main.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnOKActionPerformed
+    }// GEN-LAST:event_btnOKActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSaveActionPerformed
         savePDF();
-    }//GEN-LAST:event_btnSaveActionPerformed
+    }// GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -471,7 +490,7 @@ public class Assessment extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Assessment().setVisible(true));

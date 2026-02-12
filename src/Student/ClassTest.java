@@ -19,7 +19,8 @@ import java.util.Arrays;
  */
 public class ClassTest extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ClassTest.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger
+            .getLogger(ClassTest.class.getName());
 
     private String classID;
     private String className;
@@ -97,10 +98,11 @@ public class ClassTest extends javax.swing.JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty())
+                    continue;
                 String[] parts = line.split(";");
                 if (parts.length >= 3 &&
-                    parts[0].trim().equals(classID)) {
+                        parts[0].trim().equals(classID)) {
                     return Integer.parseInt(parts[2].trim());
                 }
             }
@@ -163,8 +165,8 @@ public class ClassTest extends javax.swing.JFrame {
         saveSubmission(answers.toString(), timeTakenSeconds);
 
         JOptionPane.showMessageDialog(this,
-            "Time is up! Your test has been auto-submitted.",
-            "Time Expired", JOptionPane.INFORMATION_MESSAGE);
+                "Time is up! Your test has been auto-submitted.",
+                "Time Expired", JOptionPane.INFORMATION_MESSAGE);
 
         loadClassTest();
     }
@@ -177,8 +179,8 @@ public class ClassTest extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split(";");
                 if (parts.length >= 2 &&
-                    parts[0].trim().equals(studentID) &&
-                    parts[1].trim().equals(classID)) {
+                        parts[0].trim().equals(studentID) &&
+                        parts[1].trim().equals(classID)) {
                     return true;
                 }
             }
@@ -197,9 +199,9 @@ public class ClassTest extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length >= 3 &&
-                    parts[0].trim().equals(studentID) &&
-                    parts[1].trim().equals(classID) &&
-                    parts[2].trim().equals(className)) {
+                        parts[0].trim().equals(studentID) &&
+                        parts[1].trim().equals(classID) &&
+                        parts[2].trim().equals(className)) {
                     return true;
                 }
             }
@@ -220,13 +222,14 @@ public class ClassTest extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length >= 8 &&
-                    parts[0].trim().equals(classID) &&
-                    parts[1].trim().equals(className)) {
+                        parts[0].trim().equals(classID) &&
+                        parts[1].trim().equals(className)) {
                     currentQuestions.add(parts);
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading ClassTestQuestions file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error reading ClassTestQuestions file: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         if (currentQuestions.isEmpty()) {
@@ -259,9 +262,8 @@ public class ClassTest extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
+                BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel lblQ = new JLabel("Q" + qNumber + ": " + questionText);
@@ -271,8 +273,8 @@ public class ClassTest extends javax.swing.JFrame {
         panel.add(Box.createVerticalStrut(5));
 
         ButtonGroup group = new ButtonGroup();
-        String[] options = {"A", "B", "C", "D"};
-        String[] optTexts = {optA, optB, optC, optD};
+        String[] options = { "A", "B", "C", "D" };
+        String[] optTexts = { optA, optB, optC, optD };
 
         for (int i = 0; i < 4; i++) {
             JRadioButton rb = new JRadioButton(options[i] + ". " + optTexts[i]);
@@ -299,8 +301,8 @@ public class ClassTest extends javax.swing.JFrame {
             ButtonModel selected = answerGroups.get(i).getSelection();
             if (selected == null) {
                 JOptionPane.showMessageDialog(this,
-                    "Please answer all questions. Question " + (i + 1) + " is not answered.",
-                    "Incomplete", JOptionPane.WARNING_MESSAGE);
+                        "Please answer all questions. Question " + (i + 1) + " is not answered.",
+                        "Incomplete", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             if (answers.length() > 0) {
@@ -310,11 +312,11 @@ public class ClassTest extends javax.swing.JFrame {
         }
 
         int confirm = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to submit your test for:\n" +
-            "Class: " + className + "\n\n" +
-            "Your lecturer will grade this test.",
-            "Confirm Submission",
-            JOptionPane.YES_NO_OPTION);
+                "Are you sure you want to submit your test for:\n" +
+                        "Class: " + className + "\n\n" +
+                        "Your lecturer will grade this test.",
+                "Confirm Submission",
+                JOptionPane.YES_NO_OPTION);
 
         if (confirm != JOptionPane.YES_OPTION) {
             return;
@@ -337,12 +339,13 @@ public class ClassTest extends javax.swing.JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestSubmission.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty())
+                    continue;
                 String[] parts = line.split(";");
                 if (!(parts.length >= 3 &&
-                      parts[0].trim().equals(studentID) &&
-                      parts[1].trim().equals(classID) &&
-                      parts[2].trim().equals(className))) {
+                        parts[0].trim().equals(studentID) &&
+                        parts[1].trim().equals(classID) &&
+                        parts[2].trim().equals(className))) {
                     existingLines.add(line);
                 }
             }
@@ -350,7 +353,8 @@ public class ClassTest extends javax.swing.JFrame {
             // File doesn't exist yet
         }
 
-        String newEntry = studentID + ";" + studentName + ";" + classID + ";" + className  + ";" + answers + ";" + dateTime + ";Submitted";
+        String newEntry = studentID + ";" + studentName + ";" + classID + ";" + className + ";" + answers + ";"
+                + dateTime + ";Submitted";
         if (timeTakenSeconds >= 0) {
             newEntry += ";" + timeTakenSeconds;
         }
@@ -361,12 +365,13 @@ public class ClassTest extends javax.swing.JFrame {
                 fw.write(line + "\n");
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving submission: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error saving submission: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         NotificationHelper.addNotification(studentID, "CLASSTEST",
-             studentName + " has submitted class test for " + className + " (" + classID + ")");
+                studentName + " has submitted class test for " + className + " (" + classID + ")");
     }
 
     /**
@@ -375,7 +380,8 @@ public class ClassTest extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -410,26 +416,29 @@ public class ClassTest extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(lblTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
-                .addComponent(btnBack)
-                .addGap(15, 15, 15))
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 214,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41,
+                                        Short.MAX_VALUE)
+                                .addComponent(lblTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 180,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163,
+                                        Short.MAX_VALUE)
+                                .addComponent(btnBack)
+                                .addGap(15, 15, 15)));
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTimer)
-                    .addComponent(btnBack))
-                .addGap(15, 15, 15))
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblTimer)
+                                        .addComponent(btnBack))
+                                .addGap(15, 15, 15)));
 
         lblStatus.setFont(new java.awt.Font("SansSerif", 2, 12)); // NOI18N
         lblStatus.setForeground(new java.awt.Color(128, 128, 128));
@@ -450,52 +459,58 @@ public class ClassTest extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(questionsScrollPane)
-                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(questionsScrollPane)
+                                        .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(20, 20, 20))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 150,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(questionsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-                .addGap(10, 10, 10)
-                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(questionsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 370,
+                                        Short.MAX_VALUE)
+                                .addGap(10, 10, 10)
+                                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 35,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBackActionPerformed
         stopTimer();
         LearningPage classPage = new LearningPage();
         classPage.setVisible(true);
         dispose();
-    }//GEN-LAST:event_btnBackActionPerformed
+    }// GEN-LAST:event_btnBackActionPerformed
 
-    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSubmitActionPerformed
         submitTest();
-    }//GEN-LAST:event_btnSubmitActionPerformed
+    }// GEN-LAST:event_btnSubmitActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -506,7 +521,7 @@ public class ClassTest extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         java.awt.EventQueue.invokeLater(() -> new ClassTest().setVisible(true));
     }
