@@ -38,6 +38,8 @@ public class AssignLecturer extends javax.swing.JFrame {
     private static final String LECTURER_FILE = "src/TextFiles/LecturerAssigned.txt";
     private AccountFileRepository accountRepo;
     private LecturerAssignRepository lecturerRepo;
+    private static final String DEFAULT_LEADER_DISPLAY = "-- Select Academic Leader --";
+    private static final String PENDING_VALUE_IN_FILE  = "PENDING";
     
     public AssignLecturer() {
         initComponents();
@@ -55,7 +57,7 @@ public class AssignLecturer extends javax.swing.JFrame {
     
     public void displayAcademicLeaderListOnTable() {
         JComboBox<String> academicLeaderCombo = new JComboBox<>();
-        academicLeaderCombo.addItem("-- Select Academic Leader --");
+        academicLeaderCombo.addItem(DEFAULT_LEADER_DISPLAY);
 
         try {
             for (Account a : accountRepo.readAll()) {
@@ -88,16 +90,21 @@ public class AssignLecturer extends javax.swing.JFrame {
             for (Account a : accountRepo.readAll()) {
                 if (a.getRole() != null && a.getRole().equalsIgnoreCase("Lecturer")) {
 
-                    String leader = assignedLeaders.getOrDefault(
-                            a.getAccID(),
-                            "-- Select Academic Leader --"
-                    );
+                    String leaderFromFile = assignedLeaders.get(a.getAccID());
+                    String leader;
+
+                    if (leaderFromFile == null || leaderFromFile.trim().isEmpty()
+                            || leaderFromFile.equalsIgnoreCase(PENDING_VALUE_IN_FILE)) {
+                        leader = DEFAULT_LEADER_DISPLAY;
+                    } else {
+                        leader = leaderFromFile.trim();
+                    }
 
                     model.addRow(new Object[]{
-                            a.getAccID(),
-                            a.getName(),
-                            a.getEmail(),
-                            leader
+                        a.getAccID(),
+                        a.getName(),
+                        a.getEmail(),
+                        leader
                     });
                 }
             }
@@ -109,158 +116,176 @@ public class AssignLecturer extends javax.swing.JFrame {
     }
     
     public void searchLecturer() {
-        java.util.List<Integer> matchedRows = new java.util.ArrayList<>();
-        
-        Map<String, String> assignedLeaders = new LinkedHashMap<>();
+        String searchText = tfSearchLecturer.getText().trim().toLowerCase();
 
+        // If empty -> reload all lecturers
+        if (searchText.isEmpty()) {
+            loadLecturerInformationOnTable();
+            return;
+        }
+
+        // Load assignments lecturerID -> leader
+        Map<String, String> assignedLeaders = new LinkedHashMap<>();
         File file = new File(LECTURER_FILE);
         if (file.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (line.trim().isEmpty()) continue;
+                    line = line.trim();
+                    if (line.isEmpty()) continue;
 
                     String[] data = line.split(";");
-                    assignedLeaders.put(data[0].trim(), data[3].trim());
+                    // lecturerID;lecturerName;lecturerEmail;academicLeader
+                    if (data.length >= 4) {
+                        assignedLeaders.put(data[0].trim(), data[3].trim());
+                    }
                 }
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this,
-                    "Error loading lecturer assignments");
+                JOptionPane.showMessageDialog(this, "Error loading lecturer assignments");
             }
         }
 
-        String searchText = tfSearchLecturer.getText().trim().toLowerCase();
-        DefaultTableModel model =
-            (DefaultTableModel) tableAssignLecturer.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableAssignLecturer.getModel();
         model.setRowCount(0);
 
-        if (searchText.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Please enter Lecturer ID or Name to search.");
-            return;
-        }
+        java.util.List<Integer> matchedRows = new java.util.ArrayList<>();
+
+        // Read Account.txt and ONLY add lecturers:
+        // - matched lecturers first
+        // - then remaining lecturers
+        java.util.List<String[]> lecturers = new java.util.ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
             String line;
-
-            // Match Lecturers
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
+                line = line.trim();
+                if (line.isEmpty()) 
+                    continue;
 
                 String[] data = line.split(";");
+                if (data.length < 9) 
+                    continue;
 
-                String accID = data[0].trim();
-                String name = data[2].trim();
-                String email = data[3].trim();
                 String role = data[8].trim();
+                if (!role.equalsIgnoreCase("Lecturer")) 
+                    continue;  // ONLY display lecturers
 
-                // Only show LECTURERS
-                if (role.equalsIgnoreCase("Lecturer") &&
-                    (accID.toLowerCase().contains(searchText)
-                    || name.toLowerCase().contains(searchText))) {
-
-                    model.addRow(new Object[]{
-                        accID,
-                        name,
-                        email,
-                        assignedLeaders.getOrDefault(accID,
-                            "-- Select Academic Leader --")    // Academic Leader ComboBox column
-                    });
-                    
-                    matchedRows.add(model.getRowCount() - 1);
-                    
-                }
+                lecturers.add(data);
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this,
-                "Error searching lecturer");
+            JOptionPane.showMessageDialog(this, "Error searching lecturer");
             return;
+        }
+
+        // 1) Add matched lecturers first
+        for (String[] data : lecturers) {
+            String accID = data[0].trim();
+            String name  = data[2].trim();
+            String email = data[3].trim();
+
+            boolean isMatch = accID.toLowerCase().contains(searchText)
+                           || name.toLowerCase().contains(searchText);
+
+            if (!isMatch) continue;
+
+            String leaderFromFile = assignedLeaders.get(accID);
+            String leader = (leaderFromFile == null || leaderFromFile.trim().isEmpty()
+                    || leaderFromFile.equalsIgnoreCase(PENDING_VALUE_IN_FILE))
+                    ? DEFAULT_LEADER_DISPLAY
+                    : leaderFromFile.trim();
+
+            model.addRow(new Object[]{accID, name, email, leader});
+            matchedRows.add(model.getRowCount() - 1);
         }
         
-        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNT_FILE))) {
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "No lecturer found.");
+        }
 
-            String line;
+        // 2) Add remaining lecturers (not matched)
+        for (String[] data : lecturers) {
+            String accID = data[0].trim();
+            String name  = data[2].trim();
+            String email = data[3].trim();
 
-            // Second pass: remaining lecturers
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
+            boolean isMatch = accID.toLowerCase().contains(searchText)
+                           || name.toLowerCase().contains(searchText);
 
-                String[] data = line.split(";");
+            if (isMatch) continue;
 
-                String accID = data[0].trim();
-                String name = data[2].trim();
-                String email = data[3].trim();
-                String role = data[8].trim();
+            String leaderFromFile = assignedLeaders.get(accID);
+            String leader = (leaderFromFile == null || leaderFromFile.trim().isEmpty()
+                    || leaderFromFile.equalsIgnoreCase(PENDING_VALUE_IN_FILE))
+                    ? DEFAULT_LEADER_DISPLAY
+                    : leaderFromFile.trim();
 
-                if (role.equalsIgnoreCase("Lecturer") &&
-                    !(accID.toLowerCase().contains(searchText)
-                    || name.toLowerCase().contains(searchText))) {
-
-                    model.addRow(new Object[]{
-                        accID,
-                        name,
-                        email,
-                        assignedLeaders.getOrDefault(accID,
-                            "-- Select Academic Leader --")    // Academic Leader ComboBox column
-                    });
-                }
-            }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading lecturers");
+            model.addRow(new Object[]{accID, name, email, leader});
         }
 
         displayAcademicLeaderListOnTable();
 
-            if (!matchedRows.isEmpty()) {
-                tableAssignLecturer.clearSelection();
-
-                for (int row : matchedRows) {
-                    tableAssignLecturer.addRowSelectionInterval(row, row);
-                }
-
-                // Scroll to first matched row
-                int firstRow = matchedRows.get(0);
-                tableAssignLecturer.scrollRectToVisible(
-                    tableAssignLecturer.getCellRect(firstRow, 0, true)
-                );
+        // Highlight matched rows
+        if (!matchedRows.isEmpty()) {
+            tableAssignLecturer.clearSelection();
+            for (int row : matchedRows) {
+                tableAssignLecturer.addRowSelectionInterval(row, row);
             }
+            int firstRow = matchedRows.get(0);
+            tableAssignLecturer.scrollRectToVisible(
+                tableAssignLecturer.getCellRect(firstRow, 0, true)
+            );
+        }
     }
-
 
     public void saveAssignInfoIntoDatabase() {
         DefaultTableModel model = (DefaultTableModel) tableAssignLecturer.getModel();
         Map<String, String> lecturerIdToLeader = new LinkedHashMap<>();
 
+        int pendingCount = 0;
+
         for (int i = 0; i < model.getRowCount(); i++) {
             String lecturerID = model.getValueAt(i, 0).toString();
             Object leaderObj = model.getValueAt(i, 3);
 
-            if (leaderObj == null ||
-                leaderObj.toString().isEmpty() ||
-                leaderObj.toString().equals("-- Select Academic Leader --")) {
+            String leaderText = (leaderObj == null) ? "" : leaderObj.toString().trim();
 
-                JOptionPane.showMessageDialog(this,
-                        "Please assign Academic Leader for all lecturers");
-                return;
+            // If user didn't select, store PENDING in file
+            if (leaderText.isEmpty() || leaderText.equals(DEFAULT_LEADER_DISPLAY)) {
+                pendingCount++;
+                lecturerIdToLeader.put(lecturerID, PENDING_VALUE_IN_FILE);
+
+                // Keep the table showing "-- Select Academic Leader --"
+                model.setValueAt(DEFAULT_LEADER_DISPLAY, i, 3);
+            } else {
+                lecturerIdToLeader.put(lecturerID, leaderText);
             }
+        }
 
-            lecturerIdToLeader.put(lecturerID, leaderObj.toString());
+        // Show warning but DO NOT stop saving
+        if (pendingCount > 0) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Warning: " + pendingCount + " lecturer(s) have not been assigned.\n" +
+                "They will be saved as '" + PENDING_VALUE_IN_FILE + "'.",
+                "Pending Assignment",
+                JOptionPane.WARNING_MESSAGE
+            );
         }
 
         try {
             lecturerRepo.saveAllAssignments(lecturerIdToLeader, accountRepo);
-            JOptionPane.showMessageDialog(this,
-                    "Lecturer assignment updated successfully");
+            JOptionPane.showMessageDialog(this, "Saved successfully.");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this,
-                    "Error saving lecturer assignment:\n" + e.getMessage());
+                "Error saving lecturer assignment:\n" + e.getMessage());
         }
     }
+
 
     
     public void clearTextField(){
         tfSearchLecturer.setText("");
+        loadLecturerInformationOnTable();
     }
     
     /**
