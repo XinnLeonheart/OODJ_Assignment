@@ -91,23 +91,6 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     }
     
     public void saveGradingInformation() {
-        // Step 1: Build a quick lookup key -> grade from JTable
-        // Key format: studentName|classId|testName|testMark
-        java.util.Map<String, String> gradeMap = new java.util.HashMap<>();
-        javax.swing.table.DefaultTableModel tModel = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
-
-        for (int i = 0; i < tModel.getRowCount(); i++) {
-            String studentName = tModel.getValueAt(i, 1).toString().trim();
-            String classId = tModel.getValueAt(i, 2).toString().trim();
-            String testName = tModel.getValueAt(i, 3).toString().trim();
-            String testMark = tModel.getValueAt(i, 4).toString().trim();
-            String grade = tModel.getValueAt(i, 5).toString().trim();
-
-            String key = studentName + "|" + classId + "|" + testName + "|" + testMark;
-            gradeMap.put(key, grade);
-        }
-
-        // Step 2: Read original file and rewrite with grade appended
         java.util.List<String> outputLines = new java.util.ArrayList<>();
 
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(INPUT_FILE))) {
@@ -117,7 +100,7 @@ public class DefineGradingSystem extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 if (firstLine) {
                     firstLine = false;
-                    // Ensure header has Grade column
+                    // header add Grade if not exists
                     if (!line.toLowerCase().contains("grade")) {
                         outputLines.add(line + ";Grade");
                     } else {
@@ -128,26 +111,21 @@ public class DefineGradingSystem extends javax.swing.JFrame {
 
                 if (line.trim().isEmpty()) continue;
 
+                // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp(;Grade optional)
                 String[] parts = line.split(";", -1);
                 if (parts.length < 6) continue;
-
-                String studentName = parts[0].trim();
-                String classId = parts[1].trim();
-                String testName = parts[2].trim();
 
                 String markStr = parts[3].trim().replace("%", "");
                 double mark;
                 try { mark = Double.parseDouble(markStr); }
                 catch (NumberFormatException e) { continue; }
 
-                String testMarkKey = String.format("%.0f", mark);
-                String key = studentName + "|" + classId + "|" + testName + "|" + testMarkKey;
+                String grade = convertMarkToGrade(String.valueOf(mark));
 
-                // If admin selected grade use it, else auto grade
-                String grade = gradeMap.getOrDefault(key, convertMarkToGrade(String.valueOf(mark)));
-
-                // Rebuild line: keep original 6 fields (including feedback, timestamp), then append grade
+                // rebuild first 6 columns exactly
                 String base6 = parts[0] + ";" + parts[1] + ";" + parts[2] + ";" + parts[3] + ";" + parts[4] + ";" + parts[5];
+
+                // overwrite/append grade as 7th column
                 outputLines.add(base6 + ";" + grade);
             }
 
@@ -156,13 +134,14 @@ public class DefineGradingSystem extends javax.swing.JFrame {
             return;
         }
 
-        // Step 3: Write all lines back (overwrite file)
+        // overwrite the file
         try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(INPUT_FILE, false))) {
             for (String out : outputLines) {
                 bw.write(out);
                 bw.newLine();
             }
-            javax.swing.JOptionPane.showMessageDialog(this, "Grade updated into gradeclasstest.txt successfully!");
+            javax.swing.JOptionPane.showMessageDialog(this, "System auto-generated grades saved to gradeclasstest.txt!");
+            loadAllFromGradeClassTest(); // refresh table
         } catch (java.io.IOException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error writing gradeclasstest.txt: " + ex.getMessage());
         }
