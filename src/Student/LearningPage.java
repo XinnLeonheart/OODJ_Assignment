@@ -288,10 +288,13 @@ public class LearningPage extends javax.swing.JFrame {
             try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    String[] parts = line.trim().split(";");
-                    if (parts.length >= 2 && parts[0].trim().equals(classID)) {
-                        className = parts[1].trim();
-                        break;
+                    if (!line.trim().isEmpty()) {
+                        String[] parts = line.split(";");
+                        if (parts.length >= 3 && parts[0].trim().equals(classID)) {
+                            // parts[0] is ClassID, parts[1] is Topic usually, parts[2] is Module Name
+                            className = parts[2].trim(); 
+                            break;
+                        }
                     }
                 }
             } catch (IOException e) {

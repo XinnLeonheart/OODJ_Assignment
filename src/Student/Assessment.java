@@ -22,7 +22,7 @@ public class Assessment extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Assessment.class.getName());
 
-    private String filePath = "src/TextFiles/AssessmentMark.txt";
+    private final String filePath = "src/TextFiles/AssessmentMark.txt";
     private double overallCGPA = 0.0;
     private final java.util.Map<String, String> classIdToNameMap = new java.util.HashMap<>();
 
@@ -39,13 +39,13 @@ public class Assessment extends javax.swing.JFrame {
     }
 
     private void loadClassNames() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassScore.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] parts = line.split(";");
-                    if (parts.length >= 2) {
-                        classIdToNameMap.put(parts[0].trim(), parts[1].trim());
+                    if (parts.length >= 3) {
+                        classIdToNameMap.put(parts[0].trim(), parts[2].trim());
                     }
                 }
             }
@@ -54,9 +54,16 @@ public class Assessment extends javax.swing.JFrame {
         }
     }
 
+    private final java.util.Map<String, java.util.List<Double>> classAssignmentMarks = new java.util.HashMap<>();
+    private final java.util.Map<String, java.util.List<Double>> classTestMarks = new java.util.HashMap<>();
+
     private void loadAssessmentMark(String studentID){
         DefaultTableModel model = (DefaultTableModel)jTableAssessment.getModel();
+        model.setColumnIdentifiers(new String[] {"Class", "Asg Avg", "Test Avg", "Grade", "CGPA"});
         model.setRowCount(0);
+
+        loadAssignmentMarks(studentID);
+        loadClassTestMarks(studentID);
 
         double totalGradePoints = 0.0;
         int moduleCount = 0;
@@ -72,18 +79,22 @@ public class Assessment extends javax.swing.JFrame {
                     if (part.length >= 4){
                         String id = part[0].trim();
                         String classId = part[1].trim();
-                        String grades = part[2].trim();
-                        String cgpa = part[3].trim();
+                        String grade = part[2].trim();
+                        String cgpaStr = part[3].trim();
 
                         if (id.equals(studentID)){
                             String className = classIdToNameMap.getOrDefault(classId, classId);
-                            model.addRow(new Object[]{className, grades, cgpa});
+                            
+                            String asgAvg = calculateAverage(classAssignmentMarks.get(classId));
+                            String testAvg = calculateAverage(classTestMarks.get(classId));
+
+                            model.addRow(new Object[]{className, asgAvg, testAvg, grade, cgpaStr});
 
                             try {
-                                totalGradePoints += Double.parseDouble(cgpa);
+                                totalGradePoints += Double.parseDouble(cgpaStr);
                                 moduleCount++;
                             } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(this, "There's an error while converting to numeric format: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                                // Ignore parsing error
                             }
                         }
                     }
@@ -99,6 +110,77 @@ public class Assessment extends javax.swing.JFrame {
         } else {
             label1.setText("Assessment Mark - No grades available");
         }
+    }
+
+    private void loadAssignmentMarks(String studentID) {
+        classAssignmentMarks.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/gradeassignment.txt"))) {
+            String line;
+            br.readLine(); // Skip header
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                // Student Name;Class Id;Assignment Name;Assignment Marks;Feedback;Timestamp
+                if (parts.length >= 4) {
+                    // Need to match Student Name. LogIn.loggedInName is the name.
+                    // But wait, the file uses "Student Name". Registration uses Student ID. 
+                    // Let's check how GradeAssignment writes it. 
+                    // It uses studentname. 
+                    // And GradeClassessTest uses studentname.
+                    // But AssessmentMark uses StudentID.
+                    // AND LogIn has both.
+                    
+                     // Match using Student ID consistent with other files
+                     String nameInFile = parts[0].trim();
+                     if (nameInFile.equalsIgnoreCase(studentID)) {
+                         String classId = parts[1].trim();
+                         double mark = Double.parseDouble(parts[3].trim());
+                         classAssignmentMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+    }
+
+    private void loadClassTestMarks(String studentID) {
+        classTestMarks.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/gradeclasstest.txt"))) {
+            String line;
+            br.readLine(); // Skip header
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp
+                 if (parts.length >= 4) {
+                    String nameInFile = parts[0].trim();
+                     
+                    if (nameInFile.equalsIgnoreCase(studentID)) {
+                         String classId = parts[1].trim();
+                         // Check for % sign and remove it
+                         String markStr = parts[3].trim().replace("%", "");
+                         try {
+                            double mark = Double.parseDouble(markStr);
+                            classTestMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
+                         } catch (NumberFormatException e) {
+                             // ignore
+                         }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+    }
+
+    private String calculateAverage(java.util.List<Double> marks) {
+        if (marks == null || marks.isEmpty()) {
+            return "-";
+        }
+        double sum = 0;
+        for (Double m : marks) {
+            sum += m;
+        }
+        return String.format("%.0f", sum / marks.size());
     }
 
     private void savePDF() {
@@ -129,7 +211,7 @@ public class Assessment extends javax.swing.JFrame {
 
         // Table header line
         int tableTop = pageHeight - 135;
-        int[] colX = {50, 230, 360};
+        int[] colX = {50, 180, 280, 380, 460};
         int colW = 150;
 
         // Draw header background
@@ -138,7 +220,7 @@ public class Assessment extends javax.swing.JFrame {
         content.append("0 0 0 rg\n");
 
         // Header text
-        String[] headers = {"Class", "Grade", "CGPA"};
+        String[] headers = {"Class", "Asg Avg", "Test Avg", "Grade", "CGPA"};
         for (int c = 0; c < colCount && c < headers.length; c++) {
             content.append("BT /F2 11 Tf ").append(colX[c] + 5).append(" ").append(tableTop).append(" Td (").append(headers[c]).append(") Tj ET\n");
         }
@@ -169,8 +251,11 @@ public class Assessment extends javax.swing.JFrame {
         // header separator
         content.append("50 ").append(tableTop - 5).append(" m 530 ").append(tableTop - 5).append(" l S\n");
         // column separators
-        content.append("230 ").append(tableTop + 15).append(" m 230 ").append(tableBottom).append(" l S\n");
-        content.append("360 ").append(tableTop + 15).append(" m 360 ").append(tableBottom).append(" l S\n");
+        // column separators
+        content.append("180 ").append(tableTop + 15).append(" m 180 ").append(tableBottom).append(" l S\n");
+        content.append("280 ").append(tableTop + 15).append(" m 280 ").append(tableBottom).append(" l S\n");
+        content.append("380 ").append(tableTop + 15).append(" m 380 ").append(tableBottom).append(" l S\n");
+        content.append("460 ").append(tableTop + 15).append(" m 460 ").append(tableBottom).append(" l S\n");
 
         // Build PDF structure
         String stream = content.toString();

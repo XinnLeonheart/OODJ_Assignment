@@ -10,4 +10,12 @@ student1;FEEDBACK;david has submitted feedback for Physics (C005);2026-02-07 15:
 null;REGISTRATION;alice have registered for English (C001);2026-02-12 06:02
 null;REGISTRATION;alice have registered for Science (C003);2026-02-12 06:02
 null;FEEDBACK;null has submitted feedback for null (null);2026-02-12 13:53
-ACC007;REGISTRATION;alice have registered for Grammar (C001);2026-02-12 17:01
+ACC007;REGISTRATION;alice have registered for Mathematics (C002);2026-02-12 22:14
+ACC007;REGISTRATION;alice have registered for Science (C003);2026-02-12 22:14
+ACC007;CLASSTEST;alice has submitted class test for Mathematics (C002);2026-02-12 22:14
+ACC007;ASSIGNMENT;alice has submitted assignment for Mathematics (C002);2026-02-12 22:14
+ACC007;FEEDBACK;alice has submitted feedback for Mathematics (C002);2026-02-12 22:14
+ACC008;REGISTRATION;hahaha have registered for Science (C003);2026-02-12 22:22
+ACC008;REGISTRATION;hahaha have registered for Physics (C005);2026-02-12 22:22
+ACC008;CLASSTEST;hahaha has submitted class test for Physics (C005);2026-02-12 22:22
+ACC008;ASSIGNMENT;hahaha has submitted assignment for Science (C003);2026-02-12 22:22
