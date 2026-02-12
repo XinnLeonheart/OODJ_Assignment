@@ -4,10 +4,15 @@
  */
 package Lecturer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 /**
  *
@@ -57,10 +62,28 @@ public class CreateNewTest extends javax.swing.JPanel {
 
         jLabel5.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel5.setText("January 20, 2025");
+        jLabel5.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel5AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 23, -1, -1));
 
         jLabel17.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel17.setText("04:00 AM");
+        jLabel17.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel17AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 45, 80, -1));
 
         btnback.setText("back");
@@ -93,6 +116,15 @@ public class CreateNewTest extends javax.swing.JPanel {
         jLabelclasscode.setText("Class Code :");
 
         jLabellecturerclasscode.setText("base on which lecturer");
+        jLabellecturerclasscode.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabellecturerclasscodeAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
         jLabeldurationhours.setText("Duration Hours :");
 
@@ -221,6 +253,38 @@ public class CreateNewTest extends javax.swing.JPanel {
         // TODO add your handling code here:
        
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jLabellecturerclasscodeAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabellecturerclasscodeAncestorAdded
+        // TODO add your handling code here:
+        jLabellecturerclasscode.setText("Welcome " + parentPanel.getClassId());
+
+    }//GEN-LAST:event_jLabellecturerclasscodeAncestorAdded
+
+    private void jLabel5AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel5AncestorAdded
+        // TODO add your handling code here:
+                Timer timer = new Timer(1000, new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               LocalDateTime now = LocalDateTime.now();
+               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+               jLabel5.setText(formatter.format(now));
+           }
+       });
+       timer.start();
+    }//GEN-LAST:event_jLabel5AncestorAdded
+
+    private void jLabel17AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel17AncestorAdded
+        // TODO add your handling code here:
+                Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+                jLabel17.setText(formatter.format(now));
+            }
+        });
+        timer.start();
+    }//GEN-LAST:event_jLabel17AncestorAdded
 
     
 

@@ -7,8 +7,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Set;
-
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -60,6 +63,9 @@ public class LecturerDashboard extends javax.swing.JPanel {
         }
         return uniqueStudents.size();
     }
+    
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,10 +77,8 @@ public class LecturerDashboard extends javax.swing.JPanel {
 
         dashboard = new javax.swing.JPanel();
         jLabelwelcometitle = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        jLabeldatadisplay = new javax.swing.JLabel();
+        jLabeltimedisplay = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
@@ -116,35 +120,31 @@ public class LecturerDashboard extends javax.swing.JPanel {
         });
         dashboard.add(jLabelwelcometitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 23, 283, -1));
 
-        jLabel5.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
-        jLabel5.setText("January 20, 2025");
-        dashboard.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 23, -1, -1));
+        jLabeldatadisplay.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
+        jLabeldatadisplay.setText("January 20, 2025");
+        jLabeldatadisplay.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabeldatadisplayAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        dashboard.add(jLabeldatadisplay, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 23, -1, -1));
 
-        jLabel16.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
-        jLabel16.setText("Search");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(148, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, -1, -1));
-
-        jLabel17.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
-        jLabel17.setText("04:00 AM");
-        dashboard.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 45, 80, -1));
+        jLabeltimedisplay.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
+        jLabeltimedisplay.setText("04:00 AM");
+        jLabeltimedisplay.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabeltimedisplayAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        dashboard.add(jLabeltimedisplay, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 45, 80, -1));
 
         jLabel1.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 18)); // NOI18N
         jLabel1.setText("Dashboard Quick Actions");
@@ -446,16 +446,39 @@ public class LecturerDashboard extends javax.swing.JPanel {
 
     private void jLabelwelcometitleAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabelwelcometitleAncestorAdded
         // TODO add your handling code here:
-        
-        
+        jLabelwelcometitle.setText("Welcome " + lecturerName);
     }//GEN-LAST:event_jLabelwelcometitleAncestorAdded
+
+    private void jLabeldatadisplayAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabeldatadisplayAncestorAdded
+        // TODO add your handling code here:
+        Timer timer = new Timer(1000, new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               LocalDateTime now = LocalDateTime.now();
+               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+               jLabeldatadisplay.setText(formatter.format(now));
+           }
+       });
+       timer.start();
+    }//GEN-LAST:event_jLabeldatadisplayAncestorAdded
+
+    private void jLabeltimedisplayAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabeltimedisplayAncestorAdded
+        // TODO add your handling code here:
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+                jLabeltimedisplay.setText(formatter.format(now));
+            }
+        });
+        timer.start();
+    }//GEN-LAST:event_jLabeltimedisplayAncestorAdded
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel dashboard;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
@@ -465,14 +488,14 @@ public class LecturerDashboard extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabeldatadisplay;
+    private javax.swing.JLabel jLabeltimedisplay;
     private javax.swing.JLabel jLabelwelcometitle;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;

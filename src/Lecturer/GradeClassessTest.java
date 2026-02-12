@@ -4,6 +4,8 @@
  */
 package Lecturer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.table.DefaultTableModel; 
@@ -14,6 +16,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.swing.Timer;
 
 /**
  *
@@ -102,9 +105,11 @@ public class GradeClassessTest extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jButtonrefresh = new javax.swing.JButton();
         jLabelgradetest = new javax.swing.JLabel();
+        jLabelStudentname = new javax.swing.JLabel();
+        jLabelstudentnamefield = new javax.swing.JLabel();
         jLabelstudentsubmissionlist = new javax.swing.JLabel();
         jLabelstudentid = new javax.swing.JLabel();
-        jLabelstudent1field = new javax.swing.JLabel();
+        jLabelstudentidfield = new javax.swing.JLabel();
         jLabelstatus = new javax.swing.JLabel();
         jLabelstatusfield = new javax.swing.JLabel();
         jLabelcourseid = new javax.swing.JLabel();
@@ -130,6 +135,15 @@ public class GradeClassessTest extends javax.swing.JPanel {
 
         jLabel17.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel17.setText("04:00 AM");
+        jLabel17.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel17AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 45, 80, -1));
 
         dashboard1.setBackground(new java.awt.Color(228, 228, 228));
@@ -137,6 +151,15 @@ public class GradeClassessTest extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel7.setText("January 20, 2025");
+        jLabel7.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel7AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 23, -1, -1));
 
         btnback.setText("back");
@@ -176,6 +199,12 @@ public class GradeClassessTest extends javax.swing.JPanel {
         jLabelgradetest.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 18)); // NOI18N
         jLabelgradetest.setText("Grade Test");
 
+        jLabelStudentname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabelStudentname.setText("Student Name:");
+
+        jLabelstudentnamefield.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabelstudentnamefield.setText("lolipop");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -183,7 +212,12 @@ public class GradeClassessTest extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelgradetest)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabelgradetest)
+                        .addGap(65, 65, 65)
+                        .addComponent(jLabelStudentname)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelstudentnamefield))
                     .addComponent(jButtonrefresh)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 727, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(277, Short.MAX_VALUE))
@@ -196,7 +230,10 @@ public class GradeClassessTest extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonrefresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelgradetest)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelgradetest)
+                    .addComponent(jLabelStudentname)
+                    .addComponent(jLabelstudentnamefield))
                 .addContainerGap())
         );
 
@@ -206,7 +243,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
         jLabelstudentid.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabelstudentid.setText("Student ID:");
 
-        jLabelstudent1field.setText("student1");
+        jLabelstudentidfield.setText("student1");
 
         jLabelstatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabelstatus.setText("Status:");
@@ -281,7 +318,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
                                 .addGap(27, 27, 27)
                                 .addComponent(jLabelanswer))
                             .addGroup(jPanel16Layout.createSequentialGroup()
-                                .addComponent(jLabelstudent1field, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelstudentidfield, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabeltestname))
                             .addGroup(jPanel16Layout.createSequentialGroup()
@@ -314,7 +351,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelstudentid)
-                    .addComponent(jLabelstudent1field)
+                    .addComponent(jLabelstudentidfield)
                     .addComponent(jLabeltestname)
                     .addComponent(jLabeltestnamefield)
                     .addComponent(jLabel1))
@@ -390,9 +427,11 @@ public class GradeClassessTest extends javax.swing.JPanel {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
+        //Student Id;Student Name;Class Id;Test Name;Answer;Date Time;Status
         int selectedRow = jTable1.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        jLabelstudent1field.setText(model.getValueAt(selectedRow, 0).toString());
+        jLabelstudentidfield.setText(model.getValueAt(selectedRow, 0).toString());
+        jLabelstudentnamefield.setText(model.getValueAt(selectedRow, 1).toString());
         jLabelcoursefield.setText(model.getValueAt(selectedRow, 2).toString());
         jLabeltestnamefield.setText(model.getValueAt(selectedRow, 3).toString());
         jLabelanswerfield.setText(model.getValueAt(selectedRow, 4).toString());
@@ -407,14 +446,16 @@ public class GradeClassessTest extends javax.swing.JPanel {
 
     private void jButtongradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtongradeActionPerformed
         // TODO add your handling code here:
-        String studentname = jLabelstudent1field.getText();
+        //Student Id;Student Name;Class Id;Test Name;Answer;Date Time;Status
+        String studentid = jLabelstudentidfield.getText();
+        String studentname = jLabelstudentnamefield.getText();
         String classid = jLabelcoursefield.getText();
         String status = jLabelstatusfield.getText();
         String testname = jLabeltestnamefield.getText();
         String testmarks = (String) jComboBoxmarksfield.getSelectedItem();
         String feedback = jTextArea1.getText();
         
-        if (studentname.isEmpty() || classid.isEmpty() || testname.isEmpty() || feedback.isEmpty()) {
+        if (studentid.isEmpty() || studentname.isEmpty() || classid.isEmpty() || testname.isEmpty() || feedback.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please select a row to grade and give feedback!");
             return;
         }else if(status.equals("Graded")){
@@ -429,13 +470,15 @@ public class GradeClassessTest extends javax.swing.JPanel {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String timestamp = now.format(formatter);
 
-            String line = studentname + ";" + classid + ";" + testname + ";" + testmarks + ";" + feedback + ";"+ timestamp;
+            //gradeclasstest.txt
+            //StudentId;Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade
+            String line = studentid + ";" + studentname + ";" + classid + ";" + testname + ";" + testmarks + ";" + feedback + ";"+ timestamp;
             writer.write(line);
             writer.write(System.getProperty("line.separator"));
             writer.close();
             
             //Updata ClassTestSubmission.txt status to "Graded"
-            updateClassTestSubmissionStatus(studentname, classid, testname);
+            updateClassTestSubmissionStatus(studentid, classid, testname);
 
             JOptionPane.showMessageDialog(null,"Success");
             
@@ -458,7 +501,33 @@ public class GradeClassessTest extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxmarksfieldActionPerformed
 
-    private void updateClassTestSubmissionStatus(String studentId, String classId, String testName) {
+    private void jLabel7AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel7AncestorAdded
+        // TODO add your handling code here:
+        Timer timer = new Timer(1000, new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               LocalDateTime now = LocalDateTime.now();
+               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+               jLabel7.setText(formatter.format(now));
+           }
+       });
+       timer.start();
+    }//GEN-LAST:event_jLabel7AncestorAdded
+
+    private void jLabel17AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel17AncestorAdded
+        // TODO add your handling code here:
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+                jLabel17.setText(formatter.format(now));
+            }
+        });
+        timer.start();
+    }//GEN-LAST:event_jLabel17AncestorAdded
+
+    private void updateClassTestSubmissionStatus(String studentid, String classId, String testName) {
     String filePath = "src/TextFiles/ClassTestSubmission.txt";
     File file = new File(filePath);
     
@@ -475,9 +544,10 @@ public class GradeClassessTest extends javax.swing.JPanel {
             String[] data = line.split(";");
             
             // Check if this is the row we want to update
-            // Format: Student Id;Student Name;Course Id;Test Name;Answer;Date Time;Status;Duration Complete Time
+            //ClasstestSubmission.txt
+            //Student Id;Student Name;Class Id;Test Name;Answer;Date Time;Status
             if(data.length >= 7 && 
-               data[0].trim().equals(studentId.trim()) && 
+               data[0].trim().equals(studentid.trim()) && 
                data[2].trim().equals(classId.trim()) && 
                data[3].trim().equals(testName.trim())) {
                 
@@ -511,6 +581,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelStudentname;
     private javax.swing.JLabel jLabelanswer;
     private javax.swing.JLabel jLabelanswerfield;
     private javax.swing.JLabel jLabelcoursefield;
@@ -518,8 +589,9 @@ public class GradeClassessTest extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelgradetest;
     private javax.swing.JLabel jLabelstatus;
     private javax.swing.JLabel jLabelstatusfield;
-    private javax.swing.JLabel jLabelstudent1field;
     private javax.swing.JLabel jLabelstudentid;
+    private javax.swing.JLabel jLabelstudentidfield;
+    private javax.swing.JLabel jLabelstudentnamefield;
     private javax.swing.JLabel jLabelstudentsubmissionlist;
     private javax.swing.JLabel jLabeltestmarks;
     private javax.swing.JLabel jLabeltestname;

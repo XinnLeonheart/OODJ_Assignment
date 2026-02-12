@@ -4,6 +4,8 @@
  */
 package Lecturer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.table.DefaultTableModel; 
@@ -12,6 +14,9 @@ import javax.swing.JOptionPane;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.Timer;
 
 
 /**
@@ -108,6 +113,15 @@ public class ViewClassessTest extends javax.swing.JPanel {
 
         jLabel17.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel17.setText("04:00 AM");
+        jLabel17.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel17AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 45, 80, -1));
 
         dashboard1.setBackground(new java.awt.Color(228, 228, 228));
@@ -115,6 +129,15 @@ public class ViewClassessTest extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel7.setText("January 20, 2025");
+        jLabel7.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel7AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 23, -1, -1));
 
         btnback.setText("back");
@@ -399,6 +422,32 @@ public class ViewClassessTest extends javax.swing.JPanel {
             );
         }
     }//GEN-LAST:event_jButtondeleteActionPerformed
+
+    private void jLabel7AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel7AncestorAdded
+        // TODO add your handling code here:
+                        Timer timer = new Timer(1000, new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               LocalDateTime now = LocalDateTime.now();
+               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+               jLabel7.setText(formatter.format(now));
+           }
+       });
+       timer.start();
+    }//GEN-LAST:event_jLabel7AncestorAdded
+
+    private void jLabel17AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel17AncestorAdded
+        // TODO add your handling code here:
+                        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+                jLabel17.setText(formatter.format(now));
+            }
+        });
+        timer.start();
+    }//GEN-LAST:event_jLabel17AncestorAdded
 
     // METHOD TO WRITE TABLE DATA TO classtest.txt
     private void updateClassTestFile() {

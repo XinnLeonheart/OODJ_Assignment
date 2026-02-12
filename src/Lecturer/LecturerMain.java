@@ -3,6 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Lecturer;
+import LogIn.LogIn;
+import javax.swing.JOptionPane;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  *
@@ -45,10 +50,122 @@ public class LecturerMain extends javax.swing.JFrame {
         d.setVisible(false);
     }
     
+    //Gets data from LogIn.accID and LogIn.loggedInName
     // ADD THIS CONSTRUCTOR FOR TESTING
     public LecturerMain() {
-        // Default test values
-        this("Lolipop", "C001");
+        
+        String name = LogIn.loggedInName;
+        String accountId = LogIn.accID; // This is the lecturerId
+        
+// Default test values
+//        this("Lolipop", "C001");
+        
+        // Get module name from module.txt using lecturerId
+        String moduleName = getModuleNameByLecturerId(accountId);
+        
+        // Get classId from Class.txt using moduleName
+        String classId = getClassIdByModuleName(moduleName);
+        
+        if (classId == null || classId.isEmpty()) {
+            JOptionPane.showMessageDialog(null, 
+                "Could not find class information for lecturer: " + name + "\nUsing test data instead.",
+                "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+        
+        // Initialize with the found data
+        this.lecturerName = name;
+        this.lecturerClassId = classId;
+        initComponents();
+        
+        a = new LecturerAssignments(lecturerName, classId);
+        b = new LecturerClassess(lecturerName, classId);
+        c = new LecturerDashboard(lecturerName, classId);
+        d = new LecturerProfile(lecturerName, classId);
+        
+        dashboard.add(a);
+        dashboard.add(b);
+        dashboard.add(c);
+        dashboard.add(d);
+        a.setVisible(false);
+        b.setVisible(false);
+        c.setVisible(true);
+        d.setVisible(false);
+    }
+    
+    // Get module name from module.txt by lecturerId
+    //File format: moduleId;moduleName;academicLeaderId;lecturerId
+    
+    private String getModuleNameByLecturerId(String lecturerId) {
+        String filePath = "src/TextFiles/Module.txt";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                
+                if (data.length < 4) {
+                    continue; // Skip corrupted lines
+                }
+                
+                // data[0] = moduleId
+                // data[1] = moduleName
+                // data[2] = academicLeaderId
+                // data[3] = lecturerId
+                
+                String fileModuleId = data[0].trim();
+                String fileModuleName = data[1].trim();
+                String fileAcademicLeaderId = data[2].trim();
+                String fileLecturerId = data[3].trim();
+                
+                // Check if this row matches the logged-in lecturer
+                if (fileLecturerId.equals(lecturerId)) {
+                    return fileModuleName;
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,
+                "Error reading module.txt file: " + e.getMessage(),
+                "File Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return null; // Not found
+    }
+    
+    //Get classId from Class.txt by moduleName
+    //File format: classId;className;module
+    
+    private String getClassIdByModuleName(String moduleName) {
+        String filePath = "src/TextFiles/Class.txt";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                
+                if (data.length < 3) {
+                    continue; // Skip corrupted lines
+                }
+                
+                // data[0] = classId
+                // data[1] = className
+                // data[2] = module
+                
+                String fileClassId = data[0].trim();
+                String fileClassName = data[1].trim();
+                String fileModule = data[2].trim();
+                
+                // Check if this row matches the module name
+                if (fileModule.equals(moduleName)) {
+                    return fileClassId;
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,
+                "Error reading Class.txt file: " + e.getMessage(),
+                "File Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return null; // Not found
     }
     
     

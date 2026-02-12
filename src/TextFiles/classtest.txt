@@ -1,6 +1,6 @@
 Test Name;Duration Hours;Class Code
-test;45 min;base on which lecturer
-testfu;45 min;base on which lecturer
-testfuckuagain;45 min;base on which lecturer
+DuckYou;45 min;base on which lecturer
+Statistics;45 min;base on which lecturer
+NowisMrning;45 min;base on which lecturer
 testlololo;1 hrs;base on which lecturer
 testlili;45 min;base on which lecturer
