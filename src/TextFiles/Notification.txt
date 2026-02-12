@@ -11,3 +11,5 @@ null;REGISTRATION;alice have registered for English (C001);2026-02-12 06:02
 null;REGISTRATION;alice have registered for Science (C003);2026-02-12 06:02
 null;FEEDBACK;null has submitted feedback for null (null);2026-02-12 13:53
 ACC007;REGISTRATION;alice have registered for Grammar (C001);2026-02-12 17:01
+ACC008;REGISTRATION;hahaha have registered for Animal (C003);2026-02-12 18:46
+ACC008;REGISTRATION;hahaha have registered for Newton First Law (C005);2026-02-12 18:46

@@ -289,7 +289,7 @@ public class LearningPage extends javax.swing.JFrame {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.trim().split(";");
-                    if (parts.length >= 2 && parts[0].trim().equals(classID)) {
+                    if (parts.length >= 3 && parts[2].trim().equals(classID)) {
                         className = parts[1].trim();
                         break;
                     }
