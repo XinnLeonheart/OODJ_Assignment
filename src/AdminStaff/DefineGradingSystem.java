@@ -70,7 +70,7 @@ public class DefineGradingSystem extends javax.swing.JFrame {
     
     public void saveGradingInformation() {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tableGrading.getModel();
-        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter("AssessmentWithGrades.txt", true))) {
+        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter("StudentGrade.txt", true))) {
             for (int i = 0; i < model.getRowCount(); i++) {
                 String id = model.getValueAt(i, 0).toString();
                 String name = model.getValueAt(i, 1).toString();
