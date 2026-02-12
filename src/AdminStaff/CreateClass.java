@@ -31,6 +31,7 @@ public class CreateClass extends javax.swing.JFrame {
     
     private static final String CLASS_FILE = "src/TextFiles/Class.txt";
     private String originalTableData = "";
+    private final ClassFileRepository classRepo = new ClassFileRepository(CLASS_FILE);
 
     public CreateClass() {
         initComponents(); 
@@ -54,40 +55,11 @@ public class CreateClass extends javax.swing.JFrame {
         loadTableClass();       
     }
     
-    public void autoGenerateClassID(){
-        
-        String prefix = "C";
-        int nextID = 1;
-
-        File file = new File(CLASS_FILE);
-
-        // If file does not exist / empty -> start from C001
-        if (!file.exists() || file.length() == 0) {
-            tfClassID.setText(prefix + "001");
-            return;
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            String lastID = null;
-
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] data = line.split(";");
-                    lastID = data[0].trim(); 
-                }
-            }
-
-            if (lastID != null && lastID.startsWith(prefix)) {
-                int number = Integer.parseInt(lastID.substring(1));
-                nextID = number + 1;
-            }
-
-            tfClassID.setText(prefix + String.format("%03d", nextID));
-
-        } catch (IOException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
-                "Error generating Class ID!");
+    public void autoGenerateClassID() {
+        try {
+            tfClassID.setText(classRepo.getNextClassId());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error generating Class ID!");
         }
     }
     
@@ -99,43 +71,42 @@ public class CreateClass extends javax.swing.JFrame {
         if (classID.isEmpty() || className.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all fields");
             return;
-        }      
-        
-         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CLASS_FILE, true))) {
-            bw.write(classID + ";" + className + ";" + module);
-            bw.newLine();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving class data");
-            return;
         }
 
-        JOptionPane.showMessageDialog(this, "Class created successfully!");
-        
-        loadTableClass();
-        tfClassName.setText("");
-        autoGenerateClassID();
+        try {
+            classRepo.append(new ClassRoom(classID, className, module));
+            JOptionPane.showMessageDialog(this, "Class created successfully!");
+            loadTableClass();
+            tfClassName.setText("");
+            autoGenerateClassID();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving class data");
+        }
     }
     
-    public void saveResult(){
+    public void saveResult() {
         if (tableClass.isEditing()) {
             tableClass.getCellEditor().stopCellEditing();
         }
-            
-       DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
+
+        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
 
         if (model.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "No data to save.");
             return;
         }
 
+        // Build list from table
+        java.util.List<ClassRoom> list = new java.util.ArrayList<>();
         StringBuilder currentData = new StringBuilder();
 
         for (int i = 0; i < model.getRowCount(); i++) {
-            currentData.append(
-                model.getValueAt(i, 0) + ";" +
-                model.getValueAt(i, 1) + ";" +
-                model.getValueAt(i, 2)
-            ).append("\n");
+            String id = model.getValueAt(i, 0).toString().trim();
+            String name = model.getValueAt(i, 1).toString().trim();
+            String module = model.getValueAt(i, 2).toString().trim();
+
+            list.add(new ClassRoom(id, name, module));
+            currentData.append(id).append(";").append(name).append(";").append(module).append("\n");
         }
 
         // Compare with original data
@@ -144,16 +115,13 @@ public class CreateClass extends javax.swing.JFrame {
             return;
         }
 
-        // Save changes
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CLASS_FILE))) {
-            bw.write(currentData.toString());
+        try {
+            classRepo.overwriteAll(list);   // <-- OOP way
+            JOptionPane.showMessageDialog(this, "Changes saved successfully!");
+            loadTableClass();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving changes.");
-            return;
+            JOptionPane.showMessageDialog(this, "Error saving changes: " + e.getMessage());
         }
-
-        JOptionPane.showMessageDialog(this, "Changes saved successfully!");
-        loadTableClass();
     }
     
     public void displayModuleSelectionOnTable() {
@@ -184,108 +152,65 @@ public class CreateClass extends javax.swing.JFrame {
     }
     
     public void searchClass() {
-        String searchText = tfSearchClass.getText().trim().toLowerCase();
-        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
-        model.setRowCount(0);
-        
+        String searchText = tfSearchClass.getText().trim();
+
         if (searchText.isEmpty()) {
-            tfSearchClass.setText("");
-            JOptionPane.showMessageDialog(this, "Please enter Account ID or Name to search.");
+            JOptionPane.showMessageDialog(this, "Please enter Class ID or Name to search.");
             loadTableClass();
             return;
         }
-                
-        try (BufferedReader br = new BufferedReader (new FileReader(CLASS_FILE))){
-            String line;
 
-            while ((line = br.readLine()) != null) {
-            if (line.trim().isEmpty()) continue;
+        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
+        model.setRowCount(0);
 
-            String[] data = line.split(";");
-
-            String classID = data[0].toLowerCase();
-            String className = data[1].toLowerCase();
-
-            if (classID.contains(searchText) || className.contains(searchText)) {
-                model.addRow(new Object[]{
-                        data[0], data[1], data[2], "Delete"
-                });
+        try {
+            for (ClassRoom c : classRepo.search(searchText)) {
+                model.addRow(new Object[]{ c.getClassId(), c.getClassName(), c.getModule(), "Delete" });
             }
-        }
 
-        if (model.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this,
-                    "No matching account found.");
-        }                       
-        } catch (IOException e){
-            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());           
+            if (model.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "No matching class found.");
+                loadTableClass();
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error searching classes: " + e.getMessage());
         }
-    }    
+    }
     
-    public void loadTableClass(){    
-        DefaultTableModel model =
-            (DefaultTableModel) tableClass.getModel();
+    public void loadTableClass() {
+        DefaultTableModel model = (DefaultTableModel) tableClass.getModel();
         model.setRowCount(0);
 
         StringBuilder snapshot = new StringBuilder();
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(CLASS_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-                String[] data = line.split(";");
 
-                model.addRow(new Object[]{
-                    data[0], data[1], data[2], "Delete"
-                });
-                
-                snapshot.append(line).append("\n");
+        try {
+            for (ClassRoom c : classRepo.readAll()) {
+                model.addRow(new Object[]{ c.getClassId(), c.getClassName(), c.getModule(), "Delete" });
+                snapshot.append(c.toLine()).append("\n");
             }
+            originalTableData = snapshot.toString();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading accounts");
+            JOptionPane.showMessageDialog(this, "Error loading classes");
         }
-        
-        originalTableData = snapshot.toString();
-    }           
+    }
     
     // Refresh classID and clear text in the tfClassName
     public void clearTextFieldAndResult(){
         autoGenerateClassID();
         tfClassName.setText("");
+        loadTableClass();
     }
     
     public void deleteClassById(String classId) {
-        File file = new File(CLASS_FILE);
-
-        StringBuilder keptLines = new StringBuilder();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-
-                if (!line.startsWith(classId + ";")) {
-                    keptLines.append(line).append("\n");
-                }
-            }
+        try {
+            classRepo.deleteById(classId);
+            JOptionPane.showMessageDialog(this, "Class deleted successfully!");
+            loadTableClass();
+            autoGenerateClassID();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading file");
-            return;
+            JOptionPane.showMessageDialog(this, "Error deleting class");
         }
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-            bw.write(keptLines.toString());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving file");
-            return;
-        }
-
-        JOptionPane.showMessageDialog(this, "Class deleted successfully!");
-        loadTableClass();
-        autoGenerateClassID();
     }
-
     
     private void setupDeleteColumn() {
         int actionCol = 3;
