@@ -350,7 +350,7 @@ public class ClassTest extends javax.swing.JFrame {
             // File doesn't exist yet
         }
 
-        String newEntry = studentID + ";" + classID + ";" + className  + ";" + answers + ";" + dateTime + ";Submitted";
+        String newEntry = studentID + ";" + studentName + ";" + classID + ";" + className  + ";" + answers + ";" + dateTime + ";Submitted";
         if (timeTakenSeconds >= 0) {
             newEntry += ";" + timeTakenSeconds;
         }

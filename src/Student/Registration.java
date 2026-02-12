@@ -339,7 +339,7 @@ public class Registration extends javax.swing.JFrame {
         for (int i = 0; i < classList.size() && i < checkboxes.length; i++) {
             if (checkboxes[i].getState()) {
                 String classID = classList.get(i)[0].trim();
-                String className = classList.get(i)[1].trim();
+                String className = classList.get(i)[2].trim();
                 NotificationHelper.addNotification(studentID, "REGISTRATION",
                     studentName + " have registered for " + className + " (" + classID + ")");
             }
