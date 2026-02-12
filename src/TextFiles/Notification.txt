@@ -15,7 +15,5 @@ ACC007;REGISTRATION;alice have registered for Science (C003);2026-02-12 22:14
 ACC007;CLASSTEST;alice has submitted class test for Mathematics (C002);2026-02-12 22:14
 ACC007;ASSIGNMENT;alice has submitted assignment for Mathematics (C002);2026-02-12 22:14
 ACC007;FEEDBACK;alice has submitted feedback for Mathematics (C002);2026-02-12 22:14
-ACC008;REGISTRATION;hahaha have registered for Science (C003);2026-02-12 22:22
-ACC008;REGISTRATION;hahaha have registered for Physics (C005);2026-02-12 22:22
-ACC008;CLASSTEST;hahaha has submitted class test for Physics (C005);2026-02-12 22:22
-ACC008;ASSIGNMENT;hahaha has submitted assignment for Science (C003);2026-02-12 22:22
+ACC008;REGISTRATION;hahaha have registered for Physics (C005);2026-02-13 00:34
+ACC008;REGISTRATION;hahaha have registered for Biology (C006);2026-02-13 00:34
