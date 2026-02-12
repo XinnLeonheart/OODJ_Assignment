@@ -35,8 +35,6 @@ public class LecturerMain extends javax.swing.JFrame {
         d = new LecturerProfile(lecturerName, classId);
         
         
-        
-        
         dashboard.add(a);
         dashboard.add(b);
         dashboard.add(c);
@@ -340,6 +338,7 @@ public class LecturerMain extends javax.swing.JFrame {
     private void sidebar2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sidebar2MouseClicked
         // TODO add your handling code here:
         a.setVisible(true);
+        a.showDashboard();
         b.setVisible(false);
         c.setVisible(false);
         d.setVisible(false);
@@ -351,6 +350,7 @@ public class LecturerMain extends javax.swing.JFrame {
         b.setVisible(false);
         c.setVisible(false);
         d.setVisible(true);
+        
     }//GEN-LAST:event_sidebar8MouseClicked
 
     /**

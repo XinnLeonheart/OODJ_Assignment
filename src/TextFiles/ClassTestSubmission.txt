@@ -6,4 +6,4 @@ student4;C001;Statistics;C,D,B;2026-02-07 14:53;Graded;1
 student5;C001;Statistics;C,D,B;2026-02-09 12:53;Graded;6
 student6;C001;Statistics;C,D,B;2026-02-14 15:53;Graded;2
 student7;C001;Statistics;C,D,B;2026-02-07 14:53;Graded;1
-student8;C001;Statistics;C,D,B;2026-02-09 12:53;Submitted;6
+student8;C001;Statistics;C,D,B;2026-02-09 12:53;Graded;6

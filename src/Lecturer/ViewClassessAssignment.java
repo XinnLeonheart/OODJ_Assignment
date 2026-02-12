@@ -70,7 +70,6 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         dashboard = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -87,7 +86,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         jLabel1baseonwhichlecturer = new javax.swing.JLabel();
         jTextFieldassignmentname = new javax.swing.JTextField();
         jLabeleditcode = new javax.swing.JLabel();
-        jLabeltestname = new javax.swing.JLabel();
+        jLabelassignmentname = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jTextFielddurationhours = new javax.swing.JTextField();
         jButtonupdate = new javax.swing.JButton();
@@ -155,8 +154,8 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         jLabeleditcode.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 18)); // NOI18N
         jLabeleditcode.setText("Edit Code");
 
-        jLabeltestname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabeltestname.setText("Test Name");
+        jLabelassignmentname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabelassignmentname.setText("Assignment Name");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Duration Hours");
@@ -191,7 +190,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(jButtondelete))
                     .addComponent(jLabeleditcode)
-                    .addComponent(jLabeltestname)
+                    .addComponent(jLabelassignmentname)
                     .addComponent(jLabel1)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -213,7 +212,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
                         .addComponent(jLabeleditcode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabeltestname)
+                            .addComponent(jLabelassignmentname)
                             .addComponent(jLabelclasscode))
                         .addGap(2, 2, 2)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -233,7 +232,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
         );
 
         jLabelclassesstest.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 18)); // NOI18N
-        jLabelclassesstest.setText("Classess Test");
+        jLabelclassesstest.setText("Classess Assignment");
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -285,23 +284,6 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
 
         dashboard.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(dashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 798, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(dashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -309,18 +291,18 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
             .addGap(0, 810, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap()
+                    .addComponent(dashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 798, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 472, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap()
+                    .addComponent(dashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -425,7 +407,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
             // Write header
-            writer.write("Assignment Name,Duration Hours,Class Code\n");
+            writer.write("Assignment Name;Duration Hours;Class Code\n");
 
             // Write all rows from table
             for(int i = 0; i < model.getRowCount(); i++) {
@@ -433,7 +415,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
                 String duration = model.getValueAt(i, 1).toString();
                 String classCode = model.getValueAt(i, 2).toString();
 
-                writer.write(AssignmentName + "," + duration + "," + classCode + "\n");
+                writer.write(AssignmentName + ";" + duration + ";" + classCode + "\n");
             }
 
             writer.close();
@@ -457,11 +439,10 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1baseonwhichlecturer;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelassignmentname;
     private javax.swing.JLabel jLabelclasscode;
     private javax.swing.JLabel jLabelclassesstest;
     private javax.swing.JLabel jLabeleditcode;
-    private javax.swing.JLabel jLabeltestname;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

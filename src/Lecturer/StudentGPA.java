@@ -20,11 +20,11 @@ import java.util.*;
 public class StudentGPA extends javax.swing.JPanel {
 
     private FeedbackandGPA2 parent;
-    private Map<String, String> testNames = new LinkedHashMap<>(); // Test Name -> Duration
-    private Map<String, String> assignmentNames = new LinkedHashMap<>(); // Assignment Name -> Duration
+    private List<String> testNames = new ArrayList<>();
+    private List<String> assignmentNames = new ArrayList<>();
     private Map<String, Map<String, Double>> studentTestMarks = new HashMap<>();
     private Map<String, Map<String, Double>> studentAssignmentMarks = new HashMap<>();
-
+    private Map<String, String> studentClassId = new HashMap<>(); // Store student's class ID
     /**
      * Creates new form StudentGPA
      */
@@ -70,10 +70,11 @@ public class StudentGPA extends javax.swing.JPanel {
                 line = line.trim();
                 if (!line.isEmpty()) {
                     String[] parts = line.split(";");
-                    if (parts.length >= 2) {
+                    if (parts.length >= 1) {
                         String testName = parts[0].trim();
-                        String duration = parts[1].trim();
-                        testNames.put(testName, duration);
+                        if (!testNames.contains(testName)) {  // Avoid duplicates
+                            testNames.add(testName);
+                        }
                     }
                 }
             }
@@ -96,10 +97,11 @@ public class StudentGPA extends javax.swing.JPanel {
                 line = line.trim();
                 if (!line.isEmpty()) {
                     String[] parts = line.split(";");
-                    if (parts.length >= 2) {
+                    if (parts.length >= 1) {
                         String assignmentName = parts[0].trim();
-                        String duration = parts[1].trim();
-                        assignmentNames.put(assignmentName, duration);
+                        if (!assignmentNames.contains(assignmentName)) {  // Avoid duplicates
+                            assignmentNames.add(assignmentName);
+                        }
                     }
                 }
             }
@@ -122,12 +124,15 @@ public class StudentGPA extends javax.swing.JPanel {
                 line = line.trim();
                 if (!line.isEmpty()) {
                     String[] parts = line.split(";");
-                    if (parts.length >= 4) {
+                    if (parts.length >= 5) {
                         String studentName = parts[0].trim();
                         String classId = parts[1].trim();
                         String testName = parts[2].trim();
                         double marks = Double.parseDouble(parts[3].trim());
 
+                        //Store class id for this student
+                        studentClassId.put(studentName, classId);
+                        
                         studentTestMarks.computeIfAbsent(studentName, k -> new HashMap<>())
                                 .put(testName, marks);
                     }
@@ -152,12 +157,17 @@ public class StudentGPA extends javax.swing.JPanel {
                 line = line.trim();
                 if (!line.isEmpty()) {
                     String[] parts = line.split(";");
-                    if (parts.length >= 4) {
+                    if (parts.length >= 5) {
                         String studentName = parts[0].trim();
-                        String courseId = parts[1].trim();
+                        String classId = parts[1].trim();
                         String assignmentName = parts[2].trim();
                         double marks = Double.parseDouble(parts[3].trim());
 
+                        // Store class ID for this student (if not already stored)
+                        if (!studentClassId.containsKey(studentName)) {
+                            studentClassId.put(studentName, classId);
+                        }
+                        
                         studentAssignmentMarks.computeIfAbsent(studentName, k -> new HashMap<>())
                                 .put(assignmentName, marks);
                     }
@@ -166,6 +176,40 @@ public class StudentGPA extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Calculate GPA/Average for a student based on available marks
+     * Only counts marks that exist (ignores missing data)
+     */
+    private String calculateGPA(String studentName) {
+        List<Double> allMarks = new ArrayList<>();
+        
+        // Collect test marks
+        Map<String, Double> testMarks = studentTestMarks.getOrDefault(studentName, new HashMap<>());
+        for (String testName : testNames) {
+            Double mark = testMarks.get(testName);
+            if (mark != null && mark >= 0) {  // Only add valid marks
+                allMarks.add(mark);
+            }
+        }
+        
+        // Collect assignment marks
+        Map<String, Double> assignMarks = studentAssignmentMarks.getOrDefault(studentName, new HashMap<>());
+        for (String assignmentName : assignmentNames) {
+            Double mark = assignMarks.get(assignmentName);
+            if (mark != null && mark >= 0) {  // Only add valid marks
+                allMarks.add(mark);
+            }
+        }
+        
+        // Calculate average based on available marks only
+        if (allMarks.isEmpty()) {
+            return "-";
+        } else {
+            double average = allMarks.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+            return String.format("%.2f", average);
+        }
+    }
+    
     /**
      * Create table model with dynamic columns and populate with data
      */
@@ -176,19 +220,20 @@ public class StudentGPA extends javax.swing.JPanel {
         // Build column headers
         Vector<String> columnHeaders = new Vector<>();
         columnHeaders.add("Student Name");
+        columnHeaders.add("Class ID");  // Add Class ID column
 
         // Add all test columns
-        for (String testName : testNames.keySet()) {
+        for (String testName : testNames) {
             columnHeaders.add(testName);
         }
 
         // Add all assignment columns
-        for (String assignmentName : assignmentNames.keySet()) {
+        for (String assignmentName : assignmentNames) {
             columnHeaders.add(assignmentName);
         }
 
         // Add GPA/Average column
-        columnHeaders.add("GPA/Average");
+        columnHeaders.add("Average");
 
         model.setColumnIdentifiers(columnHeaders);
 
@@ -202,35 +247,26 @@ public class StudentGPA extends javax.swing.JPanel {
             Vector<Object> row = new Vector<>();
             row.add(studentName);
 
-            List<Double> allMarks = new ArrayList<>();
+            // Add Class ID
+            String classId = studentClassId.getOrDefault(studentName, "-");
+            row.add(classId);
 
             // Add test marks
             Map<String, Double> testMarks = studentTestMarks.getOrDefault(studentName, new HashMap<>());
-            for (String testName : testNames.keySet()) {
-                Double mark = testMarks.getOrDefault(testName, null);
+            for (String testName : testNames) {
+                Double mark = testMarks.get(testName);
                 row.add(mark != null ? mark : "-");
-                if (mark != null) {
-                    allMarks.add(mark);
-                }
             }
 
             // Add assignment marks
             Map<String, Double> assignMarks = studentAssignmentMarks.getOrDefault(studentName, new HashMap<>());
-            for (String assignmentName : assignmentNames.keySet()) {
+            for (String assignmentName : assignmentNames) {
                 Double mark = assignMarks.getOrDefault(assignmentName, null);
                 row.add(mark != null ? mark : "-");
-                if (mark != null) {
-                    allMarks.add(mark);
-                }
             }
 
-            // Calculate and add GPA/Average
-            if (allMarks.isEmpty()) {
-                row.add("-");
-            } else {
-                double average = allMarks.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-                row.add(String.format("%.2f", average));
-            }
+            // Calculate and add GPA/Average (ALWAYS recalculated fresh)
+            row.add(calculateGPA(studentName));
 
             model.addRow(row);
         }
@@ -274,7 +310,11 @@ public class StudentGPA extends javax.swing.JPanel {
         assignmentNames.clear();
         studentTestMarks.clear();
         studentAssignmentMarks.clear();
+        studentClassId.clear();  // Clear class ID data too
+        
         loadTableData();
+        
+        JOptionPane.showMessageDialog(this, "Table refreshed and GPA recalculated!");
     }
     /**
      * This method is called from within the constructor to initialize the form.
