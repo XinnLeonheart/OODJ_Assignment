@@ -231,7 +231,12 @@ public class GradeClassessTest extends javax.swing.JPanel {
         jLabeltestmarks.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabeltestmarks.setText("Test Marks:");
 
-        jComboBoxmarksfield.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "33%", "67%", "100%", " " }));
+        jComboBoxmarksfield.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "33", "67", "100", "" }));
+        jComboBoxmarksfield.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxmarksfieldActionPerformed(evt);
+            }
+        });
 
         jButtongrade.setText("Grade");
         jButtongrade.addActionListener(new java.awt.event.ActionListener() {
@@ -448,6 +453,10 @@ public class GradeClassessTest extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null,"Error");
         }
     }//GEN-LAST:event_jButtongradeActionPerformed
+
+    private void jComboBoxmarksfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxmarksfieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxmarksfieldActionPerformed
 
     private void updateClassTestSubmissionStatus(String studentId, String classId, String testName) {
     String filePath = "src/TextFiles/ClassTestSubmission.txt";

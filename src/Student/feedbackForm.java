@@ -61,8 +61,8 @@ public class feedbackForm extends javax.swing.JFrame {
         try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
+                String[] part = line.split(";");
                 if (!line.trim().isEmpty()) {
-                    String[] part = line.split(";");
                     String classId = part[0].trim();
                     String className = part[1].trim();
 

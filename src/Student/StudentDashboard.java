@@ -42,19 +42,6 @@ public class StudentDashboard extends javax.swing.JFrame {
         initComponents();
     }
     
-//    public String studentName;
-//    public StudentDashboard (String studentName){
-//        this.studentName = studentName;
-//        initComponents();
-//        displayWelcomeMessage();
-//    }
-//    
-//    public void displayWelcomeMessage(){
-//        String welcomeMessage = "Welcome! " + studentName;
-//        jLabelWelcome.setText(welcomeMessage);
-//    }
-//    
-    
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(StudentDashboard.class.getName());
 

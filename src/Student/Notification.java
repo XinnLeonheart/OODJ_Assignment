@@ -35,7 +35,7 @@ public class Notification extends javax.swing.JFrame {
     }
 
     private void loadNotifications() {
-        String filePath = "src/TextFiles/Notification";
+        String filePath = "src/TextFiles/Notification.txt";
         ArrayList<String[]> notifications = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {

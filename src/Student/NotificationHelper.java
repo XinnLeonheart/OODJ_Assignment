@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class NotificationHelper {
 
-    private static final String NOTIFICATION_FILE = "src/TextFiles/Notification";
+    private static final String NOTIFICATION_FILE = "src/TextFiles/Notification.txt";
 
     public static void addNotification(String studentID, String type, String message) {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

@@ -70,7 +70,7 @@ public class LecturerDashboard extends javax.swing.JPanel {
     private void initComponents() {
 
         dashboard = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        jLabelwelcometitle = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
@@ -102,10 +102,19 @@ public class LecturerDashboard extends javax.swing.JPanel {
         dashboard.setBackground(new java.awt.Color(228, 228, 228));
         dashboard.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel6.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel6.setFont(new java.awt.Font("Leelawadee UI", 1, 24)); // NOI18N
-        jLabel6.setText("Welcome Dashboard LOLIPOP ");
-        dashboard.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 23, 283, -1));
+        jLabelwelcometitle.setBackground(new java.awt.Color(0, 0, 0));
+        jLabelwelcometitle.setFont(new java.awt.Font("Leelawadee UI", 1, 24)); // NOI18N
+        jLabelwelcometitle.setText("Welcome  LOLIPOP ");
+        jLabelwelcometitle.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabelwelcometitleAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        dashboard.add(jLabelwelcometitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 23, 283, -1));
 
         jLabel5.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel5.setText("January 20, 2025");
@@ -435,6 +444,12 @@ public class LecturerDashboard extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jLabelwelcometitleAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabelwelcometitleAncestorAdded
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jLabelwelcometitleAncestorAdded
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel dashboard;
@@ -451,7 +466,7 @@ public class LecturerDashboard extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabelwelcometitle;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;

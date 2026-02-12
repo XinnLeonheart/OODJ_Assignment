@@ -127,7 +127,7 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
         if (studentID != null && !studentID.isEmpty() && className != null && !className.isEmpty()) {
             // Write to AssignmentSubmission file (replace previous submission for same student+class)
             ArrayList<String> lines = new ArrayList<>();
-            try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssignmentSubmission"))) {
+            try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssignmentSubmission.txt"))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) continue;
@@ -143,7 +143,7 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
                 // File doesn't exist yet
             }
             lines.add(studentID + ";" + classID + ";" + className + ";" + dateTime + ";Submitted");
-            try (FileWriter fw = new FileWriter("src/TextFiles/AssignmentSubmission")) {
+            try (FileWriter fw = new FileWriter("src/TextFiles/AssignmentSubmission.txt")) {
                 for (String l : lines) {
                     fw.write(l + "\n");
                 }

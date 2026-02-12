@@ -286,7 +286,7 @@ public class Registration extends javax.swing.JFrame {
 
     private void btnChooseModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseModuleActionPerformed
         // TODO add your handling code here:
-                String filePath = "src/TextFiles/Registration";
+                String filePath = "src/TextFiles/Registration.txt";
         String studentID = LogIn.accID;
         String studentName = LogIn.loggedInName;
 
@@ -352,7 +352,7 @@ public class Registration extends javax.swing.JFrame {
     }//GEN-LAST:event_btnChooseModuleActionPerformed
 
     private void loadClasses() {
-        String filePath = "src/TextFiles/Class";
+        String filePath = "src/TextFiles/Class.txt";
         javax.swing.JLabel[] labels = {jLabel1, jLabel2, jLabel3, jLabel4,
                                        jLabel5, jLabel6, jLabel7, jLabel8};
         java.awt.Checkbox[] checkboxes = {checkbox1, checkbox2, checkbox3, checkbox4,
@@ -364,7 +364,7 @@ public class Registration extends javax.swing.JFrame {
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] data = line.split(";");
-                    if (data.length >= 2) {
+                    if (data.length >= 3) {
                         classList.add(data);
                     }
                 }
@@ -375,7 +375,9 @@ public class Registration extends javax.swing.JFrame {
 
         for (int i = 0; i < labels.length; i++) {
             if (i < classList.size()) {
-                labels[i].setText(classList.get(i)[1].trim());
+                String module = classList.get(i)[2].trim(); 
+                labels[i].setText(module);
+
                 labels[i].setVisible(true);
                 checkboxes[i].setVisible(true);
             } else {
@@ -385,79 +387,13 @@ public class Registration extends javax.swing.JFrame {
         }
     }
 
-//    private void btnChooseModuleActionPerformed(ActionEvent evt) {
-//        String filePath = "src/TextFiles/Registration";
-//        String studentID = LogIn.accID;
-//        String studentName = LogIn.loggedInName;
-//
-//        java.awt.Checkbox[] checkboxes = {checkbox1, checkbox2, checkbox3, checkbox4,
-//                                          checkbox5, checkbox6, checkbox7, checkbox8};
-//
-//        ArrayList<String> selectedClassIDs = new ArrayList<>();
-//        for (int i = 0; i < classList.size() && i < checkboxes.length; i++) {
-//            if (checkboxes[i].getState()) {
-//                selectedClassIDs.add(classList.get(i)[0].trim());
-//            }
-//        }
-//
-//        if (selectedClassIDs.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Please select at least one class.");
-//            return;
-//        }
-//
-//        ArrayList<String> lines = new ArrayList<>();
-//        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                if (!line.trim().isEmpty()) {
-//                    lines.add(line);
-//                }
-//            }
-//        } catch (IOException e) {
-//            JOptionPane.showMessageDialog(this, "Error reading Registration file: " + e.getMessage());
-//        }
-//
-//        // Remove existing class registrations for this student
-//        lines.removeIf(line -> line.startsWith(studentID + ";"));
-//
-//        String newLine = studentID + ";" + String.join(";", selectedClassIDs);
-//        lines.add(newLine);
-//
-//        try (FileWriter fw = new FileWriter(filePath)) {
-//            for (String l : lines) {
-//                fw.write(l + System.lineSeparator());
-//            }
-//        } catch (IOException e) {
-//            JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage());
-//            return;
-//        }
-//
-//        // Clear all previous data for this student
-//        clearStudentData(studentID);
-//
-//        // Append notification for each registered class
-//        for (int i = 0; i < classList.size() && i < checkboxes.length; i++) {
-//            if (checkboxes[i].getState()) {
-//                String classID = classList.get(i)[0].trim();
-//                String className = classList.get(i)[1].trim();
-//                NotificationHelper.addNotification(studentID, "REGISTRATION",
-//                    studentName + " have registered for " + className + " (" + classID + ")");
-//            }
-//        }
-//
-//        JOptionPane.showMessageDialog(this, "Classes registered successfully!");
-//        LearningPage registerClass = new LearningPage();
-//        registerClass.setVisible(true);
-//        dispose();
-//    }
-
     private void clearStudentData(String studentID) {
         String[] files = {
-            "src/TextFiles/AssessmentMark",
-            "src/TextFiles/ClassTestSubmission",
-            "src/TextFiles/AssignmentSubmission",
-            "src/TextFiles/Feedback",
-            "src/TextFiles/Notification"
+            "src/TextFiles/AssessmentMark.txt",
+            "src/TextFiles/ClassTestSubmission.txt",
+            "src/TextFiles/AssignmentSubmission.txt",
+            "src/TextFiles/Feedback.txt",
+            "src/TextFiles/Notification.txt"
         };
         for (String file : files) {
             ArrayList<String> kept = new ArrayList<>();

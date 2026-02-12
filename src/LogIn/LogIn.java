@@ -137,6 +137,7 @@ public class LogIn extends javax.swing.JFrame {
 
                     loginSuccess = true;
                     
+                    LogIn.accID = accID;
                     LogIn.loggedInID = accID;
                     LogIn.loggedInName = name;
 
@@ -239,6 +240,7 @@ public class LogIn extends javax.swing.JFrame {
         logIntoAccount();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+   
     /**
      * @param args the command line arguments
      */

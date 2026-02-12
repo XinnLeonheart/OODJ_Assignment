@@ -315,7 +315,7 @@ public class EditProfile extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        String filePath = "src/TextFiles/Account";
+        String filePath = "src/TextFiles/Account.txt";
         String studentID = txtStudentID.getText().trim();
         boolean found = false;
 

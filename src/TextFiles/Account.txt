@@ -4,4 +4,5 @@ ACC003;ai;ai;ai@mail.uni.edu.my;ai;0091346287;Male;18;Lecturer;
 ACC004;hoshino;hoshino;hoshino@mail.uni.edu.my;hoshino;0007123598;Male;18;Lecturer;
 ACC005;oi;oi;oi@mail.uni.edu.my;oi;00781549856;Male;18;Academic Leader;
 ACC006;wi;wi;wi@mail.uni.edu.my;wi;009813247592;Male;18;Academic Leader;
-ACC007;alice;alice;alice@mail.uni.edu.my;1234;00987654321;Female;13;Student;
+ACC007;alice;alice;alice@mail.uni.edu.my;1234;00987654321;Female;13;Student
+ACC008;hahaha;hahaha;hahaha@mail.uni.edu.my;12344;0001928347;Male;13;Student;
