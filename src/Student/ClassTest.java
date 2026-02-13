@@ -50,10 +50,36 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private void setupAfterInit() {
-        lblTitle.setText("Class Test: " + className);
-        setTitle("Class Test - " + className);
+    String testName = getTestNameForClass(classID); // get from classtest.txt
+        if (!testName.isEmpty()) {
+            lblTitle.setText("Class Test: " + testName);
+            setTitle("Class Test - " + testName);
+            this.className = testName; // use testName for saving submission
+        } else {
+            lblTitle.setText("Class Test: " + className);
+            setTitle("Class Test - " + className);
+        }
         loadClassTest();
         setLocationRelativeTo(null);
+    }
+    
+    // Add this new helper method in ClassTest.java
+    private String getTestNameForClass(String classID) {
+        try (BufferedReader br = new BufferedReader(
+                new FileReader("TextFiles/classtest.txt"))) {
+            String line;
+            br.readLine(); // skip header
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(";");
+                if (parts.length >= 3 && parts[2].trim().equals(classID)) {
+                    return parts[0].trim(); // return "DuckYou"
+                }
+            }
+        } catch (IOException e) {
+            // file not found, fall back to className
+        }
+        return "";
     }
 
     private void loadClassTest() {
@@ -95,22 +121,30 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private int getTimerDuration() {
-        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/Class.txt"))) {
+        // classtest.txt format: TestName;Duration;ClassID
+        // Duration is like "45 min" or "1 hrs" — extract the number
+        try (BufferedReader br = new BufferedReader(
+                new FileReader("TextFiles/classtest.txt"))) {
             String line;
+            br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty())
-                    continue;
+                if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(";");
-                if (parts.length >= 3 &&
-                        parts[0].trim().equals(classID)) {
-                    return Integer.parseInt(parts[2].trim());
+                if (parts.length >= 3 && parts[2].trim().equals(classID)) {
+                    String duration = parts[1].trim(); // e.g. "45 min" or "1 hrs"
+                    String[] dParts = duration.split(" ");
+                    int value = Integer.parseInt(dParts[0].trim());
+                    if (duration.contains("hrs")) {
+                        return value * 60; // convert hours to minutes
+                    }
+                    return value; // already in minutes
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            // File doesn't exist yet or invalid format
+            // not found or bad format
         }
         return 0;
-    }
+}
 
     private void startTimer(int minutes) {
         remainingSeconds = minutes * 60;
@@ -192,16 +226,15 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private boolean isAlreadySubmitted() {
-        String studentID = LogIn.accID;
+        String studentID = LogIn.loggedInID;
 
         try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/ClassTestSubmission.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length >= 3 &&
+                if (parts.length >= 2 &&
                         parts[0].trim().equals(studentID) &&
-                        parts[1].trim().equals(classID) &&
-                        parts[2].trim().equals(className)) {
+                        parts[1].trim().equals(classID)){
                     return true;
                 }
             }
@@ -221,14 +254,16 @@ public class ClassTest extends javax.swing.JFrame {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length >= 8 &&
-                        parts[0].trim().equals(classID) &&
-                        parts[1].trim().equals(className)) {
+                //ClassID;ClassName;Question;OptA;OptB;OptC;OptD;Answer
+                if (parts.length >= 7 &&
+                        parts[0].trim().equals(classID)) { // ← ONLY match by classID
                     currentQuestions.add(parts);
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading ClassTestQuestions file: " + e.getMessage(), "Error",
+            JOptionPane.showMessageDialog(this, 
+                    "Error reading ClassTestQuestions file: " + e.getMessage(), 
+                    "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
 
@@ -253,6 +288,7 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private JPanel createQuestionPanel(int qNumber, String[] questionData, boolean disabled) {
+        // Format: ClassID;ClassName;Question;OptA;OptB;OptC;OptD;Answer
         String questionText = questionData[2].trim();
         String optA = questionData[3].trim();
         String optB = questionData[4].trim();
@@ -381,7 +417,7 @@ public class ClassTest extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -416,34 +452,40 @@ public class ClassTest extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 214,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41,
-                                        Short.MAX_VALUE)
-                                .addComponent(lblTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 180,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163,
-                                        Short.MAX_VALUE)
-                                .addComponent(btnBack)
-                                .addGap(15, 15, 15)));
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addComponent(lblTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
+                .addComponent(btnBack)
+                .addGap(15, 15, 15))
+        );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblTimer)
-                                        .addComponent(btnBack))
-                                .addGap(15, 15, 15)));
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTimer)
+                    .addComponent(btnBack))
+                .addGap(15, 15, 15))
+        );
 
         lblStatus.setFont(new java.awt.Font("SansSerif", 2, 12)); // NOI18N
         lblStatus.setForeground(new java.awt.Color(128, 128, 128));
         lblStatus.setText(" ");
 
+        questionsPanel.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                questionsPanelAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         questionsPanel.setLayout(new javax.swing.BoxLayout(questionsPanel, javax.swing.BoxLayout.Y_AXIS));
         questionsScrollPane.setViewportView(questionsPanel);
 
@@ -459,39 +501,38 @@ public class ClassTest extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(questionsScrollPane)
-                                        .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(20, 20, 20))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 150,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(questionsScrollPane)
+                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(questionsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 370,
-                                        Short.MAX_VALUE)
-                                .addGap(10, 10, 10)
-                                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 35,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(questionsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                .addGap(10, 10, 10)
+                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void questionsPanelAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_questionsPanelAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_questionsPanelAncestorAdded
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBackActionPerformed
         stopTimer();

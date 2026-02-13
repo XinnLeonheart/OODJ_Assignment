@@ -1,1 +1,2 @@
-student1;C001;A;4.0
+Class Id;Test Name;Test Marks;Grade
+C001;test1;100;A+

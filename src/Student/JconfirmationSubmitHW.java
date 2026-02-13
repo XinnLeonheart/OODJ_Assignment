@@ -134,15 +134,15 @@ public class JconfirmationSubmitHW extends javax.swing.JDialog {
                     String[] parts = line.split(";");
                     if (!(parts.length >= 3
                             && parts[0].trim().equals(studentID)
-                            && parts[1].trim().equals(classID))
-                            && parts[2].trim().equals(className)) {
+                            && parts[1].trim().equals(classID)
+                            && parts[2].trim().equals(className))) {
                         lines.add(line);
                     }
                 }
             } catch (IOException e) {
                 // File doesn't exist yet
             }
-            lines.add(studentID + ";" + classID + ";" + className + ";" + dateTime + ";Submitted");
+            lines.add(studentID + ";" + studentName + ";" + classID + ";" + className + ";" + dateTime + ";Submitted");
             try (FileWriter fw = new FileWriter("TextFiles/AssignmentSubmission.txt")) {
                 for (String l : lines) {
                     fw.write(l + "\n");

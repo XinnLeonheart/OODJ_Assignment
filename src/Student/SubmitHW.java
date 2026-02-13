@@ -89,7 +89,7 @@ public class SubmitHW extends javax.swing.JFrame {
     }
 
     private boolean isAlreadySubmitted() {
-        String studentID = LogIn.accID;
+        String studentID = LogIn.loggedInID;
         if (studentID == null || studentID.isEmpty()) {
             return false;
         }
@@ -97,10 +97,10 @@ public class SubmitHW extends javax.swing.JFrame {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split(";");
+                // New format: studentID;studentName;classID;assignmentName;dateTime;Status
                 if (parts.length >= 3
                         && parts[0].trim().equals(studentID)
-                        && parts[1].trim().equals(classID)
-                        && parts[2].trim().equals(className)) {
+                        && parts[2].trim().equals(classID)) {
                     return true;
                 }
             }
@@ -111,7 +111,7 @@ public class SubmitHW extends javax.swing.JFrame {
     }
 
     private boolean isClassGraded() {
-        String studentID = LogIn.accID;
+        String studentID = LogIn.loggedInID;
         if (studentID == null || studentID.isEmpty()) {
             return false;
         }

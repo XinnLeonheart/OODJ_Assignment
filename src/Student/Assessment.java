@@ -31,12 +31,13 @@ public class Assessment extends javax.swing.JFrame {
         initComponents();
         loadClassNames();
 
-        String studentID = LogIn.accID;
+        String studentID = LogIn.loggedInID;
         if (studentID == null || studentID.isEmpty()) {
-            studentID = "guest";
-        }
-        loadAssessmentMark(studentID);
-        setLocationRelativeTo(null);
+            JOptionPane.showMessageDialog(this, "No logged-in student ID found!");
+            return;
+    }
+    generateAssessmentMarkFromClassTestOnly(studentID);
+    loadAssessmentMark(studentID);
     }
 
     private void loadClassNames() {
@@ -58,132 +59,87 @@ public class Assessment extends javax.swing.JFrame {
     private final java.util.Map<String, java.util.List<Double>> classAssignmentMarks = new java.util.HashMap<>();
     private final java.util.Map<String, java.util.List<Double>> classTestMarks = new java.util.HashMap<>();
 
+    
+
     private void loadAssessmentMark(String studentID) {
+
         DefaultTableModel model = (DefaultTableModel) jTableAssessment.getModel();
-        model.setColumnIdentifiers(new String[] { "Class", "Asg Avg", "Test Avg", "Grade", "CGPA" });
+        model.setColumnIdentifiers(new String[] { "Class", "Test Name", "Test Marks", "Grade" });
         model.setRowCount(0);
 
-        loadAssignmentMarks(studentID);
-        loadClassTestMarks(studentID);
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
-        double totalGradePoints = 0.0;
-        int moduleCount = 0;
+            br.readLine(); // skip header in AssessmentMark.txt
 
-        try (var br = new BufferedReader(new FileReader(filePath))) {
             String line;
-
             while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    String[] part = line.split(";");
+                if (line.trim().isEmpty()) continue;
 
-                    // Format: StudentID;ClassID;Grade;CGPA
-                    if (part.length >= 4) {
-                        String id = part[0].trim();
-                        String classId = part[1].trim();
-                        String grade = part[2].trim();
-                        String cgpaStr = part[3].trim();
+                // AssessmentMark.txt format:
+                // Class Id;Test Name;Test Marks;Grade
+                String[] part = line.split(";", -1);
+                if (part.length < 4) continue;
 
-                        if (id.equals(studentID)) {
-                            String className = classIdToNameMap.getOrDefault(classId, classId);
-                            
-                            String asgAvg = calculateAverage(classAssignmentMarks.get(classId));
-                            String testAvg = calculateAverage(classTestMarks.get(classId));
+                String classId   = part[0].trim();
+                String testName  = part[1].trim();
+                String testMarks = part[2].trim();
+                String grade     = part[3].trim();
 
-                            model.addRow(new Object[] { className, asgAvg, testAvg, grade, cgpaStr });
+                String className = classIdToNameMap.getOrDefault(classId, classId);
 
-                            try {
-                                totalGradePoints += Double.parseDouble(cgpaStr);
-                                moduleCount++;
-                            } catch (NumberFormatException e) {
-                                // Ignore parsing error
-                            }
-                        }
-                    }
-                }
+                model.addRow(new Object[] { className, testName, testMarks, grade });
             }
+
+            label1.setText("Assessment Mark (Class Test)");
+
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading assessment mark file: " + e.getMessage(), "Error",
+            JOptionPane.showMessageDialog(this,
+                    "Error reading assessment mark file: " + e.getMessage(),
+                    "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-
-        if (moduleCount > 0) {
-            overallCGPA = totalGradePoints / moduleCount;
-            label1.setText("Assessment Mark - Overall CGPA: " + String.format("%.2f", overallCGPA));
-        } else {
-            label1.setText("Assessment Mark - No grades available");
-        }
     }
 
-    private void loadAssignmentMarks(String studentID) {
-        classAssignmentMarks.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/gradeassignment.txt"))) {
-            String line;
-            br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(";");
-                // Student Name;Class Id;Assignment Name;Assignment Marks;Feedback;Timestamp
-                if (parts.length >= 4) {
-                    // Need to match Student Name. LogIn.loggedInName is the name.
-                    // But wait, the file uses "Student Name". Registration uses Student ID. 
-                    // Let's check how GradeAssignment writes it. 
-                    // It uses studentname. 
-                    // And GradeClassessTest uses studentname.
-                    // But AssessmentMark uses StudentID.
-                    // AND LogIn has both.
-                    
-                     // Match using Student ID consistent with other files
-                     String nameInFile = parts[0].trim();
-                     if (nameInFile.equalsIgnoreCase(studentID)) {
-                         String classId = parts[1].trim();
-                         double mark = Double.parseDouble(parts[3].trim());
-                         classAssignmentMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // Ignore
-        }
-    }
 
-    private void loadClassTestMarks(String studentID) {
-        classTestMarks.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/gradeclasstest.txt"))) {
-            String line;
-            br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(";");
-                // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp
-                 if (parts.length >= 4) {
-                    String nameInFile = parts[0].trim();
-                     
-                    if (nameInFile.equalsIgnoreCase(studentID)) {
-                         String classId = parts[1].trim();
-                         // Check for % sign and remove it
-                         String markStr = parts[3].trim().replace("%", "");
-                         try {
-                            double mark = Double.parseDouble(markStr);
-                            classTestMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
-                         } catch (NumberFormatException e) {
-                             // ignore
-                         }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // Ignore
-        }
-    }
+//    private void loadClassTestMarks(String studentID) {
+//        classTestMarks.clear();
+//        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/gradeclasstest.txt"))) {
+//            String line;
+//            br.readLine(); // Skip header
+//            while ((line = br.readLine()) != null) {
+//                String[] parts = line.split(";");
+//                // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp
+//                 if (parts.length >= 4) {
+//                    String nameInFile = parts[0].trim();
+//                     
+//                    if (nameInFile.equalsIgnoreCase(studentID)) {
+//                         String classId = parts[1].trim();
+//                         // Check for % sign and remove it
+//                         String markStr = parts[3].trim().replace("%", "");
+//                         try {
+//                            double mark = Double.parseDouble(markStr);
+//                            classTestMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
+//                         } catch (NumberFormatException e) {
+//                             // ignore
+//                         }
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            // Ignore
+//        }
+//    }
 
-    private String calculateAverage(java.util.List<Double> marks) {
-        if (marks == null || marks.isEmpty()) {
-            return "-";
-        }
-        double sum = 0;
-        for (Double m : marks) {
-            sum += m;
-        }
-        return String.format("%.0f", sum / marks.size());
-    }
+//    private String calculateAverage(java.util.List<Double> marks) {
+//        if (marks == null || marks.isEmpty()) {
+//            return "-";
+//        }
+//        double sum = 0;
+//        for (Double m : marks) {
+//            sum += m;
+//        }
+//        return String.format("%.0f", sum / marks.size());
+//    }
 
     private void savePDF() {
         String downloadsPath = System.getProperty("user.home") + java.io.File.separator + "Downloads";
@@ -351,7 +307,7 @@ public class Assessment extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         btnOK = new javax.swing.JButton();
@@ -383,18 +339,19 @@ public class Assessment extends javax.swing.JFrame {
 
         jTableAssessment.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         jTableAssessment.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {
+            new Object [][] {
 
-                },
-                new String[] {
-                        "Student ID", "Class Name", "Mark", "Feedback", "Grade"
-                }) {
-            boolean[] canEdit = new boolean[] {
-                    false, false, false, false, false
+            },
+            new String [] {
+                "Class", "Test Name", "Test Marks", "Grade"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit [columnIndex];
             }
         });
         jTableAssessment.setRowHeight(25);
@@ -408,51 +365,48 @@ public class Assessment extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(label1)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(label1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addContainerGap(15, Short.MAX_VALUE)
-                                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)));
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
-                                .addGap(22, 22, 22))
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(127, 127, 127)
-                                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 160,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 160,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
+                .addGap(22, 22, 22))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(127, 127, 127)
+                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 30,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 30,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(17, 17, 17)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -466,6 +420,89 @@ public class Assessment extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSaveActionPerformed
         savePDF();
     }// GEN-LAST:event_btnSaveActionPerformed
+
+    
+    private void generateAssessmentMarkFromClassTestOnly(String studentID) {
+
+        String testFile = "TextFiles/gradeclasstest.txt";
+        String outFile  = "TextFiles/AssessmentMark.txt";
+
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(testFile));
+             java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(outFile, false))) {
+
+            bw.write("Class Id;Test Name;Test Marks;Grade");
+            bw.newLine();
+
+            br.readLine(); // skip header in gradeclasstest.txt
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] p = line.split(";", -1);
+                if (p.length < 8) continue;
+
+                String sid = p[0].trim();
+                if (!sid.equalsIgnoreCase(studentID)) continue;
+
+                String classId   = p[2].trim();
+                String testName  = p[3].trim();
+                String testMarks = p[4].trim().replace("%", "");
+                String grade     = p[7].trim();
+
+                bw.write(safe(classId) + ";" + safe(testName) + ";" + safe(testMarks) + ";" + safe(grade));
+                bw.newLine();
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error generating AssessmentMark.txt: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    
+    private String safe(String s) {
+    if (s == null) return "";
+        return s.replace(";", ",").trim();
+    }
+
+//private double averageOrZero(java.util.List<Double> list) {
+//    if (list == null || list.isEmpty()) return 0.0;
+//    double sum = 0.0;
+//    for (double v : list) sum += v;
+//    return sum / list.size();
+//}
+//
+//private String toGrade(double mark) {
+//    if (mark >= 80) return "A+";
+//    if (mark >= 75) return "A";
+//    if (mark >= 70) return "A-";
+//    if (mark >= 65) return "B+";
+//    if (mark >= 60) return "B";
+//    if (mark >= 55) return "B-";
+//    if (mark >= 50) return "C+";
+//    if (mark >= 45) return "C";
+//    if (mark >= 40) return "D";
+//    return "F";
+//}
+//
+//private double toGpaPoint(String grade) {
+//    switch (grade) {
+//        case "A+": return 4.00;
+//        case "A":  return 4.00;
+//        case "A-": return 3.67;
+//        case "B+": return 3.33;
+//        case "B":  return 3.00;
+//        case "B-": return 2.67;
+//        case "C+": return 2.33;
+//        case "C":  return 2.00;
+//        case "D":  return 1.00;
+//        default:   return 0.00;
+//    }
+//}
+
+    
 
     /**
      * @param args the command line arguments

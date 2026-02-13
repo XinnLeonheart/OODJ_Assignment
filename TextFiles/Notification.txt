@@ -7,9 +7,19 @@ student1;REGISTRATION;david have registered for Statistics (C004);2026-02-07 15:
 student1;REGISTRATION;david have registered for Physics (C005);2026-02-07 15:53
 student1;CLASSTEST;david has submitted class test for Statistics (C004);2026-02-07 15:53
 student1;FEEDBACK;david has submitted feedback for Physics (C005);2026-02-07 15:54
-null;REGISTRATION;alice have registered for English (C001);2026-02-12 06:02
-null;REGISTRATION;alice have registered for Science (C003);2026-02-12 06:02
-null;FEEDBACK;null has submitted feedback for null (null);2026-02-12 13:53
-ACC007;REGISTRATION;alice have registered for Statistics (C004);2026-02-13 04:44
-ACC007;REGISTRATION;alice have registered for Physics (C005);2026-02-13 04:44
-ACC008;REGISTRATION;hahaha have registered for Mathematics (C002);2026-02-13 05:05
+ACC008;REGISTRATION;hahaha have registered for sc (C001);2026-02-13 14:20
+ACC008;ASSIGNMENT;hahaha has submitted assignment for sc (C001);2026-02-13 14:20
+null;REGISTRATION;null have registered for sc (C001);2026-02-13 14:52
+ACC007;REGISTRATION;alice have registered for English (C001);2026-02-13 19:55
+ACC007;REGISTRATION;alice have registered for English (C002);2026-02-13 19:55
+ACC007;REGISTRATION;alice have registered for English (C003);2026-02-13 19:55
+ACC007;REGISTRATION;alice have registered for English (C004);2026-02-13 19:55
+ACC007;REGISTRATION;alice have registered for English (C005);2026-02-13 19:55
+ACC007;REGISTRATION;alice have registered for English (C006);2026-02-13 19:55
+ACC007;CLASSTEST;alice has submitted class test for testlololo (C001);2026-02-13 19:55
+ACC007;CLASSTEST;alice has submitted class test for DuckYou (C002);2026-02-13 19:55
+ACC007;CLASSTEST;alice has submitted class test for NowisMrning (C004);2026-02-13 19:55
+ACC007;ASSIGNMENT;alice has submitted assignment for assignment123 (C001);2026-02-13 19:55
+ACC007;ASSIGNMENT;alice has submitted assignment for assignment14 (C002);2026-02-13 19:55
+ACC007;ASSIGNMENT;alice has submitted assignment for ganassignemnt (C004);2026-02-13 19:55
+ACC007;ASSIGNMENT;alice has submitted assignment for assignmentisbitch (C006);2026-02-13 19:56
