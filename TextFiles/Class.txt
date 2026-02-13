@@ -1,1 +1,6 @@
-C001;grammar;sc
+C001;grammar;en
+C002;listening;en
+C003;speaking;en
+C004;writing;en
+C005;vocabulary;en
+C006;reading;en
