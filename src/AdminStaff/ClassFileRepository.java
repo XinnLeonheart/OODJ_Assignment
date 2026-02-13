@@ -29,9 +29,9 @@ public class ClassFileRepository {
         return file;
     }
 
-    public List<ClassRoom> readAll() throws IOException {
+    public List<ClassLearning> readAll() throws IOException {
         File file = ensureFile();
-        List<ClassRoom> list = new ArrayList<>();
+        List<ClassLearning> list = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -39,14 +39,14 @@ public class ClassFileRepository {
                 line = line.trim();
                 if (line.isEmpty()) continue;
 
-                ClassRoom c = ClassRoom.fromLine(line);
+                ClassLearning c = ClassLearning.fromLine(line);
                 if (c != null) list.add(c);
             }
         }
         return list;
     }
 
-    public void append(ClassRoom c) throws IOException {
+    public void append(ClassLearning c) throws IOException {
         File file = ensureFile();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             bw.write(c.toLine());
@@ -54,10 +54,10 @@ public class ClassFileRepository {
         }
     }
 
-    public void overwriteAll(List<ClassRoom> classes) throws IOException {
+    public void overwriteAll(List<ClassLearning> classes) throws IOException {
         File file = ensureFile();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, false))) {
-            for (ClassRoom c : classes) {
+            for (ClassLearning c : classes) {
                 bw.write(c.toLine());
                 bw.newLine();
             }
@@ -65,10 +65,10 @@ public class ClassFileRepository {
     }
 
     public void deleteById(String classId) throws IOException {
-        List<ClassRoom> all = readAll();
-        List<ClassRoom> kept = new ArrayList<>();
+        List<ClassLearning> all = readAll();
+        List<ClassLearning> kept = new ArrayList<>();
 
-        for (ClassRoom c : all) {
+        for (ClassLearning c : all) {
             if (!c.getClassId().equalsIgnoreCase(classId)) {
                 kept.add(c);
             }
@@ -76,11 +76,11 @@ public class ClassFileRepository {
         overwriteAll(kept);
     }
 
-    public List<ClassRoom> search(String keyword) throws IOException {
+    public List<ClassLearning> search(String keyword) throws IOException {
         String k = keyword.trim().toLowerCase();
-        List<ClassRoom> result = new ArrayList<>();
+        List<ClassLearning> result = new ArrayList<>();
 
-        for (ClassRoom c : readAll()) {
+        for (ClassLearning c : readAll()) {
             if (c.getClassId().toLowerCase().contains(k)
                     || c.getClassName().toLowerCase().contains(k)) {
                 result.add(c);
@@ -90,10 +90,10 @@ public class ClassFileRepository {
     }
 
     public String getNextClassId() throws IOException {
-        List<ClassRoom> all = readAll();
+        List<ClassLearning> all = readAll();
 
         int max = 0;
-        for (ClassRoom c : all) {
+        for (ClassLearning c : all) {
             String id = c.getClassId(); // e.g. C001
             if (id != null && id.startsWith("C")) {
                 try {

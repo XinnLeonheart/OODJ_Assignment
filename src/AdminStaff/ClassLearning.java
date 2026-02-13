@@ -9,12 +9,12 @@ package AdminStaff;
  * @author User
  */
 
-public class ClassRoom {
+public class ClassLearning {
     private String classId;
     private String className;
     private String module;
 
-    public ClassRoom(String classId, String className, String module) {
+    public ClassLearning(String classId, String className, String module) {
         this.classId = classId;
         this.className = className;
         this.module = module;
@@ -43,10 +43,10 @@ public class ClassRoom {
     }
 
     // Convert file line -> object
-    public static ClassRoom fromLine(String line) {
+    public static ClassLearning fromLine(String line) {
         String[] data = line.split(";");
         if (data.length < 3) return null;
-        return new ClassRoom(data[0].trim(), data[1].trim(), data[2].trim());
+        return new ClassLearning(data[0].trim(), data[1].trim(), data[2].trim());
     }
 }
 

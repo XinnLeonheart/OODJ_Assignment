@@ -89,7 +89,7 @@ public class CreateClass extends javax.swing.JFrame {
         }
 
         try {
-            classRepo.append(new ClassRoom(classID, className, moduleName));
+            classRepo.append(new ClassLearning(classID, className, moduleName));
             JOptionPane.showMessageDialog(this, "Class created successfully!");
             loadTableClass();
             tfClassName.setText("");
@@ -112,7 +112,7 @@ public class CreateClass extends javax.swing.JFrame {
         }
 
         // Build list from table
-        java.util.List<ClassRoom> list = new java.util.ArrayList<>();
+        java.util.List<ClassLearning> list = new java.util.ArrayList<>();
         StringBuilder currentData = new StringBuilder();
 
         for (int i = 0; i < model.getRowCount(); i++) {
@@ -120,7 +120,7 @@ public class CreateClass extends javax.swing.JFrame {
             String name = model.getValueAt(i, 1).toString().trim();
             String module = model.getValueAt(i, 2).toString().trim();
 
-            list.add(new ClassRoom(id, name, module));
+            list.add(new ClassLearning(id, name, module));
             currentData.append(id).append(";").append(name).append(";").append(module).append("\n");
         }
 
@@ -235,7 +235,7 @@ public class CreateClass extends javax.swing.JFrame {
         model.setRowCount(0);
 
         try {
-            for (ClassRoom c : classRepo.search(searchText)) {
+            for (ClassLearning c : classRepo.search(searchText)) {
                 model.addRow(new Object[]{ c.getClassId(), c.getClassName(), c.getModule(), "Delete" });
             }
 
@@ -255,7 +255,7 @@ public class CreateClass extends javax.swing.JFrame {
         StringBuilder snapshot = new StringBuilder();
 
         try {
-            for (ClassRoom c : classRepo.readAll()) {
+            for (ClassLearning c : classRepo.readAll()) {
                 model.addRow(new Object[]{ c.getClassId(), c.getClassName(), c.getModule(), "Delete" });
                 snapshot.append(c.toLine()).append("\n");
             }
