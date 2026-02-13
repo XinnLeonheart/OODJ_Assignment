@@ -85,7 +85,7 @@ public class Assessment extends javax.swing.JFrame {
 
                         if (id.equals(studentID)) {
                             String className = classIdToNameMap.getOrDefault(classId, classId);
-
+                            
                             String asgAvg = calculateAverage(classAssignmentMarks.get(classId));
                             String testAvg = calculateAverage(classTestMarks.get(classId));
 
@@ -124,19 +124,19 @@ public class Assessment extends javax.swing.JFrame {
                 // Student Name;Class Id;Assignment Name;Assignment Marks;Feedback;Timestamp
                 if (parts.length >= 4) {
                     // Need to match Student Name. LogIn.loggedInName is the name.
-                    // But wait, the file uses "Student Name". Registration uses Student ID.
-                    // Let's check how GradeAssignment writes it.
-                    // It uses studentname.
+                    // But wait, the file uses "Student Name". Registration uses Student ID. 
+                    // Let's check how GradeAssignment writes it. 
+                    // It uses studentname. 
                     // And GradeClassessTest uses studentname.
                     // But AssessmentMark uses StudentID.
                     // AND LogIn has both.
-
-                    // Match using Student ID consistent with other files
-                    String nameInFile = parts[0].trim();
-                    if (nameInFile.equalsIgnoreCase(studentID)) {
-                        String classId = parts[1].trim();
-                        double mark = Double.parseDouble(parts[3].trim());
-                        classAssignmentMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
+                    
+                     // Match using Student ID consistent with other files
+                     String nameInFile = parts[0].trim();
+                     if (nameInFile.equalsIgnoreCase(studentID)) {
+                         String classId = parts[1].trim();
+                         double mark = Double.parseDouble(parts[3].trim());
+                         classAssignmentMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
                     }
                 }
             }
@@ -153,19 +153,19 @@ public class Assessment extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 // Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp
-                if (parts.length >= 4) {
+                 if (parts.length >= 4) {
                     String nameInFile = parts[0].trim();
-
+                     
                     if (nameInFile.equalsIgnoreCase(studentID)) {
-                        String classId = parts[1].trim();
-                        // Check for % sign and remove it
-                        String markStr = parts[3].trim().replace("%", "");
-                        try {
+                         String classId = parts[1].trim();
+                         // Check for % sign and remove it
+                         String markStr = parts[3].trim().replace("%", "");
+                         try {
                             double mark = Double.parseDouble(markStr);
                             classTestMarks.computeIfAbsent(classId, k -> new java.util.ArrayList<>()).add(mark);
-                        } catch (NumberFormatException e) {
-                            // ignore
-                        }
+                         } catch (NumberFormatException e) {
+                             // ignore
+                         }
                     }
                 }
             }
@@ -387,10 +387,10 @@ public class Assessment extends javax.swing.JFrame {
 
                 },
                 new String[] {
-                        "Class", "Grade", "CGPA"
+                        "Student ID", "Class Name", "Mark", "Feedback", "Grade"
                 }) {
             boolean[] canEdit = new boolean[] {
-                    false, false, false
+                    false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -494,7 +494,7 @@ public class Assessment extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Assessment().setVisible(true));
-    }
+            }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOK;
