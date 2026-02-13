@@ -286,7 +286,7 @@ public class Registration extends javax.swing.JFrame {
 
     private void btnChooseModuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseModuleActionPerformed
         // TODO add your handling code here:
-                String filePath = "src/TextFiles/Registration.txt";
+                String filePath = "TextFiles/Registration.txt";
         String studentID = LogIn.accID;
         String studentName = LogIn.loggedInName;
 
@@ -352,7 +352,7 @@ public class Registration extends javax.swing.JFrame {
     }//GEN-LAST:event_btnChooseModuleActionPerformed
 
     private void loadClasses() {
-        String filePath = "src/TextFiles/Class.txt";
+        String filePath = "TextFiles/Class.txt";
         javax.swing.JLabel[] labels = {jLabel1, jLabel2, jLabel3, jLabel4,
                                        jLabel5, jLabel6, jLabel7, jLabel8};
         java.awt.Checkbox[] checkboxes = {checkbox1, checkbox2, checkbox3, checkbox4,
@@ -389,11 +389,11 @@ public class Registration extends javax.swing.JFrame {
 
     private void clearStudentData(String studentID) {
         String[] files = {
-            "src/TextFiles/AssessmentMark.txt",
-            "src/TextFiles/ClassTestSubmission.txt",
-            "src/TextFiles/AssignmentSubmission.txt",
-            "src/TextFiles/Feedback.txt",
-            "src/TextFiles/Notification.txt"
+            "TextFiles/AssessmentMark.txt",
+            "TextFiles/ClassTestSubmission.txt",
+            "TextFiles/AssignmentSubmission.txt",
+            "TextFiles/Feedback.txt",
+            "TextFiles/Notification.txt"
         };
         for (String file : files) {
             ArrayList<String> kept = new ArrayList<>();

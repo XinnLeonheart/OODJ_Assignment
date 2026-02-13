@@ -28,7 +28,7 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         loadModules();
     }
 
-    private static final String FILE_PATH = "src/TextFiles/Module.txt";
+    private static final String FILE_PATH = "TextFiles/Module.txt";
 
 
     private void loadModules() {

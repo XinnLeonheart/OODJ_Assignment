@@ -18,8 +18,7 @@ public class ReportFrame extends javax.swing.JFrame {
 
     private String currentLeaderID;
 
-    private final String REPORT_PATH
-            = System.getProperty("user.dir") + "/src/TextFiles/Report.txt";
+    private final String REPORT_PATH = "TextFiles/Report.txt";
 
     /**
      * Creates new form ReportFrame

@@ -31,7 +31,7 @@ public class GradeClassessAssignment extends javax.swing.JPanel {
     }
     
     private void loadTableData(){
-        String filePath = "src/TextFiles/AssignmentSubmission.txt";
+        String filePath = "TextFiles/AssignmentSubmission.txt";
         File file = new File(filePath);
         
         try{
@@ -386,7 +386,7 @@ public class GradeClassessAssignment extends javax.swing.JPanel {
         }
         try
         {
-            String filePath = "src/TextFiles/gradeassignment.txt";
+            String filePath = "TextFiles/gradeassignment.txt";
             FileWriter writer = new FileWriter(filePath, true);
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -417,7 +417,7 @@ public class GradeClassessAssignment extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtongradeActionPerformed
 
     private void updateAssignmentSubmissionStatus(String studentId, String classId, String assignmentName) {
-    String filePath = "src/TextFiles/AssignmentSubmission.txt";
+    String filePath = "TextFiles/AssignmentSubmission.txt";
     File file = new File(filePath);
     
     try {

@@ -36,7 +36,7 @@ public class LecturerDashboard extends javax.swing.JPanel {
     }
 
     private void loadDashboardData(){
-        int studentCount = countStudents("src/TextFiles/loliapplyclass.txt");
+        int studentCount = countStudents("TextFiles/loliapplyclass.txt");
         totalStudent.setText(String.valueOf(studentCount));
     }
     

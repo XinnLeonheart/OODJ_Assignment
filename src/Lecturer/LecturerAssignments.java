@@ -128,7 +128,7 @@ public class LecturerAssignments extends FeedbackandGPA2 {
     }
     
     private void loadTableData(){
-        String filePath = "src/TextFiles/lolicourse.txt";
+        String filePath = "TextFiles/lolicourse.txt";
         File file = new File(filePath);
         
         try {

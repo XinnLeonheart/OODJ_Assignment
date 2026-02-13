@@ -32,7 +32,7 @@ public class EditProfileFrame extends javax.swing.JFrame {
 
         try {
 
-            File file = new File("src/TextFiles/Account.txt");
+            File file = new File("TextFiles/Account.txt");
 
             if (!file.exists()) {
                 JOptionPane.showMessageDialog(this, "Account file not found");
@@ -214,7 +214,7 @@ public class EditProfileFrame extends javax.swing.JFrame {
 
         try {
 
-            File file = new File("src/TextFiles/Account.txt");
+            File file = new File("TextFiles/Account.txt");
 
             if (!file.exists()) {
                 JOptionPane.showMessageDialog(this, "Account file not found");

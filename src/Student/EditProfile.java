@@ -39,7 +39,7 @@ public class EditProfile extends javax.swing.JFrame {
     
     private void loadStudentData(){
         // Load student data from file
-        String filePath = "src/TextFiles/Account.txt";
+        String filePath = "TextFiles/Account.txt";
         String targetID = LogIn.loggedInID;
 
         try {
@@ -315,7 +315,7 @@ public class EditProfile extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        String filePath = "src/TextFiles/Account.txt";
+        String filePath = "TextFiles/Account.txt";
         String studentID = txtStudentID.getText().trim();
         boolean found = false;
 

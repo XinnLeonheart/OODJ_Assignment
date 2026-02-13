@@ -23,7 +23,7 @@ public class Assessment extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger
             .getLogger(Assessment.class.getName());
 
-    private final String filePath = "src/TextFiles/AssessmentMark.txt";
+    private final String filePath = "TextFiles/AssessmentMark.txt";
     private double overallCGPA = 0.0;
     private final java.util.Map<String, String> classIdToNameMap = new java.util.HashMap<>();
 
@@ -40,7 +40,7 @@ public class Assessment extends javax.swing.JFrame {
     }
 
     private void loadClassNames() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/Class.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
@@ -116,7 +116,7 @@ public class Assessment extends javax.swing.JFrame {
 
     private void loadAssignmentMarks(String studentID) {
         classAssignmentMarks.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/gradeassignment.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/gradeassignment.txt"))) {
             String line;
             br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
@@ -147,7 +147,7 @@ public class Assessment extends javax.swing.JFrame {
 
     private void loadClassTestMarks(String studentID) {
         classTestMarks.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/gradeclasstest.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/gradeclasstest.txt"))) {
             String line;
             br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {

@@ -294,7 +294,7 @@ public class StudentDashboard extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new StudentDashboard().setVisible(true));
         String username = "";
         try{
-            Path path = Paths.get("src/TextFiles/Account.txt");
+            Path path = Paths.get("TextFiles/Account.txt");
             username = Files.readString(path).trim();
         } catch (IOException e){
             username = "Unknown";

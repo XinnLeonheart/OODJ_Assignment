@@ -30,10 +30,10 @@ public class CreateClass extends javax.swing.JFrame {
      * Creates new form CreateClass
      */
     
-    private static final String MODULE_FILE = "src/TextFiles/Module.txt";
+    private static final String MODULE_FILE = "TextFiles/Module.txt";
     private final java.util.List<Module> moduleList = new java.util.ArrayList<>();
     private String originalTableData = "";
-    private static final String CLASS_FILE = "src/TextFiles/Class.txt";
+    private static final String CLASS_FILE = "TextFiles/Class.txt";
     private final ClassFileRepository classRepo = new ClassFileRepository(CLASS_FILE);
 
     public CreateClass() {

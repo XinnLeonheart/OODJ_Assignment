@@ -231,7 +231,7 @@ public class CreateNewTest extends javax.swing.JPanel {
         
        try
            {
-           String filePath = "src/TextFiles/classtest.txt";
+           String filePath = "TextFiles/classtest.txt";
            FileWriter writer = new FileWriter(filePath, true);
            
            String line = testname + ";" + durationhours + ";" + classcode;
