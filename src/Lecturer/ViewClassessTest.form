@@ -307,6 +307,9 @@
                           <Properties>
                             <Property name="text" type="java.lang.String" value="base on which lecturer"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="jLabel1baseonwhichlecturerAncestorAdded"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JTextField" name="jTextFieldtestname">
                         </Component>

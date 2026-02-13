@@ -4,10 +4,15 @@
  */
 package Lecturer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -60,7 +65,7 @@ public class ViewFeedbacks extends javax.swing.JPanel {
                 String line = tableLines[i].toString().trim();
                 String[] dataRow = line.split(";");
             
-                //only display the studentsubmission which related to courseId
+                //only display the feedback which related to courseId
                 //show own students submission only base on courseId
                 if(classIdColumnIndex != -1 && 
                     dataRow.length > classIdColumnIndex &&
@@ -109,6 +114,15 @@ public class ViewFeedbacks extends javax.swing.JPanel {
 
         jLabel17.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel17.setText("04:00 AM");
+        jLabel17.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel17AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 45, 80, -1));
 
         dashboard1.setBackground(new java.awt.Color(228, 228, 228));
@@ -116,6 +130,15 @@ public class ViewFeedbacks extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 12)); // NOI18N
         jLabel7.setText("January 20, 2025");
+        jLabel7.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel7AncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         dashboard1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 23, -1, -1));
 
         btnback.setText("back");
@@ -158,7 +181,7 @@ public class ViewFeedbacks extends javax.swing.JPanel {
         );
 
         jLabelclassesstest.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 18)); // NOI18N
-        jLabelclassesstest.setText("Student GPA Record");
+        jLabelclassesstest.setText("Student Feedbacks Thought Class");
 
         jButtonrefresh.setText("Refresh");
         jButtonrefresh.addActionListener(new java.awt.event.ActionListener() {
@@ -289,6 +312,32 @@ public class ViewFeedbacks extends javax.swing.JPanel {
             parent.showDashboard();
         }
     }//GEN-LAST:event_btnbackActionPerformed
+
+    private void jLabel7AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel7AncestorAdded
+        // TODO add your handling code here:
+                Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+                jLabel17.setText(formatter.format(now));
+            }
+        });
+        timer.start();
+    }//GEN-LAST:event_jLabel7AncestorAdded
+
+    private void jLabel17AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel17AncestorAdded
+        // TODO add your handling code here:
+                Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+                jLabel17.setText(formatter.format(now));
+            }
+        });
+        timer.start();
+    }//GEN-LAST:event_jLabel17AncestorAdded
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

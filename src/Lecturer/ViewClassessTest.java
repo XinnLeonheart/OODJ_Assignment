@@ -178,6 +178,15 @@ public class ViewClassessTest extends javax.swing.JPanel {
         jLabelclasscode.setText("Class Code");
 
         jLabel1baseonwhichlecturer.setText("base on which lecturer");
+        jLabel1baseonwhichlecturer.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jLabel1baseonwhichlecturerAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
         jLabeleditcode.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 18)); // NOI18N
         jLabeleditcode.setText("Edit Code");
@@ -448,6 +457,12 @@ public class ViewClassessTest extends javax.swing.JPanel {
         });
         timer.start();
     }//GEN-LAST:event_jLabel17AncestorAdded
+
+    private void jLabel1baseonwhichlecturerAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel1baseonwhichlecturerAncestorAdded
+        // TODO add your handling code here:
+            jLabel1baseonwhichlecturer.setText(parentPanel.getClassId());
+
+    }//GEN-LAST:event_jLabel1baseonwhichlecturerAncestorAdded
 
     // METHOD TO WRITE TABLE DATA TO classtest.txt
     private void updateClassTestFile() {

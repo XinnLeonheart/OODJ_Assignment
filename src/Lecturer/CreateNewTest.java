@@ -256,7 +256,7 @@ public class CreateNewTest extends javax.swing.JPanel {
 
     private void jLabellecturerclasscodeAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabellecturerclasscodeAncestorAdded
         // TODO add your handling code here:
-        jLabellecturerclasscode.setText("Welcome " + parentPanel.getClassId());
+        jLabellecturerclasscode.setText(parentPanel.getClassId());
 
     }//GEN-LAST:event_jLabellecturerclasscodeAncestorAdded
 

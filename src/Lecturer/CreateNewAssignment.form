@@ -58,6 +58,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="January 20, 2025"/>
           </Properties>
+          <Events>
+            <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="jLabel5AncestorAdded"/>
+          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="682" y="23" width="-1" height="-1"/>
@@ -71,6 +74,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="04:00 AM"/>
           </Properties>
+          <Events>
+            <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="jLabel17AncestorAdded"/>
+          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="682" y="45" width="80" height="-1"/>
@@ -198,6 +204,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="base on which lecturer"/>
               </Properties>
+              <Events>
+                <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="jLabellecturerclasscodeAncestorAdded"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabeldurationhours">
               <Properties>

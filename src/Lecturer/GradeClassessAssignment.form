@@ -74,6 +74,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="04:00 AM"/>
           </Properties>
+          <Events>
+            <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="jLabel17AncestorAdded"/>
+          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="682" y="45" width="80" height="-1"/>
@@ -126,6 +129,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="January 20, 2025"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="ancestorAdded" listener="javax.swing.event.AncestorListener" parameters="javax.swing.event.AncestorEvent" handler="jLabel7AncestorAdded"/>
+                  </Events>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
                       <AbsoluteConstraints x="682" y="23" width="-1" height="-1"/>
@@ -172,7 +178,7 @@
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="jLabelstatusfield" alignment="0" min="-2" pref="152" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jLabelstudent1field" min="-2" pref="152" max="-2" attributes="0"/>
+                                              <Component id="jLabelstudentidfield" min="-2" pref="152" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jLabeltestname" min="-2" max="-2" attributes="0"/>
                                           </Group>
@@ -215,7 +221,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabelstudentid" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabelstudent1field" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelstudentidfield" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabeltestname" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabelassignmentnamefield" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -272,7 +278,13 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabelgradetest" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="jLabelgradetest" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                                          <Component id="jLabelstudentname" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="jLabelstudentnamefield" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                       <Component id="jButtonrefresh" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jScrollPane1" alignment="0" min="-2" pref="727" max="-2" attributes="0"/>
                                   </Group>
@@ -288,7 +300,11 @@
                                   <EmptySpace type="unrelated" max="32767" attributes="0"/>
                                   <Component id="jButtonrefresh" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabelgradetest" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabelgradetest" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelstudentname" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelstudentnamefield" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -335,6 +351,22 @@
                             <Property name="text" type="java.lang.String" value="Grade Assignment"/>
                           </Properties>
                         </Component>
+                        <Component class="javax.swing.JLabel" name="jLabelstudentname">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                              <Font name="Segoe UI" size="14" style="0"/>
+                            </Property>
+                            <Property name="text" type="java.lang.String" value="Student Name:"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabelstudentnamefield">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                              <Font name="Segoe UI" size="14" style="0"/>
+                            </Property>
+                            <Property name="text" type="java.lang.String" value="lolipop"/>
+                          </Properties>
+                        </Component>
                       </SubComponents>
                     </Container>
                     <Component class="javax.swing.JLabel" name="jLabelstudentsubmissionlist">
@@ -353,7 +385,7 @@
                         <Property name="text" type="java.lang.String" value="Student ID:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabelstudent1field">
+                    <Component class="javax.swing.JLabel" name="jLabelstudentidfield">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="student1"/>
                       </Properties>
