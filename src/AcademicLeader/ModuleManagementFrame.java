@@ -28,8 +28,8 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         loadModules();
     }
 
-    private final String FILE_PATH = System.getProperty("user.dir")
-            + "/src/TextFiles/Module.txt";
+    private static final String FILE_PATH = "src/TextFiles/Module.txt";
+
 
     private void loadModules() {
 
@@ -56,7 +56,8 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             }
 
         } catch (IOException e) {
-            System.out.println("File read error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -227,7 +228,10 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             }
 
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
         }
+
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
 
@@ -236,6 +240,8 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             }
 
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
         }
 
         JOptionPane.showMessageDialog(this, "Module updated");
@@ -267,7 +273,10 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             }
 
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
         }
+
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
 
@@ -276,6 +285,8 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             }
 
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
         }
 
         JOptionPane.showMessageDialog(this, "Module deleted");
@@ -292,32 +303,39 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+        try {
+            File file = new File(FILE_PATH);
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) parent.mkdirs();
 
-            String line;
+            System.out.println("Writing to: " + file.getAbsolutePath());
 
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith(moduleID + ";")) {
-                    JOptionPane.showMessageDialog(this, "Module ID already exists");
-                    return;
+            // check duplicate
+            if (file.exists()) {
+                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        if (line.startsWith(moduleID + ";")) {
+                            JOptionPane.showMessageDialog(this, "Module ID already exists");
+                            return;
+                        }
+                    }
                 }
             }
 
+            // append new module
+            try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
+                pw.println(moduleID + ";" + moduleName + ";" + currentLeaderID + ";-");
+                pw.flush();
+            }
+
+            JOptionPane.showMessageDialog(this, "Module created successfully");
+            loadModules();
+
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving module: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH, true))) {
-
-            pw.println(moduleID + ";" + moduleName + ";" + currentLeaderID + ";-");
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving module");
-            return;
-        }
-
-        JOptionPane.showMessageDialog(this, "Module created successfully");
-        loadModules();
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void txtModuleIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtModuleIDActionPerformed

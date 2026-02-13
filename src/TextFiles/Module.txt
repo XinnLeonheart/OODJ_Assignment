@@ -1,8 +1,0 @@
-M001;English;ACC003;ACC003
-M002;Mathematics;-;ACC004
-M003;Science;-;ACC009
-M004;Statistics;-;ACC010
-M005;Physics;-;ACC011
-M006;Biology;-;ACC012
-M007;Chemistry;-;ACC013
-M008;Accounting;-;ACC014
