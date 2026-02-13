@@ -14,22 +14,28 @@ import java.util.List;
  *
  * @author User
  */
-public class GradingSystem extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GradingSystem.class.getName());
-
+public class GradingSystem extends javax.swing.JFrame {    
+  
     /**
      * Creates new form DefineGradingSystem
      */
+    
+    private static final java.util.logging.Logger logger =
+        java.util.logging.Logger.getLogger(GradingSystem.class.getName());
+
+    private static final String INPUT_FILE =
+            java.nio.file.Paths.get("TextFiles", "gradeclasstest.txt").toString();
+
+    private final GradeFileRepository gradeRepo;
+    
     public GradingSystem() {
         initComponents();
+        this.gradeRepo = new GradeFileRepository(INPUT_FILE);
         displayGradeSelectionOnTable();
         loadAllFromGradeClassTest();
     }
     
-    private final GradeFileRepository gradeRepo = new GradeFileRepository(INPUT_FILE);
-    private static final String INPUT_FILE =
-        java.nio.file.Paths.get("TextFiles", "gradeclasstest.txt").toString();
+
 
 
     public void searchStudent() {
@@ -42,7 +48,12 @@ public class GradingSystem extends javax.swing.JFrame {
             for (GradeRecord r : gradeRepo.readAll()) {
 
                 // match by name (your file doesn't store student ID)
-                if (!r.getStudentName().toLowerCase().contains(keyword)) continue;
+                boolean match = r.getStudentName().toLowerCase().contains(keyword)
+                        || r.getStudentId().toLowerCase().contains(keyword);
+
+                if (!match) 
+                    continue;
+
 
                 // if grade missing -> auto generate
                 String grade = (r.getGrade() == null || r.getGrade().isBlank())
@@ -89,7 +100,7 @@ public class GradingSystem extends javax.swing.JFrame {
         List<String> outputLines = new ArrayList<>();
 
         // header (your file first line)
-        outputLines.add("Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade");
+        outputLines.add("Student Id;Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade");
 
         try {
             // We must read the ORIGINAL file lines to keep feedback/timestamp
@@ -110,25 +121,33 @@ public class GradingSystem extends javax.swing.JFrame {
                     if (line.trim().isEmpty()) continue;
 
                     String[] parts = line.split(";", -1);
-                    if (parts.length < 6) continue;
+                    if (parts.length < 8) 
+                        continue;
 
-                    String studentName = parts[0];
-                    String classId = parts[1];
-                    String testName = parts[2];
+                    String studentId   = parts[0].trim();
+                    String studentName = parts[1].trim();
+                    String classId     = parts[2].trim();
+                    String testName    = parts[3].trim();
 
-                    String markStr = parts[3].trim().replace("%", "");
+                    String markStr = parts[4].trim().replace("%", "");
                     double mark;
-                    try { mark = Double.parseDouble(markStr); }
-                    catch (NumberFormatException e) { continue; }
+                    try { 
+                        mark = Double.parseDouble(markStr); 
+                    }
+                    catch (NumberFormatException e) {
+                        continue; 
+                    }
 
-                    String feedback = parts[4];
-                    String timestamp = parts[5];
+                    String feedback  = parts[5];
+                    String timestamp = parts[6];
 
-                    String grade = convertMarkToGrade(String.valueOf(mark));
+                    String grade = (parts.length >= 8 && !parts[7].trim().isEmpty())
+                            ? parts[7].trim()
+                            : convertMarkToGrade(String.valueOf(mark));
 
-                    // build using GradeRecord (OOP)
-                    GradeRecord record = new GradeRecord("N/A", studentName.trim(), classId.trim(), testName.trim(), mark, grade);
+                    GradeRecord record = new GradeRecord(studentId, studentName, classId, testName, mark, grade);
                     outputLines.add(record.toLine(feedback, timestamp));
+
                 }
             }
 
