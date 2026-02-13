@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
 /**
  *
  * @author justl
@@ -363,6 +364,15 @@ public class LecturerDashboard extends javax.swing.JPanel {
 
         totalStudent.setFont(new java.awt.Font("Leelawadee UI Semilight", 1, 18)); // NOI18N
         totalStudent.setText("Total Students");
+        totalStudent.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                totalStudentAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -474,6 +484,10 @@ public class LecturerDashboard extends javax.swing.JPanel {
         });
         timer.start();
     }//GEN-LAST:event_jLabeltimedisplayAncestorAdded
+
+    private void totalStudentAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_totalStudentAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_totalStudentAncestorAdded
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

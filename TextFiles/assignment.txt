@@ -1,7 +1,9 @@
 Assignment Name;Duration Hours;Class Code
-assignment123;1 hrs;base on which lecturer
-assignment14;1 hrs;base on which lecturer
-assignmenttttt;1 hrs;base on which lecturer
-ganassignemnt;45 min;base on which lecturer
-assignduckk;45 min;base on which lecturer
-assignmentisbitch;45 min;base on which lecturer
+assignment123;1 hrs;C001
+assignment14;1 hrs;C002
+assignmenttttt;1 hrs;C003
+ganassignemnt;45 min;C004
+assignduckk;45 min;C005
+assignmentisbitch;45 min;C006
+assign;1 hrs;C007
+assignmlolipop;1 hrs;C008

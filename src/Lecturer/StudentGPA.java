@@ -124,11 +124,13 @@ public class StudentGPA extends javax.swing.JPanel {
                 line = line.trim();
                 if (!line.isEmpty()) {
                     String[] parts = line.split(";");
+                    //Student Id;Student Name;Class Id;Test Name;Test Marks;Feedback;Timestamp;Grade
                     if (parts.length >= 5) {
-                        String studentName = parts[0].trim();
-                        String classId = parts[1].trim();
-                        String testName = parts[2].trim();
-                        double marks = Double.parseDouble(parts[3].trim());
+                        String studentId = parts[0].trim(); 
+                        String studentName = parts[1].trim();
+                        String classId = parts[2].trim();
+                        String testName = parts[3].trim();
+                        double marks = Double.parseDouble(parts[4].trim());
 
                         //Store class id for this student
                         studentClassId.put(studentName, classId);
@@ -157,11 +159,13 @@ public class StudentGPA extends javax.swing.JPanel {
                 line = line.trim();
                 if (!line.isEmpty()) {
                     String[] parts = line.split(";");
+                    //Student Id;Student Name;Class Id;Assignment Name;Assignment Marks;Feedback;Timestamp;Grade
                     if (parts.length >= 5) {
-                        String studentName = parts[0].trim();
-                        String classId = parts[1].trim();
-                        String assignmentName = parts[2].trim();
-                        double marks = Double.parseDouble(parts[3].trim());
+                        String studentId = parts[0].trim();
+                        String studentName = parts[1].trim();
+                        String classId = parts[2].trim();
+                        String assignmentName = parts[3].trim();
+                        double marks = Double.parseDouble(parts[4].trim());
 
                         // Store class ID for this student (if not already stored)
                         if (!studentClassId.containsKey(studentName)) {

@@ -467,6 +467,8 @@ public class LecturerMain extends javax.swing.JFrame {
         b.setVisible(false);
         c.setVisible(false);
         d.setVisible(true);
+        d.showDashboard();
+        
         
     }//GEN-LAST:event_sidebar8MouseClicked
 
