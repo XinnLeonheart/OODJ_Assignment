@@ -93,7 +93,7 @@ public class SubmitHW extends javax.swing.JFrame {
         if (studentID == null || studentID.isEmpty()) {
             return false;
         }
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssignmentSubmission.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/AssignmentSubmission.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split(";");
@@ -115,7 +115,7 @@ public class SubmitHW extends javax.swing.JFrame {
         if (studentID == null || studentID.isEmpty()) {
             return false;
         }
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssessmentMark.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/AssessmentMark.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split(";");

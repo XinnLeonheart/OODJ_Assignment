@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import AcademicLeader.Module;
 
 public class CreateClass extends javax.swing.JFrame {
     
@@ -29,13 +30,15 @@ public class CreateClass extends javax.swing.JFrame {
      * Creates new form CreateClass
      */
     
-    private static final String CLASS_FILE = "src/TextFiles/Class.txt";
+    private static final String MODULE_FILE = "TextFiles/Module.txt";
+    private final java.util.List<Module> moduleList = new java.util.ArrayList<>();
     private String originalTableData = "";
+    private static final String CLASS_FILE = "TextFiles/Class.txt";
     private final ClassFileRepository classRepo = new ClassFileRepository(CLASS_FILE);
 
     public CreateClass() {
         initComponents(); 
-
+        
         DefaultTableModel model = new DefaultTableModel(
             new Object[][] {},
             new String[] {"Class ID", "Class Name", "Module", "Action"}
@@ -50,7 +53,10 @@ public class CreateClass extends javax.swing.JFrame {
         tableClass.setModel(model);
         tableClass.getColumnModel().getColumn(0).setResizable(false);
         setupDeleteColumn();
+        
+        loadModulesIntoComboBox();
         displayModuleSelectionOnTable();
+        
         autoGenerateClassID();
         loadTableClass();       
     }
@@ -66,7 +72,16 @@ public class CreateClass extends javax.swing.JFrame {
     public void createClass() {
         String classID = tfClassID.getText().trim();
         String className = tfClassName.getText().trim();
-        String module = cbModule.getSelectedItem().toString();
+        Module selected = (Module) cbModule.getSelectedItem();
+
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this, "Please select a module");
+            return;
+        }
+
+        String moduleID = selected.getModuleID();
+        String moduleName = selected.getModuleName();
+
 
         if (classID.isEmpty() || className.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all fields");
@@ -74,7 +89,7 @@ public class CreateClass extends javax.swing.JFrame {
         }
 
         try {
-            classRepo.append(new ClassRoom(classID, className, module));
+            classRepo.append(new ClassRoom(classID, className, moduleName));
             JOptionPane.showMessageDialog(this, "Class created successfully!");
             loadTableClass();
             tfClassName.setText("");
@@ -124,31 +139,65 @@ public class CreateClass extends javax.swing.JFrame {
         }
     }
     
+    private void loadModulesIntoComboBox() {
+        moduleList.clear();
+        cbModule.removeAllItems();
+
+        File file = new File(MODULE_FILE);
+        if (!file.exists()) {
+            JOptionPane.showMessageDialog(this, "Module file not found: " + MODULE_FILE);
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                String[] parts = line.split(";");
+                if (parts.length < 2) continue;
+
+                String moduleID = parts[0].trim();
+                String moduleName = parts[1].trim();
+
+                Module m = new Module(moduleID, moduleName);
+                moduleList.add(m);
+                cbModule.addItem(m);   // JComboBox will display moduleName because Module.toString()
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading modules: " + e.getMessage());
+        }
+    }
+
+    
     public void displayModuleSelectionOnTable() {
-        String[] modules = {
-            "English", "Mathematics", "Science", "Statistics",
-            "Physics", "Biology", "Chemistry", "Accounting"
-        };
+        JComboBox<Module> moduleComboBox = new JComboBox<>();
+        for (Module m : moduleList) moduleComboBox.addItem(m);
 
-        JComboBox<String> moduleComboBox = new JComboBox<>(modules);
+        tableClass.getColumnModel().getColumn(2)
+                .setCellEditor(new DefaultCellEditor(moduleComboBox));
 
-        tableClass.getColumnModel()
-                  .getColumn(2)   // Module column index
-                  .setCellEditor(new DefaultCellEditor(moduleComboBox));
-        
-        tableClass.getColumnModel()
-          .getColumn(2)
-          .setCellRenderer(new DefaultTableCellRenderer() {
-              @Override
-              public java.awt.Component getTableCellRendererComponent(
-                      JTable table, Object value, boolean isSelected,
-                      boolean hasFocus, int row, int column) {
+        tableClass.getColumnModel().getColumn(2)
+                .setCellRenderer(new DefaultTableCellRenderer() {
+                    @Override
+                    public java.awt.Component getTableCellRendererComponent(
+                            JTable table, Object value, boolean isSelected,
+                            boolean hasFocus, int row, int column) {
 
-                  JComboBox<String> rendererCombo = new JComboBox<>(modules);
-                  rendererCombo.setSelectedItem(value);
-                  return rendererCombo;
-              }
-          });
+                        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                        // if store Module object directly
+                        if (value instanceof Module) {
+                            setText(((Module) value).getModuleName());
+                        } else if (value != null) {
+                            setText(value.toString());
+                        } else {
+                            setText("");
+                        }
+                        return this;
+                    }
+                });
     }
     
     public void searchClass() {
@@ -382,8 +431,6 @@ public class CreateClass extends javax.swing.JFrame {
 
         jLabel5.setText("Module:");
 
-        cbModule.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "English", "Mathematics", "Science", "Statistics", "Physics", "Biology", "Chemistry", "Accounting" }));
-
         btnSaveClass.setText("Save");
         btnSaveClass.addActionListener(this::btnSaveClassActionPerformed);
 
@@ -527,7 +574,7 @@ public class CreateClass extends javax.swing.JFrame {
     private javax.swing.JButton btnCreateClass;
     private javax.swing.JButton btnSaveClass;
     private javax.swing.JButton btnSearchClass;
-    private javax.swing.JComboBox<String> cbModule;
+    private javax.swing.JComboBox<Module> cbModule;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

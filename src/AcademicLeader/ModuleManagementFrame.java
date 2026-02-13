@@ -16,6 +16,10 @@ import javax.swing.table.DefaultTableModel;
 public class ModuleManagementFrame extends javax.swing.JFrame {
 
     private final String currentLeaderID;
+    private final ModuleRepository repo = new ModuleRepository("Module.txt");
+    
+
+
 
     /**
      * Creates new form ModuleManagement
@@ -26,39 +30,29 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         initComponents();
         this.currentLeaderID = leaderID;
         loadModules();
+        
+
     }
 
-    private final String FILE_PATH = System.getProperty("user.dir")
-            + "/src/TextFiles/Module.txt";
-
     private void loadModules() {
-
         DefaultTableModel model = (DefaultTableModel) tblModule.getModel();
         model.setRowCount(0);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        try {
+            for (String line : repo.readAllLines()) {
+                if (line.trim().isEmpty()) continue;
 
                 String[] data = line.split(";");
-
                 if (data.length >= 4 && data[2].equals(currentLeaderID)) {
-
-                    model.addRow(new Object[]{
-                        data[0],
-                        data[1],
-                        data[2],
-                        data[3]
-                    });
+                    model.addRow(new Object[]{ data[0], data[1], data[2], data[3] });
                 }
             }
-
         } catch (IOException e) {
-            System.out.println("File read error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -206,41 +200,37 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         }
 
         String moduleID = txtModuleID.getText().trim();
-        String newName = txtModuleName.getText().trim();
+        String newName  = txtModuleName.getText().trim();
+
+        if (moduleID.isEmpty() || newName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in Module ID and Module Name");
+            return;
+        }
 
         ArrayList<String> updated = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        try {
+            for (String line : repo.readAllLines()) {
+                if (line.trim().isEmpty()) continue;
 
                 String[] data = line.split(";");
-
-                if (data[0].equals(moduleID) && data[2].equals(currentLeaderID)) {
+                if (data.length >= 4 && data[0].equals(moduleID) && data[2].equals(currentLeaderID)) {
                     data[1] = newName;
                     line = String.join(";", data);
                 }
-
                 updated.add(line);
             }
 
-        } catch (IOException e) {
-        }
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
-
-            for (String l : updated) {
-                pw.println(l);
-            }
+            repo.writeAllLines(updated);
 
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
+            return;
         }
 
         JOptionPane.showMessageDialog(this, "Module updated");
         loadModules();
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnUpdateActionPerformedActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -251,40 +241,37 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         }
 
         String moduleID = txtModuleID.getText().trim();
+        if (moduleID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Module ID is empty");
+            return;
+        }
+
         ArrayList<String> updated = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        try {
+            for (String line : repo.readAllLines()) {
+                if (line.trim().isEmpty()) continue;
 
                 String[] data = line.split(";");
-
-                if (!(data[0].equals(moduleID) && data[2].equals(currentLeaderID))) {
+                if (data.length >= 4 && !(data[0].equals(moduleID) && data[2].equals(currentLeaderID))) {
                     updated.add(line);
                 }
             }
 
-        } catch (IOException e) {
-        }
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
-
-            for (String l : updated) {
-                pw.println(l);
-            }
+            repo.writeAllLines(updated);
 
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            e.printStackTrace();
+            return;
         }
 
         JOptionPane.showMessageDialog(this, "Module deleted");
         loadModules();
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        String moduleID = txtModuleID.getText().trim();
+        String moduleID   = txtModuleID.getText().trim();
         String moduleName = txtModuleName.getText().trim();
 
         if (moduleID.isEmpty() || moduleName.isEmpty()) {
@@ -292,32 +279,25 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        try {
+            for (String line : repo.readAllLines()) {
                 if (line.startsWith(moduleID + ";")) {
                     JOptionPane.showMessageDialog(this, "Module ID already exists");
                     return;
                 }
             }
 
+            repo.appendLine(moduleID + ";" + moduleName + ";" + currentLeaderID + ";-");
+
+            JOptionPane.showMessageDialog(this, "Module created successfully");
+            System.out.println("MODULE USED = " + repo.getFile().getAbsolutePath());
+            loadModules();
+
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving module: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH, true))) {
-
-            pw.println(moduleID + ";" + moduleName + ";" + currentLeaderID + ";-");
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving module");
-            return;
-        }
-
-        JOptionPane.showMessageDialog(this, "Module created successfully");
-        loadModules();
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void txtModuleIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtModuleIDActionPerformed

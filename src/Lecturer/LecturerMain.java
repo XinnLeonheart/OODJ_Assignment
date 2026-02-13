@@ -96,7 +96,7 @@ public class LecturerMain extends javax.swing.JFrame {
     //File format: moduleId;moduleName;academicLeaderId;lecturerId
     
     private String getModuleNameByLecturerId(String lecturerId) {
-        String filePath = "src/TextFiles/Module.txt";
+        String filePath = "TextFiles/Module.txt";
         
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -135,7 +135,7 @@ public class LecturerMain extends javax.swing.JFrame {
     //File format: classId;className;module
     
     private String getClassIdByModuleName(String moduleName) {
-        String filePath = "src/TextFiles/Class.txt";
+        String filePath = "TextFiles/Class.txt";
         
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;

@@ -26,7 +26,7 @@ public class ViewFeedbacks extends javax.swing.JPanel {
     }
 
     private void loadTableData(){
-        String filePath = "src/TextFiles/Feedback.txt";
+        String filePath = "TextFiles/Feedback.txt";
         File file = new File(filePath);
         
         try{

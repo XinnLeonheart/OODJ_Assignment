@@ -32,7 +32,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
     
     
     private void loadTableData(){
-        String filePath = "src/TextFiles/assignment.txt";
+        String filePath = "TextFiles/assignment.txt";
         File file = new File(filePath);
         
         try{
@@ -403,7 +403,7 @@ public class ViewClassessAssignment extends javax.swing.JPanel {
     private void updateAssignmentFile() {
         try {
             // Create FileWriter - replace with your file path
-            FileWriter writer = new FileWriter("src/TextFiles/assignment.txt");
+            FileWriter writer = new FileWriter("TextFiles/assignment.txt");
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
             // Write header

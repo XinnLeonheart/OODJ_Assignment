@@ -196,7 +196,7 @@ public class CreateNewAssignment extends javax.swing.JPanel {
         }
         try
         {
-            String filePath = "src/TextFiles/assignment.txt";
+            String filePath = "TextFiles/assignment.txt";
             FileWriter writer = new FileWriter(filePath, true);
 
             String line = assignmentname + ";" + durationhours + ";" + classcode;

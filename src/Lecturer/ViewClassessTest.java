@@ -39,7 +39,7 @@ public class ViewClassessTest extends javax.swing.JPanel {
     }
     
     private void loadTableData(){
-        String filePath = "src/TextFiles/classtest.txt";
+        String filePath = "TextFiles/classtest.txt";
         File file = new File(filePath);
         
         try{
@@ -453,7 +453,7 @@ public class ViewClassessTest extends javax.swing.JPanel {
     private void updateClassTestFile() {
         try {
             // Create FileWriter - replace with your file path
-            FileWriter writer = new FileWriter("src/TextFiles/classtest.txt");
+            FileWriter writer = new FileWriter("TextFiles/classtest.txt");
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
             // Write header

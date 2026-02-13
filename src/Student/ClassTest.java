@@ -95,7 +95,7 @@ public class ClassTest extends javax.swing.JFrame {
     }
 
     private int getTimerDuration() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/Class.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/Class.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty())
@@ -174,7 +174,7 @@ public class ClassTest extends javax.swing.JFrame {
     private boolean isClassLocked() {
         String studentID = LogIn.loggedInID;
 
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/AssessmentMark.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/AssessmentMark.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split(";");
@@ -194,7 +194,7 @@ public class ClassTest extends javax.swing.JFrame {
     private boolean isAlreadySubmitted() {
         String studentID = LogIn.accID;
 
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestSubmission.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/ClassTestSubmission.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
@@ -217,7 +217,7 @@ public class ClassTest extends javax.swing.JFrame {
         currentQuestions.clear();
         answerGroups.clear();
 
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestQuestions.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/ClassTestQuestions.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
@@ -336,7 +336,7 @@ public class ClassTest extends javax.swing.JFrame {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         ArrayList<String> existingLines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/TextFiles/ClassTestSubmission.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/ClassTestSubmission.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty())
@@ -360,7 +360,7 @@ public class ClassTest extends javax.swing.JFrame {
         }
         existingLines.add(newEntry);
 
-        try (FileWriter fw = new FileWriter("src/TextFiles/ClassTestSubmission.txt")) {
+        try (FileWriter fw = new FileWriter("TextFiles/ClassTestSubmission.txt")) {
             for (String line : existingLines) {
                 fw.write(line + "\n");
             }

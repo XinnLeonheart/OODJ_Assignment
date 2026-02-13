@@ -10,7 +10,22 @@ package AcademicLeader;
  */
 public class Module {
     private String moduleID, moduleName, academicLeaderID, lecturerID;
-
+    
+    public Module(String moduleID) {
+        this.moduleID = moduleID;
+    }
+    
+    public Module(String moduleID, String moduleName) {
+        this.moduleID = moduleID;
+        this.moduleName = moduleName;
+    }
+    
+    public Module(String moduleID, String moduleName, String academicLeaderID) {
+        this.moduleID = moduleID;
+        this.moduleName = moduleName;
+        this.academicLeaderID = academicLeaderID;
+    }
+    
     public Module(String moduleID, String moduleName, String academicLeaderID, String lecturerID) {
         this.moduleID = moduleID;
         this.moduleName = moduleName;
@@ -18,5 +33,16 @@ public class Module {
         this.lecturerID = lecturerID;
     }
 
-    // getters & setters
+    public String getModuleID() {
+        return moduleID;
+    }
+    
+    public String getModuleName() { 
+        return moduleName; 
+    }
+    
+    @Override
+    public String toString() {
+        return moduleName;
+    }
 }

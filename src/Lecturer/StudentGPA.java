@@ -38,12 +38,12 @@ public class StudentGPA extends javax.swing.JPanel {
         
         try{
             // Load test and assignment definitions
-            loadTestDefinitions("src/TextFiles/classtest.txt");
-            loadAssignmentDefinitions("src/TextFiles/assignment.txt");
+            loadTestDefinitions("TextFiles/classtest.txt");
+            loadAssignmentDefinitions("TextFiles/assignment.txt");
 
             // Load student marks
-            loadStudentTestMarks("src/TextFiles/gradeclasstest.txt");
-            loadStudentAssignmentMarks("src/TextFiles/gradeassignment.txt");
+            loadStudentTestMarks("TextFiles/gradeclasstest.txt");
+            loadStudentAssignmentMarks("TextFiles/gradeassignment.txt");
 
             // Create and populate table
             createAndPopulateTable();
@@ -523,7 +523,7 @@ public class StudentGPA extends javax.swing.JPanel {
 
     private void btnsaverecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsaverecordActionPerformed
         // TODO add your handling code here:
-        saveTableToFile("src/TextFiles/StudentGPA.txt");
+        saveTableToFile("TextFiles/StudentGPA.txt");
     }//GEN-LAST:event_btnsaverecordActionPerformed
 
 

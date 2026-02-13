@@ -108,7 +108,7 @@ public class LogIn extends javax.swing.JFrame {
         String emailInput = tfLogInEmail.getText();
         String passwordInput = new String(pfLogInPw.getPassword());
 
-        String filePath = "src/TextFiles/Account.txt"; // adjust path if needed
+        String filePath = "TextFiles/Account.txt"; 
         boolean loginSuccess = false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

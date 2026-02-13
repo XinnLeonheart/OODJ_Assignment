@@ -35,7 +35,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
     }
 
     private void loadTableData(){
-        String filePath = "src/TextFiles/ClassTestSubmission.txt";
+        String filePath = "TextFiles/ClassTestSubmission.txt";
         File file = new File(filePath);
         
         try{
@@ -464,7 +464,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
         }
         try
             {
-            String filePath = "src/TextFiles/gradeclasstest.txt";
+            String filePath = "TextFiles/gradeclasstest.txt";
             FileWriter writer = new FileWriter(filePath, true);
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -528,7 +528,7 @@ public class GradeClassessTest extends javax.swing.JPanel {
     }//GEN-LAST:event_jLabel17AncestorAdded
 
     private void updateClassTestSubmissionStatus(String studentid, String classId, String testName) {
-    String filePath = "src/TextFiles/ClassTestSubmission.txt";
+    String filePath = "TextFiles/ClassTestSubmission.txt";
     File file = new File(filePath);
     
     try {

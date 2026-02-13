@@ -28,7 +28,7 @@ public class GradingSystem extends javax.swing.JFrame {
     }
     
     private final GradeFileRepository gradeRepo = new GradeFileRepository(INPUT_FILE);
-    private static final String INPUT_FILE = "src/TextFiles/gradeclasstest.txt";
+    private static final String INPUT_FILE = "TextFiles/gradeclasstest.txt";
 
     public void searchStudent() {
         String keyword = tfSearchStudent.getText().trim().toLowerCase();

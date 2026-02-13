@@ -34,8 +34,8 @@ public class AssignLecturer extends javax.swing.JFrame {
      * Creates new form AssignLecturer
      */
     
-    private static final String ACCOUNT_FILE = "src/TextFiles/Account.txt";
-    private static final String LECTURER_FILE = "src/TextFiles/LecturerAssigned.txt";
+    private static final String ACCOUNT_FILE = "TextFiles/Account.txt";
+    private static final String LECTURER_FILE = "TextFiles/LecturerAssigned.txt";
     private AccountFileRepository accountRepo;
     private LecturerAssignRepository lecturerRepo;
     private static final String DEFAULT_LEADER_DISPLAY = "-- Select Academic Leader --";
