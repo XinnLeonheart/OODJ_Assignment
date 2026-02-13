@@ -16,9 +16,9 @@ import javax.swing.table.DefaultTableModel;
 public class ModuleManagementFrame extends javax.swing.JFrame {
 
     private final String currentLeaderID;
-    
-    private final ModuleRepository repo = new ModuleRepository("Module.txt");
 
+    private final ModuleRepository repo
+            = new ModuleRepository("Module.txt");
 
     /**
      * Creates new form ModuleManagement
@@ -29,7 +29,6 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         initComponents();
         this.currentLeaderID = leaderID;
         loadModules();
-        
 
     }
 
@@ -39,11 +38,13 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
 
         try {
             for (String line : repo.readAllLines()) {
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
 
                 String[] data = line.split(";");
                 if (data.length >= 4 && data[2].equals(currentLeaderID)) {
-                    model.addRow(new Object[]{ data[0], data[1], data[2], data[3] });
+                    model.addRow(new Object[]{data[0], data[1], data[2], data[3]});
                 }
             }
         } catch (IOException e) {
@@ -51,7 +52,6 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -199,7 +199,7 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         }
 
         String moduleID = txtModuleID.getText().trim();
-        String newName  = txtModuleName.getText().trim();
+        String newName = txtModuleName.getText().trim();
 
         if (moduleID.isEmpty() || newName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill in Module ID and Module Name");
@@ -210,7 +210,9 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
 
         try {
             for (String line : repo.readAllLines()) {
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
 
                 String[] data = line.split(";");
                 if (data.length >= 4 && data[0].equals(moduleID) && data[2].equals(currentLeaderID)) {
@@ -249,7 +251,9 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
 
         try {
             for (String line : repo.readAllLines()) {
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
 
                 String[] data = line.split(";");
                 if (data.length >= 4 && !(data[0].equals(moduleID) && data[2].equals(currentLeaderID))) {
@@ -270,7 +274,7 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        String moduleID   = txtModuleID.getText().trim();
+        String moduleID = txtModuleID.getText().trim();
         String moduleName = txtModuleName.getText().trim();
 
         if (moduleID.isEmpty() || moduleName.isEmpty()) {
