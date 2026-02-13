@@ -1,2 +1,2 @@
-ACC003;ai;ai@mail.uni.edu.my;abu
-ACC004;hoshino;hoshino@mail.uni.edu.my;oi
+ACC003;ai;ai@mail.uni.edu.my;oi
+ACC004;hoshino;hoshino@mail.uni.edu.my;wi
