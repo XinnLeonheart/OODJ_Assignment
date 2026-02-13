@@ -172,33 +172,55 @@ public class CreateClass extends javax.swing.JFrame {
 
     
     public void displayModuleSelectionOnTable() {
-        JComboBox<Module> moduleComboBox = new JComboBox<>();
-        for (Module m : moduleList) moduleComboBox.addItem(m);
+
+        // real editor combo (user can change when editing)
+        JComboBox<Module> editorCombo = new JComboBox<>();
+        for (Module m : moduleList) editorCombo.addItem(m);
 
         tableClass.getColumnModel().getColumn(2)
-                .setCellEditor(new DefaultCellEditor(moduleComboBox));
+                .setCellEditor(new DefaultCellEditor(editorCombo));
 
+        // renderer combo (looks normal + shows arrow, but user can't interact)
         tableClass.getColumnModel().getColumn(2)
-                .setCellRenderer(new DefaultTableCellRenderer() {
-                    @Override
-                    public java.awt.Component getTableCellRendererComponent(
-                            JTable table, Object value, boolean isSelected,
-                            boolean hasFocus, int row, int column) {
+                .setCellRenderer((table, value, isSelected, hasFocus, row, column) -> {
 
-                        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    JComboBox<Module> rendererCombo = new JComboBox<>();
+                    for (Module m : moduleList) rendererCombo.addItem(m);
 
-                        // if store Module object directly
-                        if (value instanceof Module) {
-                            setText(((Module) value).getModuleName());
-                        } else if (value != null) {
-                            setText(value.toString());
-                        } else {
-                            setText("");
+                    // select current value
+                    if (value instanceof Module) {
+                        rendererCombo.setSelectedItem(value);
+                    } else if (value != null) {
+                        // if you stored String module name in table, match by name
+                        for (int i = 0; i < rendererCombo.getItemCount(); i++) {
+                            Module m = rendererCombo.getItemAt(i);
+                            if (m.getModuleName().equals(value.toString())) {
+                                rendererCombo.setSelectedItem(m);
+                                break;
+                            }
                         }
-                        return this;
                     }
+
+                    // keep normal colors
+                    rendererCombo.setEnabled(true);
+
+                    // prevent clicking (no dropdown open) but keep normal look
+                    rendererCombo.setFocusable(false);
+
+                    // match selection colors like JTable row selection
+                    if (isSelected) {
+                        rendererCombo.setBackground(table.getSelectionBackground());
+                        rendererCombo.setForeground(table.getSelectionForeground());
+                    } else {
+                        rendererCombo.setBackground(table.getBackground());
+                        rendererCombo.setForeground(table.getForeground());
+                    }
+
+                    return rendererCombo;
                 });
     }
+
+
     
     public void searchClass() {
         String searchText = tfSearchClass.getText().trim();
