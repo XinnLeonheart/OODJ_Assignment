@@ -3,5 +3,5 @@ assignment123;1 hrs;base on which lecturer
 assignment14;1 hrs;base on which lecturer
 assignmenttttt;1 hrs;base on which lecturer
 ganassignemnt;45 min;base on which lecturer
-assignduckk;45 min;base on which lecturer
-assignmentisbitch;45 min;base on which lecturer
+assign;45 min;base on which lecturer
+assignment;45 min;base on which lecturer

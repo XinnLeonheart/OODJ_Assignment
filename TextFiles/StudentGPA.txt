@@ -1,4 +1,4 @@
-Student Name;Class ID;test;testfu;testfuckuagain;testlololo;testlili;assignment123;assignment14;assignmenttttt;ganassignemnt;assignduckk;assignmentisbitch;Average
+Student Name;Class ID;test;test;test;testlololo;testlili;assignment123;assignment14;assignmenttttt;ganassignemnt;assignduckk;assignment;Average
 student2;C001;100.0;-;-;-;-;100.0;-;-;-;-;-;100.00
 student1;C001;-;33.0;-;-;-;-;33.0;-;-;-;-;33.00
 student4;C001;-;-;-;-;33.0;-;-;-;-;33.0;-;33.00

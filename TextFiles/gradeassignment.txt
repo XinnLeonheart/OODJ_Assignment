@@ -1,5 +1,5 @@
 Student Id;Student Name;Class Id;Assignment Name;Assignment Marks;Feedback;Timestamp;Grade
 ACC007;alice;C003;assignmenttttt;90;OK;2026-02-13 19:56;A+
 ACC007;alice;C004;ganassignemnt;40;OK;2026-02-13 19:56;A+
-ACC007;alice;C006;assignmentisbitch;50;OK;2026-02-13 19:56;A+
+ACC007;alice;C006;assignment;50;OK;2026-02-13 19:56;A+
 

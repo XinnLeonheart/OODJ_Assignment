@@ -1,5 +1,5 @@
 Test Name;Duration Hours;Class Id
-DuckYou;45 min;C002
+You;45 min;C002
 Statistics;45 min;C003
 NowisMrning;45 min;C004
 testlololo;1 hrs;C001

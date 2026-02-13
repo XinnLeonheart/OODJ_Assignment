@@ -2,6 +2,6 @@ Student Id;Student Name;Class Id;Assignment Name;Date Time;Status
 ACC007;alice;C001;assignment123;2026-02-13 19:55;Submitted
 ACC007;alice;C002;assignment14;2026-02-13 19:55;Submitted
 ACC007;alice;C004;ganassignemnt;2026-02-13 19:55;Graded
-ACC007;alice;C006;assignmentisbitch;2026-02-13 19:56;Graded
+ACC007;alice;C006;assignment;2026-02-13 19:56;Graded
 ACC007;alice;C003;assignmenttttt;2026-02-13 19:56;Graded
 

@@ -4,6 +4,6 @@ assignment14;1 hrs;C002
 assignmenttttt;1 hrs;C003
 ganassignemnt;45 min;C004
 assignduckk;45 min;C005
-assignmentisbitch;45 min;C006
+assignment;45 min;C006
 assign;1 hrs;C007
 assignmlolipop;1 hrs;C008
