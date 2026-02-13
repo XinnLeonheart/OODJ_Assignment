@@ -16,9 +16,8 @@ import javax.swing.table.DefaultTableModel;
 public class ModuleManagementFrame extends javax.swing.JFrame {
 
     private final String currentLeaderID;
-    private final ModuleRepository repo = new ModuleRepository("Module.txt");
     
-
+    private final ModuleRepository repo = new ModuleRepository("Module.txt");
 
 
     /**

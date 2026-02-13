@@ -30,7 +30,7 @@ public class CreateClass extends javax.swing.JFrame {
      * Creates new form CreateClass
      */
     
-    private static final String MODULE_FILE = "TextFiles/Module.txt";
+    private static final String MODULE_FILE = "module.txt";
     private final java.util.List<Module> moduleList = new java.util.ArrayList<>();
     private String originalTableData = "";
     private static final String CLASS_FILE = "TextFiles/Class.txt";
