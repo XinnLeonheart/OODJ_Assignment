@@ -29,7 +29,8 @@ public class ManageAccount extends javax.swing.JFrame {
      * Creates new form ManageAccount
      */
     private AccountFileRepository repository;
-    private static final String ACCOUNT_FILE = "TextFiles/Account.txt";
+    private static final String ACCOUNT_FILE =
+        new File("TextFiles", "Account.txt").getPath();
     
     public ManageAccount() {
         initComponents();

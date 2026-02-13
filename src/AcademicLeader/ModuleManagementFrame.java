@@ -17,6 +17,9 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
 
     private final String currentLeaderID;
 
+    private final ModuleRepository repo
+            = new ModuleRepository("Module.txt");
+
     /**
      * Creates new form ModuleManagement
      *
@@ -26,35 +29,24 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         initComponents();
         this.currentLeaderID = leaderID;
         loadModules();
+
     }
 
-    private static final String FILE_PATH = "TextFiles/Module.txt";
-
-
     private void loadModules() {
-
         DefaultTableModel model = (DefaultTableModel) tblModule.getModel();
         model.setRowCount(0);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        try {
+            for (String line : repo.readAllLines()) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
 
                 String[] data = line.split(";");
-
                 if (data.length >= 4 && data[2].equals(currentLeaderID)) {
-
-                    model.addRow(new Object[]{
-                        data[0],
-                        data[1],
-                        data[2],
-                        data[3]
-                    });
+                    model.addRow(new Object[]{data[0], data[1], data[2], data[3]});
                 }
             }
-
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
             e.printStackTrace();
@@ -159,12 +151,11 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(65, 65, 65)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtModuleID, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(38, 38, 38)
-                                .addComponent(txtModuleName))
+                                .addComponent(txtModuleName, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton8)
                                 .addGap(29, 29, 29)
@@ -175,6 +166,10 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
                                 .addComponent(jButton5)
                                 .addGap(41, 41, 41)))))
                 .addContainerGap(72, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,44 +204,37 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         String moduleID = txtModuleID.getText().trim();
         String newName = txtModuleName.getText().trim();
 
+        if (moduleID.isEmpty() || newName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in Module ID and Module Name");
+            return;
+        }
+
         ArrayList<String> updated = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        try {
+            for (String line : repo.readAllLines()) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
 
                 String[] data = line.split(";");
-
-                if (data[0].equals(moduleID) && data[2].equals(currentLeaderID)) {
+                if (data.length >= 4 && data[0].equals(moduleID) && data[2].equals(currentLeaderID)) {
                     data[1] = newName;
                     line = String.join(";", data);
                 }
-
                 updated.add(line);
             }
 
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
-
-            for (String l : updated) {
-                pw.println(l);
-            }
+            repo.writeAllLines(updated);
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
             e.printStackTrace();
+            return;
         }
 
         JOptionPane.showMessageDialog(this, "Module updated");
         loadModules();
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnUpdateActionPerformedActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -257,41 +245,35 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         }
 
         String moduleID = txtModuleID.getText().trim();
+        if (moduleID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Module ID is empty");
+            return;
+        }
+
         ArrayList<String> updated = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
-
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        try {
+            for (String line : repo.readAllLines()) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
 
                 String[] data = line.split(";");
-
-                if (!(data[0].equals(moduleID) && data[2].equals(currentLeaderID))) {
+                if (data.length >= 4 && !(data[0].equals(moduleID) && data[2].equals(currentLeaderID))) {
                     updated.add(line);
                 }
             }
 
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
-
-            for (String l : updated) {
-                pw.println(l);
-            }
+            repo.writeAllLines(updated);
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
             e.printStackTrace();
+            return;
         }
 
         JOptionPane.showMessageDialog(this, "Module deleted");
         loadModules();
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -304,38 +286,24 @@ public class ModuleManagementFrame extends javax.swing.JFrame {
         }
 
         try {
-            File file = new File(FILE_PATH);
-            File parent = file.getParentFile();
-            if (parent != null && !parent.exists()) parent.mkdirs();
-
-            System.out.println("Writing to: " + file.getAbsolutePath());
-
-            // check duplicate
-            if (file.exists()) {
-                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        if (line.startsWith(moduleID + ";")) {
-                            JOptionPane.showMessageDialog(this, "Module ID already exists");
-                            return;
-                        }
-                    }
+            for (String line : repo.readAllLines()) {
+                if (line.startsWith(moduleID + ";")) {
+                    JOptionPane.showMessageDialog(this, "Module ID already exists");
+                    return;
                 }
             }
 
-            // append new module
-            try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
-                pw.println(moduleID + ";" + moduleName + ";" + currentLeaderID + ";-");
-                pw.flush();
-            }
+            repo.appendLine(moduleID + ";" + moduleName + ";" + currentLeaderID + ";-");
 
             JOptionPane.showMessageDialog(this, "Module created successfully");
+            System.out.println("MODULE USED = " + repo.getFile().getAbsolutePath());
             loadModules();
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving module: " + e.getMessage());
             e.printStackTrace();
         }
+
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void txtModuleIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtModuleIDActionPerformed

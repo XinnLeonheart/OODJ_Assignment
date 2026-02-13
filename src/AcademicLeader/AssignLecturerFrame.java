@@ -21,7 +21,7 @@ public class AssignLecturerFrame extends javax.swing.JFrame {
     private String currentLeaderID;
 
     private final String FILE_PATH = System.getProperty("user.dir")
-            + "TextFiles/Module.txt";
+            + "/TextFiles/Module.txt";
 
     /**
      * Creates new form AssignLecturer
@@ -56,7 +56,7 @@ public class AssignLecturerFrame extends javax.swing.JFrame {
 
         try (BufferedReader br = new BufferedReader(
                 new FileReader(System.getProperty("user.dir")
-                        + "TextFiles/Account.txt"))) {
+                        + "/TextFiles/Account.txt"))) {
 
             String line;
 

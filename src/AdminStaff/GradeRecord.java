@@ -45,27 +45,35 @@ public class GradeRecord {
     public void setGrade(String grade) { this.grade = grade; }
 
     public String toLine(String feedback, String timestamp) {
-        return studentName + ";" + classId + ";" + testName + ";" +
-               String.format("%.0f%%", mark) + ";" + feedback + ";" +
-               timestamp + ";" + grade;
+        return studentId + ";" + studentName + ";" + classId + ";" + testName + ";" +
+               String.format("%.0f", mark) + ";" + feedback + ";" + timestamp + ";" + grade;
     }
 
+
     public static GradeRecord fromLine(String line) {
+        if (line == null) return null;
         String[] parts = line.split(";", -1);
-        if (parts.length < 6) return null;
 
-        String studentName = parts[0].trim();
-        String classId = parts[1].trim();
-        String testName = parts[2].trim();
+        // must have at least: id, name, class, test, mark
+        if (parts.length < 5) return null;
 
-        String markStr = parts[3].trim().replace("%", "");
+        String studentId = parts[0].trim();
+        String studentName = parts[1].trim();
+        String classId = parts[2].trim();
+        String testName = parts[3].trim();
+
+        String markStr = parts[4].trim().replace("%", "");
         double mark;
-        try { mark = Double.parseDouble(markStr); }
-        catch (NumberFormatException e) { return null; }
+        try {
+            mark = Double.parseDouble(markStr);
+        } catch (NumberFormatException e) {
+            return null;
+        }
 
-        String grade = (parts.length >= 7) ? parts[6].trim() : "";
+        // grade is last column if exists
+        String grade = (parts.length >= 8) ? parts[7].trim() : "";
 
-        return new GradeRecord("N/A", studentName, classId, testName, mark, grade);
+        return new GradeRecord(studentId, studentName, classId, testName, mark, grade);
     }
 }
 

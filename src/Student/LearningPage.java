@@ -31,7 +31,43 @@ public class LearningPage extends javax.swing.JFrame {
         loadStudentCourses();
         setLocationRelativeTo(null);
     }
+    
+    private String getTestNameForClass(String classID) {
+    try (BufferedReader br = new BufferedReader(new FileReader("TextFiles/classtest.txt"))) {
+        String line;
+        br.readLine(); // skip header
+        while ((line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) continue;
+            String[] parts = line.split(";");
+            if (parts.length >= 3 && parts[2].trim().equals(classID)) {
+                return parts[0].trim(); // return Test Name
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error reading classtest.txt: " 
+            + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return ""; // no test found
+}
 
+    private String getAssignmentNameForClass(String classID) {
+    try (BufferedReader br = new BufferedReader(
+            new FileReader("TextFiles/assignment.txt"))) {
+        String line;
+        br.readLine(); // skip header
+        while ((line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) continue;
+            String[] parts = line.split(";");
+            if (parts.length >= 3 && parts[2].trim().equals(classID)) {
+                return parts[0].trim(); // return assignment name
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error reading assignment.txt: "
+            + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return "";
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -219,17 +255,33 @@ public class LearningPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnNext1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNext1ActionPerformed
-        if (!currentClassID.isEmpty()) {
-            ClassTest classTest = new ClassTest(currentClassID, currentClassName);
+    if (!currentClassID.isEmpty()) {
+            String testName = getTestNameForClass(currentClassID);
+            if (testName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "No class test available for this course.", 
+                    "Info", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            ClassTest classTest = new ClassTest(currentClassID, testName); // pass testName not className
             classTest.setVisible(true);
             dispose();
         }
     }//GEN-LAST:event_btnNext1ActionPerformed
 
     private void btnNext2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNext2ActionPerformed
-        SubmitHW submit = new SubmitHW(currentClassID, currentClassName);
+    if (!currentClassID.isEmpty()) {
+        String assignmentName = getAssignmentNameForClass(currentClassID);
+        if (assignmentName.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "No assignment available for this course.",
+                "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        SubmitHW submit = new SubmitHW(currentClassID, assignmentName); // pass assignmentName
         submit.setVisible(true);
         dispose();
+    }
     }//GEN-LAST:event_btnNext2ActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
